@@ -1,0 +1,127 @@
+name: Mirroring
+run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
+
+env:
+  MIRROR_URL: "git@github.com:EpitechPromo2027/B-PSU-200-NAN-2-1-42sh-alban.peralta.git"
+  EXECUTABLES: "42sh"
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+on:
+  push:
+    branches-ignore:
+      - "ga-ignore-*"
+  pull_request:
+    branches-ignore:
+      - "ga-ignore-*"
+
+  workflow_dispatch:
+
+jobs:
+  check_coding_style:
+    name: Check coding style
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/epitech/coding-style-checker:latest
+    steps:
+      - name: Check code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Run coding style checker
+        run: |
+          check.sh $(pwd) $(pwd)
+
+      - name: Display coding style errors
+        run: |
+          input=$(pwd)/coding-style-reports.log
+          while read line
+          do
+              error_type=$(echo $line | cut -d ":" -f 3 | cut -d " " -f 2)
+              file_name=$(echo $line | cut -d ":" -f 1)
+              file_path=$(echo $line | cut -d ':' -f 1)
+              error_line=$(echo $line | cut -d ':' -f 2)
+              error_code=$(echo $line | cut -d ':' -f 4)
+              echo "::error file=$file_name,line=$error_line,title=$error_type coding style error :: $error_code"
+          done < $input
+          if [ -s $input ]
+          then
+              exit 1
+          fi
+
+  check_program_compilation:
+    needs: [check_coding_style]
+    name: Check program compilation
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - name: Check code
+        uses: actions/checkout@v3
+
+      - name: Compile programs
+        run: |
+          make
+
+      - name: Clean compilation files
+        run: |
+          make clean
+
+      - name: Check if programs are compiled
+        run: |
+          for executable in $EXECUTABLES
+          do
+              if [ ! -x $executable ]
+              then
+                  echo "::error file=$executable,title=Compilation error :: $executable is not compiled"
+                  exit 1
+              fi
+          done
+
+  run_tests:
+    needs: [check_program_compilation]
+    name: Run tests
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - name: Check code
+        uses: actions/checkout@v3
+
+      - name: Run tests
+        run: |
+          make tests_run
+
+  push_to_mirror:
+    needs: [run_tests]
+    name: Push to mirror
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Mirror to Github
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url:
+            ${{ env.MIRROR_URL }}
+          ssh_private_key:
+            ${{ secrets.SSH_PRIVATE_KEY }}
+
+  discord_notification:
+    needs: [push_to_mirror]
+    name: Discord notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Send notification to Discord
+        uses: Ilshidur/action-discord@0.3.2
