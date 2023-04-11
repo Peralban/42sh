@@ -66,3 +66,8 @@ fclean: clean delval
 
 re:    fclean all
 	@rm -f $(OBJ)
+
+tests: all
+	@mv $(NAME) tests/
+	@cd tests && ./tester.sh
+	@rm -f tests/$(NAME)
