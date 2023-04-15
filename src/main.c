@@ -6,11 +6,12 @@
 */
 
 #include "mysh.h"
+#include <ncurses.h>
+#include <unistd.h>
 
 int main(int ac, char **av, char **env)
 {
-    (void)ac;
-    (void)av;
-    (void)env;
+    (void) ac, (void) av, (void) env;
+    see_precise_cmd(av[1]);
     return 0;
 }

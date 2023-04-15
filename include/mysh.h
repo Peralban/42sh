@@ -9,5 +9,6 @@
     #define __mysh_H
 
 int main(int ac, char **av, char **env);
+char **see_precise_cmd(char *cmd);
 
 #endif
