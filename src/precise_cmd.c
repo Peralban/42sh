@@ -76,7 +76,7 @@ char **see_precise_cmd(char *cmd)
     create_file(cmd);
     pid = fork();
     if (pid == 0) {
-        if (execvp("subl", (char *[]){"subl", "-wn", "subl.txt", NULL}) == -1) {
+        if (execvp("subl", (char *[]){"subl", "-w", "subl.txt", NULL}) == -1) {
             my_puterror
             ("Error: Sublime Text is not installed on your computer.\n");
             exit(1);
