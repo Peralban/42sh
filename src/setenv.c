@@ -84,11 +84,10 @@ int my_setenv(char **args, char **env)
     tmp = malloc(sizeof(char) * (strlen(args[1]) + 2));
     tmp = strcat(args[1], "=");
     args[1] = strdup(tmp);
-    if (args[2] == NULL) {
+    if (args[2] == NULL)
         variable_only(env, args);
-    } else {
+    else
         variable_and_value(env, args);
-    }
     free(tmp);
     return 0;
 }

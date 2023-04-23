@@ -15,20 +15,16 @@ int built_in(char **cmd, char **env, int *error)
     if (strcmp(cmd[0], "cd") == 0) {
         // my_cd(cmd, env);
         return 1;
-    }
-    if (strcmp(cmd[0], "env") == 0) {
+    } if (strcmp(cmd[0], "env") == 0) {
         print_array(env);
         return 1;
-    }
-    if (strcmp(cmd[0], "setenv") == 0) {
+    } if (strcmp(cmd[0], "setenv") == 0) {
         my_setenv(cmd, env);
         return 1;
-    }
-    if (strcmp(cmd[0], "unsetenv") == 0) {
+    } if (strcmp(cmd[0], "unsetenv") == 0) {
         my_unsetenv(cmd, env);
         return 1;
-    }
-    if (strcmp(cmd[0], "exit") == 0) {
+    } if (strcmp(cmd[0], "exit") == 0) {
         // my_exit(cmd, error);
         return 1;
     }
