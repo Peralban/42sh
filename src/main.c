@@ -18,18 +18,19 @@ int main(int ac, char **av, char **env)
     char *line = NULL;
     int error = 0;
     char **cmd = NULL;
+    char **env_cpy = my_arraydup(env);
 
     (void)ac;
     (void)av;
     while (!error) {
         if (getline(&line, &size, stdin) == -1) {
-            my_exit(NULL, &error);
             break;
         }
         line[strlen(line) - 1] = '\0';
         cmd = my_str_to_word_array(line, " \t");
-        if (built_in(cmd, env, &error) == 1)
+        if (built_in(cmd, env_cpy, &error) != 2)
             continue;
+        print_array(cmd);
     }
     return 0;
 }

@@ -5,16 +5,23 @@
 ## Makefile
 ##
 
-SRC =	my_start_with.c			\
-		my_putstr.c				\
+SRC =	delete_node_in_array.c	\
+		my_arraylen.c			\
+		print_array.c			\
+		my_start_with.c			\
 		my_str_to_word_array.c	\
-		my_array_len.c			\
+		my_putstr.c				\
+		char_isnum.c			\
+		my_puterror.c			\
+		my_arraydup.c			\
+		char_isalpha.c			\
+		str_isalphanum.c		\
 
 OBJ	=   $(SRC:.c=.o)
 
 SATAN = -W -Wall -Wextra -Werror -Wshadow
 
-INCLUDE = -I../../include -g
+INCLUDE = -I../../include
 
 CFLAGS = $(INCLUDE) $(SATAN)
 

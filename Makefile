@@ -7,6 +7,9 @@
 
 SRC	=	src/main.c					\
 		src/builtin.c				\
+		src/parse_args_setenv.c		\
+		src/unsetenv.c				\
+		src/setenv.c				\
 		src/my_exit.c				\
 
 OBJ	=   $(SRC:.c=.o)
@@ -25,20 +28,18 @@ NAME	=	42sh
 
 CC = gcc
 
-.PHONY: all clean fclean re lib include gitignore val delval
-.SILENT: all clean fclean re lib include gitignore val delval aa $(NAME) $(OBJ)
+.PHONY: all clean fclean re include gitignore val delval
+.SILENT: all clean fclean re include gitignore val delval aa $(NAME) $(OBJ)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@cd lib/my && make -s
 	@$(CC) $(OBJ) -o $(NAME) $(CFLAGS)
+
 clean:
 	@rm -f $(OBJ)
-	@cd lib/my && make clean -s
 
 include:
-	@cd lib/my && make minclude -s
 	@mkdir -p include
 	@echo "/*" > include/mysh.h
 	@echo "** EPITECH PROJECT, `date +"%Y"`" >> include/mysh.h
@@ -55,12 +56,7 @@ include:
 	@echo "" >> include/mysh.h
 	@echo "#endif" >> include/mysh.h
 
-aa: include lib re
-
-lib:
-	@rm -f libmy.a
-	@cd lib/my && make clean -s
-	@cd lib/my && make -s
+aa: minclude re
 
 gitignore:
 	@echo "vgcore*" >> .gitignore
@@ -69,8 +65,7 @@ gitignore:
 	@echo "libmy.a" >> .gitignore
 
 val:
-	@cd lib/my && make val -s
-	@gcc $(SRC) -g -o $(NAME) -I./include -L. -lmy
+	@gcc $(SRC) -g -o $(NAME) -I./include
 	@valgrind ./$(NAME)
 
 delval:
@@ -84,7 +79,6 @@ fclean: clean delval
 
 re:    fclean all
 	@rm -f $(OBJ)
-	@cd lib/my && make re -s
 
 tests_run: all
 	@mv $(NAME) tests/
