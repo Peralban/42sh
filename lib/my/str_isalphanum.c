@@ -1,19 +1,19 @@
 /*
 ** EPITECH PROJECT, 2022
-** epitech
+** minishell
 ** File description:
-** my_start_with.c
+** str_isalpahnum.c
 */
 
 #include "my.h"
 #include <stdbool.h>
 
-bool my_start_with(char *src, char *cmp)
+bool str_isalphanum(char *str)
 {
     int i = 0;
 
-    while (cmp[i] != '\0') {
-        if (cmp[i] != src[i])
+    while (str[i] != '\0') {
+        if (char_isnum(str[i]) == false && char_isalpha(str[i]) == false)
             return false;
         i++;
     }
