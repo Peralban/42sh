@@ -13,6 +13,6 @@ int built_in(char **cmd, char **env, int *error);
 int parse_args_setenv(char **args);
 int my_unsetenv(char **args, char **env);
 int my_setenv(char **args, char **env);
-void my_exit(char **cmd, int *error);
+int my_exit(char **cmd, int *error);
 
 #endif

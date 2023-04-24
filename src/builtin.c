@@ -11,7 +11,6 @@
 
 int built_in(char **cmd, char **env, int *error)
 {
-    (void) *error;
     if (strcmp(cmd[0], "cd") == 0)
         return 1;
     if (strcmp(cmd[0], "env") == 0)
@@ -21,6 +20,6 @@ int built_in(char **cmd, char **env, int *error)
     if (strcmp(cmd[0], "unsetenv") == 0)
         return my_unsetenv(cmd, env);
     if (strcmp(cmd[0], "exit") == 0)
-        return 1;
+        return my_exit(cmd, error);
     return 2;
 }

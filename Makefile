@@ -28,18 +28,21 @@ NAME	=	42sh
 
 CC = gcc
 
-.PHONY: all clean fclean re include gitignore val delval
-.SILENT: all clean fclean re include gitignore val delval aa $(NAME) $(OBJ)
+.PHONY: all clean fclean re lib include gitignore val delval
+.SILENT: all clean fclean re lib include gitignore val delval a $(NAME) $(OBJ)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
+	@make -s -C lib/my
 	@$(CC) $(OBJ) -o $(NAME) $(CFLAGS)
 
 clean:
 	@rm -f $(OBJ)
+	@make clean -s -C lib/my
 
 include:
+	@make minclude -s -C lib/my
 	@mkdir -p include
 	@echo "/*" > include/mysh.h
 	@echo "** EPITECH PROJECT, `date +"%Y"`" >> include/mysh.h
@@ -56,7 +59,12 @@ include:
 	@echo "" >> include/mysh.h
 	@echo "#endif" >> include/mysh.h
 
-aa: minclude re
+a: include lib re
+
+lib:
+	@rm -f libmy.a
+	@make clean -s -C lib/my
+	@make -s -C lib/my
 
 gitignore:
 	@echo "vgcore*" >> .gitignore
@@ -65,7 +73,8 @@ gitignore:
 	@echo "libmy.a" >> .gitignore
 
 val:
-	@gcc $(SRC) -g -o $(NAME) -I./include
+	@make val -s -C lib/my
+	@$(CC) $(SRC) -g -o $(NAME) $(CFLAGS)
 	@valgrind ./$(NAME)
 
 delval:
@@ -79,6 +88,7 @@ fclean: clean delval
 
 re:    fclean all
 	@rm -f $(OBJ)
+	@make re -s -C lib/my
 
 tests_run: all
 	@mv $(NAME) tests/
