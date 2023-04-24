@@ -6,6 +6,10 @@
 ##
 
 SRC	=	src/main.c					\
+		src/builtin.c				\
+		src/parse_args_setenv.c		\
+		src/unsetenv.c				\
+		src/setenv.c				\
 
 OBJ	=   $(SRC:.c=.o)
 
@@ -13,23 +17,31 @@ SATAN = -W -Wall -Wextra -Werror -Wshadow
 
 INCLUDE = -I./include
 
-CFLAGS = $(INCLUDE) $(SATAN)
+LIB =  -L. -lmy
+
+NCURSES = -lncurses
+
+CFLAGS = $(INCLUDE) $(SATAN) $(LIB) $(NCURSES)
 
 NAME	=	42sh
 
 CC = gcc
 
-.PHONY: all clean fclean re include gitignore val delval
-.SILENT: all clean fclean re include gitignore val delval aa $(NAME) $(OBJ)
+.PHONY: all clean fclean re lib include gitignore val delval
+.SILENT: all clean fclean re lib include gitignore val delval a $(NAME) $(OBJ)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
+	@make -s -C lib/my
 	@$(CC) $(OBJ) -o $(NAME) $(CFLAGS)
+
 clean:
 	@rm -f $(OBJ)
+	@make clean -s -C lib/my
 
 include:
+	@make minclude -s -C lib/my
 	@mkdir -p include
 	@echo "/*" > include/mysh.h
 	@echo "** EPITECH PROJECT, `date +"%Y"`" >> include/mysh.h
@@ -46,26 +58,36 @@ include:
 	@echo "" >> include/mysh.h
 	@echo "#endif" >> include/mysh.h
 
-aa: minclude re
+a: include lib re
+
+lib:
+	@rm -f libmy.a
+	@make clean -s -C lib/my
+	@make -s -C lib/my
 
 gitignore:
 	@echo "vgcore*" >> .gitignore
 	@echo $(NAME) >> .gitignore
 	@echo "*.o" >> .gitignore
+	@echo "libmy.a" >> .gitignore
 
 val:
-	@gcc $(SRC) -g -o $(NAME) -I./include
+	@make val -s -C lib/my
+	@$(CC) $(SRC) -g -o $(NAME) $(CFLAGS)
 	@valgrind ./$(NAME)
 
 delval:
 	@rm -f vgcore*
 	@rm -f a.out
+	@rm -f libmy.a
 
 fclean: clean delval
+	@rm -f libmy.a
 	@rm -f $(NAME)
 
 re:    fclean all
 	@rm -f $(OBJ)
+	@make re -s -C lib/my
 
 tests_run: all
 	@mv $(NAME) tests/

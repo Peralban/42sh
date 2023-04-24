@@ -1,0 +1,5 @@
+vgcore*
+42sh
+*.o
+libmy.a
+.vsco*
