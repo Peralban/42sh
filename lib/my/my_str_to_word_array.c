@@ -67,7 +67,6 @@ char **my_str_to_word_array(char *str, char *delim)
     int end = 0;
     int i = 1;
     char **arr = malloc(sizeof(char*));
-
     if (str == NULL || arr == NULL)
         return NULL;
     arr[0] = NULL;
