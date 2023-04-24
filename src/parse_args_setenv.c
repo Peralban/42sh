@@ -8,6 +8,7 @@
 #include "my.h"
 #include "mysh.h"
 
+//Function to check if the array gived is good
 int parse_args_setenv(char **args)
 {
     if (char_isnum(args[1][0]) == 1) {

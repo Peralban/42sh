@@ -21,7 +21,7 @@ OBJ	=   $(SRC:.c=.o)
 
 SATAN = -W -Wall -Wextra -Werror -Wshadow
 
-INCLUDE = -I../../include -g
+INCLUDE = -I../../include
 
 CFLAGS = $(INCLUDE) $(SATAN)
 

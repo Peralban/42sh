@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+//Function to add variable with (or not) is value in env array
 static void my_realloc_env(char **env, int array_size)
 {
     char **new_env = malloc(sizeof(char *) * (array_size));
@@ -77,9 +78,9 @@ int my_setenv(char **args, char **env)
         my_putstr("setenv: Too many arguments.\n");
         return 1;
     } else if (args[1] == NULL) {
-        print_array(env);
-        return 0;
-    } if (parse_args_setenv(args) == 1)
+        return print_array(env);
+    }
+    if (parse_args_setenv(args) == 1)
         return 1;
     tmp = malloc(sizeof(char) * (strlen(args[1]) + 2));
     tmp = strcat(args[1], "=");

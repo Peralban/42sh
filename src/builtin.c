@@ -12,21 +12,15 @@
 int built_in(char **cmd, char **env, int *error)
 {
     (void) *error;
-    if (strcmp(cmd[0], "cd") == 0) {
-        // my_cd(cmd, env);
+    if (strcmp(cmd[0], "cd") == 0)
         return 1;
-    } if (strcmp(cmd[0], "env") == 0) {
-        print_array(env);
+    if (strcmp(cmd[0], "env") == 0)
+        return print_array(env);
+    if (strcmp(cmd[0], "setenv") == 0)
+        return my_setenv(cmd, env);
+    if (strcmp(cmd[0], "unsetenv") == 0)
+        return my_unsetenv(cmd, env);
+    if (strcmp(cmd[0], "exit") == 0)
         return 1;
-    } if (strcmp(cmd[0], "setenv") == 0) {
-        my_setenv(cmd, env);
-        return 1;
-    } if (strcmp(cmd[0], "unsetenv") == 0) {
-        my_unsetenv(cmd, env);
-        return 1;
-    } if (strcmp(cmd[0], "exit") == 0) {
-        // my_exit(cmd, error);
-        return 1;
-    }
-    return 0;
+    return 2;
 }

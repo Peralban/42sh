@@ -15,7 +15,7 @@ int my_arraylen(char **array);
 int print_array(char **array);
 bool my_start_with(char *src, char *cmp);
 void arr_remove(char ***arr_p, int i);
-void arr_append(char ***arr_p, char *elem);
+int arr_append(char ***arr_p, char *elem);
 bool isin(char c, char *delim);
 char *my_strdupij(char *str, int begin, int end);
 char **my_str_to_word_array(char *str, char *delim);

@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+//Function to delete one or many variable(s) in env array
 static int my_unsetenv_bis(char **args, char **env, int i)
 {
     for (int index = 0; env[index] != NULL; index++) {
@@ -30,7 +30,8 @@ int my_unsetenv(char **args, char **env)
     if (nbr_args < 2) {
         my_putstr("unsetenv: Too few arguments.\n");
         return 1;
-    } for (int i = 1; args[i] != NULL; i++) {
+    }
+    for (int i = 1; args[i] != NULL; i++) {
         tmp = malloc(sizeof(char) * (strlen(args[i]) + 2));
         tmp = strcat(args[i], "=");
         args[i] = strdup(tmp);
