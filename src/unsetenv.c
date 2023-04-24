@@ -11,7 +11,7 @@
 #include <string.h>
 
 //Function to delete one or many variable(s) in env array
-static int my_unsetenv_bis(char **args, char **env, int i)
+static int delete_var(char **args, char **env, int i)
 {
     for (int index = 0; env[index] != NULL; index++) {
         if (my_start_with(env[index], args[i]) == 1) {
@@ -35,7 +35,7 @@ int my_unsetenv(char **args, char **env)
         tmp = malloc(sizeof(char) * (strlen(args[i]) + 2));
         tmp = strcat(args[i], "=");
         args[i] = strdup(tmp);
-        my_unsetenv_bis(args, env, i);
+        delete_var(args, env, i);
     }
     free(tmp);
     return 0;
