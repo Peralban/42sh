@@ -20,9 +20,10 @@ int main(int ac, char **av, char **env)
     char **cmd = NULL;
     char **env_cpy = my_arraydup(env);
 
-    (void)ac;
-    (void)av;
+    if (var_are_init(env_cpy) == false)
+        setup_env(env_cpy);
     while (!error) {
+        print_prompt(env_cpy);
         if (getline(&line, &size, stdin) == -1) {
             break;
         }
@@ -30,7 +31,6 @@ int main(int ac, char **av, char **env)
         cmd = my_str_to_word_array(line, " \t");
         if (built_in(cmd, env_cpy, &error) != 2)
             continue;
-        print_array(cmd);
     }
     return 0;
 }
