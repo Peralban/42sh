@@ -14,10 +14,11 @@ SRC	=	src/main.c					\
 		src/print_prompt.c			\
 		src/my_getpwd.c				\
 		src/set_environment.c		\
+		src/var_are_init.c			\
 
 OBJ	=   $(SRC:.c=.o)
 
-SATAN = -W -Wall -Wextra -Werror -Wshadow
+SATAN = -W -Wall -Wextra -Wshadow
 
 INCLUDE = -I./include
 
@@ -53,6 +54,8 @@ include:
 	@echo "** File description:" >> include/mysh.h
 	@echo "** The mysh's include file" >> include/mysh.h
 	@echo "*/" >> include/mysh.h
+	@echo "" >> include/mysh.h
+	@echo "#include <stdbool.h>" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "#ifndef __"mysh"_H" >> include/mysh.h
 	@echo "    #define __"mysh"_H" >> include/mysh.h
