@@ -31,16 +31,20 @@ static char *gethome(char *actual_pwd)
 }
 
 // This function set the environment variables [pwd, home, user and oldpwd].
-static void set_environment(char *home)
+static void set_environment(char *home, char **env)
 {
     char **array_home = my_str_to_word_array(home, "/");
     char *usr = strdup(array_home[1]);
     char *pwd = my_getpwd();
+    char *setenv_cmd[4][4] = {
+        {"setenv", strdup("PWD"), pwd, NULL},
+        {"setenv", strdup("HOME"), home, NULL},
+        {"setenv", strdup("USER"), usr, NULL},
+        {"setenv", strdup("OLDPWD"), strdup(""), NULL}
+        };
 
-    setenv("PWD", pwd, 1);
-    setenv("HOME", home, 1);
-    setenv("USER", usr, 1);
-    setenv("OLDPWD", "", 1);
+    for (int i = 0; i < 4; i++)
+        my_setenv(setenv_cmd[i], env);
     free(pwd);
     free(usr);
     free(home);
@@ -48,12 +52,12 @@ static void set_environment(char *home)
 
 // This function set the environment variables.
 // It's call in the main function.
-int setup_env(void)
+int setup_env(char **env)
 {
     char *actual_pwd = my_getpwd();
     char *home = NULL;
 
     home = gethome(actual_pwd);
-    set_environment(home);
+    set_environment(home, env);
     return 0;
 }

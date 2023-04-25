@@ -13,17 +13,17 @@
 #include <string.h>
 
 // This function print the prompt. And a '~' for replace the home directory.
-int print_prompt(void)
+int print_prompt(char **env)
 {
+    char *home = my_getenv(env, "HOME");
     char *prompt = NULL;
     char *pwd = my_getpwd();
-    char *home = getenv("HOME");
 
     if (isatty(0) == 0)
         return 0;
     if (my_start_with(pwd, home)) {
         prompt = strdup("~");
-        prompt = realloc(prompt, strlen(prompt) + strlen(pwd) + 1);
+        prompt = realloc(prompt, strlen(prompt) + strlen(pwd) + 3);
         prompt = strcat(prompt, pwd + strlen(home));
     } else {
         prompt = strdup(pwd);
