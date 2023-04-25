@@ -18,6 +18,5 @@ char *my_getpwd(void)
 
     getcwd(tmp_pwd, 1024);
     pwd = strdup(tmp_pwd);
-    free(tmp_pwd);
     return pwd;
 }
