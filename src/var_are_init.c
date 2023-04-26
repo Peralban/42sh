@@ -24,7 +24,7 @@ bool var_are_init(char **env)
 {
     int env_size = my_arraylen(env);
     int var_init = 0;
-    char *var[] = {"HOME", "PWD", "OLDPWD", "USER"};
+    char *var[] = {"HOME=", "PWD=", "OLDPWD=", "USER="};
 
     for (int index = 0; index < env_size; index++) {
         loop_var_init(env, &var_init, index, var);
