@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "mysh.h"
 #include "my.h"
 
@@ -14,10 +15,10 @@
 // and print "exit". Also sets the error variable to 1. To break the main loop.
 int my_exit(char **cmd, int *error)
 {
-    int len = 0;
+    int len = my_arraylen(cmd);
 
     *error = 1;
-    if (cmd != NULL) {
+    if (strcmp(cmd[0], "Error") != 0) {
         for (int i = 0; i < len; i++) {
             free(cmd[i]);
         }

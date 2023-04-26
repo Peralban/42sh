@@ -26,7 +26,7 @@ int main(int ac, char **av, char **env)
     while (!error) {
         print_prompt(env_cpy, result_cmd);
         if (getline(&line, &size, stdin) == -1)
-            my_exit(NULL, &error);
+            my_exit((char *[2]){"Error", NULL}, &error);
         line[strlen(line) - 1] = '\0';
         cmd = my_str_to_word_array(line, " \t");
         if (built_in(cmd, env_cpy, &error) != 2)
