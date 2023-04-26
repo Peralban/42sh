@@ -27,9 +27,8 @@ int arr_append(char ***arr_p, char *elem)
 {
     char **arr = arr_p[0];
     char **tmp = NULL;
-    int len = 0;
+    int len = my_arraylen(arr);
 
-    for (; arr[len] != NULL; len++);
     tmp = malloc(sizeof(char*) * (len + 2));
     if (tmp == NULL || elem == NULL)
         return 1;
@@ -58,6 +57,7 @@ char *my_strdupij(char *str, int begin, int end)
         return NULL;
     for (int i = begin; i < end; i++)
         tmp[i - begin] = str[i];
+    tmp[end - begin] = '\0';
     return tmp;
 }
 
