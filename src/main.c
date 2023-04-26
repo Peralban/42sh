@@ -19,14 +19,14 @@ int main(int ac, char **av, char **env)
     int error = 0;
     char **cmd = NULL;
     char **env_cpy = my_arraydup(env);
+    int result_cmd = 0;
 
     if (var_are_init(env_cpy) == false)
         setup_env(env_cpy);
     while (!error) {
-        print_prompt(env_cpy);
-        if (getline(&line, &size, stdin) == -1) {
-            break;
-        }
+        print_prompt(env_cpy, result_cmd);
+        if (getline(&line, &size, stdin) == -1)
+            my_exit(NULL, &error);
         line[strlen(line) - 1] = '\0';
         cmd = my_str_to_word_array(line, " \t");
         if (built_in(cmd, env_cpy, &error) != 2)
