@@ -10,6 +10,7 @@ SRC	=	src/main.c					\
 		src/parse_args_setenv.c		\
 		src/unsetenv.c				\
 		src/setenv.c				\
+		src/my_exit.c				\
 
 OBJ	=   $(SRC:.c=.o)
 
