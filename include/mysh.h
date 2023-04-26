@@ -17,7 +17,7 @@ int my_unsetenv(char **args, char **env);
 int my_setenv(char **args, char **env);
 int my_exit(char **cmd, int *error);
 char *my_getenv(char **env, char *str);
-int print_prompt(char **env);
+int print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 int setup_env(char **env);
 bool var_are_init(char **env);
