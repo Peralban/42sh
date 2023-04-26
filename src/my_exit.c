@@ -14,13 +14,15 @@
 // and print "exit". Also sets the error variable to 1. To break the main loop.
 int my_exit(char **cmd, int *error)
 {
-    int len = my_arraylen(cmd);
+    int len = 0;
 
     *error = 1;
-    for (int i = 0; i < len; i++) {
-        free(cmd[i]);
+    if (cmd != NULL) {
+        for (int i = 0; i < len; i++) {
+            free(cmd[i]);
+        }
+        free(cmd);
     }
-    free(cmd);
     if (isatty(0) == 1)
         my_putstr("exit\n");
     return 1;
