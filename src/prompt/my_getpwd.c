@@ -16,6 +16,8 @@ char *my_getpwd(void)
     char *tmp_pwd = malloc(sizeof(char) * 1024);
     char *pwd = NULL;
 
+    if (tmp_pwd == NULL)
+        return NULL;
     getcwd(tmp_pwd, 1024);
     pwd = strdup(tmp_pwd);
     return pwd;
