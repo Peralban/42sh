@@ -52,7 +52,7 @@ static int variable_and_value(char **env, char **args)
     int array_size = my_arraylen(env);
     int i = 0;
 
-    while ( env[i] != NULL && array_size != 0) {
+    while (env[i] != NULL && array_size != 0) {
         if (my_start_with(env[i], args[1]) == 1) {
             env[i] = malloc(sizeof(char) *
             (strlen(args[1]) + strlen(args[2]) + 2));
