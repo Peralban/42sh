@@ -5,13 +5,15 @@
 ## Makefile
 ##
 
-SRC	=	src/main.c					\
-		src/builtin.c				\
-		src/parse_args_setenv.c		\
-		src/unsetenv.c				\
-		src/setenv.c				\
-		src/echo.c					\
-		src/echo_special_cases.c
+SRC	=	src/main.c						\
+		src/builtin.c					\
+		src/parse_args_setenv.c			\
+		src/unsetenv.c					\
+		src/setenv.c					\
+		src/echo/echo.c					\
+		src/echo/echo_special_cases.c
+
+TEST_SRC = tests/test_my_sh.c
 
 OBJ	=   $(SRC:.c=.o)
 
@@ -95,3 +97,7 @@ tests_run: all
 	@mv $(NAME) tests/
 	@cd tests && ./tester.sh
 	@rm -f tests/$(NAME)
+
+run_tests:
+	@$(CC) -o unit_tests $(TEST_SRC) $(CFLAGS) -L. -lmy --coverage -lcriterion
+	./unit_tests

@@ -11,22 +11,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-char *handle_backslash(char *str, char *new_str, int i, int j)
-{
-    char *tmp = NULL;
-
-    tmp = find_special_char(str[i + 1]);
-        if (strlen(tmp) == 2) {
-            new_str[j] = tmp[0];
-            new_str[j + 1] = tmp[1];
-            j++;
-        } else
-            new_str[j] = tmp[0];
-    i++;
-    j++;
-    return new_str;
-}
-
 char *adapt_str(char *str, int nb_quotes)
 {
     int size = strlen(str) - nb_quotes;
@@ -38,6 +22,8 @@ char *adapt_str(char *str, int nb_quotes)
             continue;
         if (str[i] == '\\' && str[i + 1] != '\0' && str[i + 1] != 34) {
             handle_backslash(str, new_str, i, j);
+            i++;
+            j++;
             continue;
         }
         new_str[j] = str[i];
@@ -61,18 +47,31 @@ char *test_special_cases(char *str)
     return adapt_str(str, nb_quotes);
 }
 
+char *tab_to_str(char **cmd)
+{
+    char *str = NULL;
+    int size = 0;
+
+    for (int i = 1; cmd[i] != NULL; i++)
+        size += strlen(cmd[i]) + 1;
+    str = malloc(sizeof(char) * size + 1);
+    for (int i = 1; cmd[i] != NULL; i++) {
+        strcat(str, cmd[i]);
+        if (cmd[i + 1] != NULL)
+            strcat(str, " ");
+    }
+    return str;
+}
+
 int my_echo(char **cmd, int *error)
 {
     bool opt = ((cmd[1] != NULL && strcmp(cmd[1], "-n") == 0) ? true : false);
+    char *str_cmd = tab_to_str(cmd);
     char *str = NULL;
     (void)error;
 
-    for (int i = 1 + opt; cmd[i] != NULL; i++) {
-        str = test_special_cases(cmd[i]);
-        printf("%s", str);
-        if (cmd[i + 1] != NULL)
-            printf(" ");
-    }
+    str = test_special_cases(str_cmd);
+    printf("%s", str);
     if (!opt)
         printf("\n");
     return 0;

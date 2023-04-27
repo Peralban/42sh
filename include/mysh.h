@@ -13,7 +13,10 @@ int built_in(char **cmd, char **env, int *error);
 int parse_args_setenv(char **args);
 int my_unsetenv(char **args, char **env);
 int my_setenv(char **args, char **env);
+
+//built-in echo functions
 int my_echo(char **cmd, int *error);
 char *find_special_char(char c);
+char *handle_backslash(char *str, char *new_str, int i, int j);
 
 #endif
