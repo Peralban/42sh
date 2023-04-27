@@ -5,17 +5,17 @@
 ## Makefile
 ##
 
-SRC	=	src/main.c					\
-		src/builtin.c				\
-		src/parse_args_setenv.c		\
-		src/unsetenv.c				\
-		src/setenv.c				\
-		src/my_exit.c				\
-		src/my_getenv.c				\
-		src/print_prompt.c			\
-		src/my_getpwd.c				\
-		src/set_environment.c		\
-		src/var_are_init.c			\
+SRC	=	src/main.c						\
+		src/builtin/builtin.c				\
+		src/builtin/parse_args_setenv.c		\
+		src/builtin/unsetenv.c				\
+		src/builtin/setenv.c				\
+		src/builtin/my_exit.c				\
+		src/prompt/my_getenv.c				\
+		src/prompt/print_prompt.c			\
+		src/prompt/my_getpwd.c				\
+		src/builtin/set_environment.c		\
+		src/prompt/var_are_init.c			\
 
 OBJ	=   $(SRC:.c=.o)
 
