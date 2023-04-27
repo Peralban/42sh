@@ -10,6 +10,7 @@ SRC	=	src/main.c						\
 		src/parse_args_setenv.c			\
 		src/unsetenv.c					\
 		src/setenv.c					\
+    src/my_exit.c				\
 		src/echo/echo.c					\
 		src/echo/echo_special_cases.c
 
