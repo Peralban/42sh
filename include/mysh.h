@@ -16,7 +16,7 @@ int parse_args_setenv(char **args);
 int my_unsetenv(char **args, char **env);
 int my_setenv(char **args, char **env);
 int my_exit(char **cmd, int *error);
-char *my_getenv(char **env, char *str);
+char *my_getenv(char **env, char *var);
 int print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 int setup_env(char **env);
