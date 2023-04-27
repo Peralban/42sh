@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-SRC	=	src/main.c						\
+SRC	=	src/main.c							\
 		src/builtin/builtin.c				\
 		src/builtin/parse_args_setenv.c		\
 		src/builtin/unsetenv.c				\
@@ -16,8 +16,8 @@ SRC	=	src/main.c						\
 		src/prompt/my_getpwd.c				\
 		src/builtin/set_environment.c		\
 		src/prompt/var_are_init.c			\
-		src/echo/echo.c					\
-		src/echo/echo_special_cases.c
+		src/builtin/echo.c					\
+		src/builtin/echo_special_cases.c
 
 TEST_SRC = tests/test_my_sh.c
 
