@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static void arr_remove(char ***arr_p, int i)
+void arr_remove(char ***arr_p, int i)
 {
     char **arr = arr_p[0];
     int j = 0;
@@ -49,7 +49,7 @@ static bool isin(char c, char *delim)
     return false;
 }
 
-static static char *my_strdupij(char *str, int begin, int end)
+static char *my_strdupij(char *str, int begin, int end)
 {
     char *tmp = malloc(end - begin + 1);
 
