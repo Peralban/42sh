@@ -17,6 +17,8 @@ char *adapt_str(char *str, int nb_quotes)
     char *new_str = malloc(sizeof(char) * size + 1);
     int j = 0;
 
+    if (new_str == NULL)
+        return NULL;
     for (int i = 0; str[i] != '\0'; i++) {
         if (str[i] == '\"')
             continue;
@@ -55,6 +57,8 @@ char *tab_to_str(char **cmd)
     for (int i = 1; cmd[i] != NULL; i++)
         size += strlen(cmd[i]) + 1;
     str = malloc(sizeof(char) * size + 1);
+    if (str == NULL)
+        return NULL;
     for (int i = 1; cmd[i] != NULL; i++) {
         strcat(str, cmd[i]);
         if (cmd[i + 1] != NULL)

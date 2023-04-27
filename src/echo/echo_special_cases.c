@@ -53,10 +53,7 @@ char *handle_backslash(char *str, char *new_str, int i, int j)
         if (strlen(tmp) == 2) {
             new_str[j] = tmp[0];
             new_str[j + 1] = tmp[1];
-            j++;
         } else
             new_str[j] = tmp[0];
-    i++;
-    j++;
     return new_str;
 }
