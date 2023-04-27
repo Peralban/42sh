@@ -11,6 +11,7 @@ SRC	=	src/main.c					\
 		src/unsetenv.c				\
 		src/setenv.c				\
 		src/my_exit.c				\
+		src/my_cd.c					\
 
 OBJ	=   $(SRC:.c=.o)
 
