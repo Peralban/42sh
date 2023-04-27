@@ -31,12 +31,11 @@ int main(int ac, char **av, char **env)
     int error = 0;
     char **cmd = NULL;
     char **env_cpy = my_arraydup(env);
-    int result_cmd = 0;
 
     if (var_are_init(env_cpy) == false)
         setup_env(env_cpy);
-    while (!error) {
-        print_prompt(env_cpy, result_cmd);
+    while (error != -1) {
+        print_prompt(env_cpy, error);
         line = my_getline(&error);
         if (line == NULL)
             continue;

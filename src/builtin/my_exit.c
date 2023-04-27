@@ -17,7 +17,7 @@ int my_exit(char **cmd, int *error)
 {
     int len = my_arraylen(cmd);
 
-    *error = 1;
+    *error = -1;
     if (strcmp(cmd[0], "Error") != 0) {
         for (int i = 0; i < len; i++) {
             free(cmd[i]);
