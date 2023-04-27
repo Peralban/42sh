@@ -6,10 +6,16 @@
 ##
 
 SRC	=	src/main.c						\
-		src/builtin.c					\
-		src/parse_args_setenv.c			\
-		src/unsetenv.c					\
-		src/setenv.c					\
+		src/builtin/builtin.c				\
+		src/builtin/parse_args_setenv.c		\
+		src/builtin/unsetenv.c				\
+		src/builtin/setenv.c				\
+		src/builtin/my_exit.c				\
+		src/prompt/my_getenv.c				\
+		src/prompt/print_prompt.c			\
+		src/prompt/my_getpwd.c				\
+		src/builtin/set_environment.c		\
+		src/prompt/var_are_init.c			\
 		src/echo/echo.c					\
 		src/echo/echo_special_cases.c
 
@@ -17,7 +23,7 @@ TEST_SRC = tests/test_my_sh.c
 
 OBJ	=   $(SRC:.c=.o)
 
-SATAN = -W -Wall -Wextra -Werror -Wshadow
+SATAN = -W -Wall -Wextra -Wshadow
 
 INCLUDE = -I./include
 
@@ -53,6 +59,8 @@ include:
 	@echo "** File description:" >> include/mysh.h
 	@echo "** The mysh's include file" >> include/mysh.h
 	@echo "*/" >> include/mysh.h
+	@echo "" >> include/mysh.h
+	@echo "#include <stdbool.h>" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "#ifndef __"mysh"_H" >> include/mysh.h
 	@echo "    #define __"mysh"_H" >> include/mysh.h
