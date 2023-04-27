@@ -56,7 +56,8 @@ char *tab_to_str(char **cmd)
 
     for (int i = 1; cmd[i] != NULL; i++)
         size += strlen(cmd[i]) + 1;
-    str = malloc(sizeof(char) * size + 1);
+    str = malloc(sizeof(char) * size);
+    str[0] = '\0';
     if (str == NULL)
         return NULL;
     for (int i = 1; cmd[i] != NULL; i++) {
@@ -75,7 +76,7 @@ int my_echo(char **cmd, int *error)
     (void)error;
 
     str = test_special_cases(str_cmd);
-    printf("%s", str);
+    printf("%s", strdup(str));
     if (!opt)
         printf("\n");
     return 0;
