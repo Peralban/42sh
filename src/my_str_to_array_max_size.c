@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include "../include/my_getline.h"
+#include "../include/my.h"
 
 char *my_strdupij_endin(const char *str, int begin, int end)
 {
@@ -19,14 +20,6 @@ char *my_strdupij_endin(const char *str, int begin, int end)
         new_str[j] = str[i];
     new_str[j] = '\0';
     return new_str;
-}
-
-int isin(char c, const char *delim)
-{
-    for (int i = 0; delim[i] != '\0'; i++)
-        if (c == delim[i])
-            return 1;
-    return 0;
 }
 
 void add_to_arr(char ***arr, char *str, int *swa)
@@ -53,6 +46,7 @@ void get_word(char *str, char *delim, char ***arr, int *swa)
     if (swa[SWA_K] >= swa[SWA_MAX] - 2 && !isin(str[swa[SWA_I] - 1], delim) &&
     !isin(str[swa[SWA_I]], delim)) {
         add_to_arr(arr, str, swa);
+        swa[SWA_K]--;
         swa[SWA_BEGIN] = swa[SWA_I] + 1;
         if (isin(str[swa[SWA_I] + 1], delim))
             swa[SWA_I]++;

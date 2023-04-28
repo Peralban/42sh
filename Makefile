@@ -8,15 +8,16 @@
 SRC	=	src/main.c					\
 		src/builtin.c				\
 		src/destroy_array.c			\
-		src/my_getline.c			\
+		src/my_getline_ncurses.c	\
 		src/my_str_to_array_max_size.c	\
 		src/parse_args_setenv.c		\
 		src/unsetenv.c				\
 		src/setenv.c				\
+		src/write_in_term.c			\
 
 OBJ	=   $(SRC:.c=.o)
 
-SATAN = -W -Wall -Wextra -Werror -Wshadow
+SATAN = -W -Wall -Wextra -Wshadow
 
 INCLUDE = -I./include
 
