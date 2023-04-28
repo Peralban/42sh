@@ -37,14 +37,14 @@ static void set_environment(char *home, char **env)
     char *usr = strdup(array_home[1]);
     char *pwd = my_getpwd();
     char *setenv_cmd[4][4] = {
-        {"setenv", strdup("PWD"), pwd, NULL},
         {"setenv", strdup("HOME"), home, NULL},
         {"setenv", strdup("USER"), usr, NULL},
-        {"setenv", strdup("OLDPWD"), strdup(""), NULL}
+        {"setenv", strdup("OLDPWD"), strdup(""), NULL},
+        {"setenv", strdup("PWD"), pwd, NULL}
         };
 
     for (int i = 0; i < 4; i++)
-        my_setenv(setenv_cmd[i], env);
+        my_setenv(setenv_cmd[i], env, (int *) {0});
     free(pwd);
     free(usr);
     free(home);
