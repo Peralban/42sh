@@ -75,7 +75,7 @@ int my_setenv(char **args, char **env, int *return_value)
     char *tmp = NULL;
 
     if (nbr_args > 3) {
-        my_putstr("setenv: Too many arguments.\n");
+        my_puterror("setenv: Too many arguments.\n");
         *return_value = 1;
         return 1;
     } else if (args[1] == NULL)

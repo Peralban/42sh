@@ -28,7 +28,7 @@ int my_unsetenv(char **args, char **env, int *return_value)
     char *tmp = NULL;
 
     if (nbr_args < 2) {
-        my_putstr("unsetenv: Too few arguments.\n");
+        my_puterror("unsetenv: Too few arguments.\n");
         *return_value = 1;
         return 1;
     }
