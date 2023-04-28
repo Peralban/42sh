@@ -1,4 +1,4 @@
-/*
+    /*
 ** EPITECH PROJECT, 2022
 ** 42sh
 ** File description:
@@ -69,13 +69,13 @@ int print_prompt(char **env, int result_cmd)
     if (isatty(0) == 0)
         return 0;
     if (my_start_with(pwd, home)) {
-        prompt = strdup("~");
-        prompt = realloc(prompt, strlen(prompt) + strlen(pwd));
-        prompt = strcat(prompt, pwd + strlen(home));
-    } else
-        prompt = strdup(pwd);
-    my_putstr("\033[1;34m");
-    my_putstr(prompt);
+        my_putstr("\033[1;34m~");
+        my_putstr("\033[1;34m");
+        my_putstr(pwd + strlen(home));
+    } else {
+        my_putstr("\033[1;34m");
+        my_putstr(pwd);
+    }
     is_github_folder(pwd, env);
     print_arrow(result_cmd);
     free(prompt);
