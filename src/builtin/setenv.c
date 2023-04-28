@@ -69,10 +69,9 @@ static int variable_and_value(char **env, char **args)
     return 0;
 }
 
-int my_setenv(char **args, char **env, int *return_value)
+static int setenv_error(char **args, int *return_value, char **env)
 {
     int nbr_args = my_arraylen(args);
-    char *tmp = NULL;
 
     if (nbr_args > 3) {
         my_puterror("setenv: Too many arguments.\n");
@@ -80,7 +79,18 @@ int my_setenv(char **args, char **env, int *return_value)
         return 1;
     } else if (args[1] == NULL)
         return print_array(env);
-    if (parse_args_setenv(args) == 1)
+    if (parse_args_setenv(args) == 1) {
+        *return_value = 1;
+        return 1;
+    }
+    return 0;
+}
+
+int my_setenv(char **args, char **env, int *return_value)
+{
+    char *tmp = NULL;
+
+    if (setenv_error(args, return_value, env) == 1)
         return 1;
     tmp = malloc(sizeof(char) * (strlen(args[1]) + 2));
     tmp = strcpy(tmp, args[1]);
