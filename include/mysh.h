@@ -23,4 +23,9 @@ int setup_env(char **env);
 bool var_are_init(char **env);
 int my_cd(char **cmd, char **env, int *error);
 
+//built-in echo functions
+int my_echo(char **cmd, int *error);
+char *find_special_char(char c);
+char *handle_backslash(char *str, char *new_str, int i, int j);
+
 #endif

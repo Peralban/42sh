@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-SRC	=	src/main.c						\
+SRC	=	src/main.c							\
 		src/builtin/builtin.c				\
 		src/builtin/parse_args_setenv.c		\
 		src/builtin/unsetenv.c				\
@@ -16,7 +16,11 @@ SRC	=	src/main.c						\
 		src/prompt/my_getpwd.c				\
 		src/builtin/set_environment.c		\
 		src/prompt/var_are_init.c			\
+		src/builtin/echo.c					\
+		src/builtin/echo_special_cases.c
 		src/my_cd.c					\
+
+TEST_SRC = tests/test_my_sh.c
 
 OBJ	=   $(SRC:.c=.o)
 
@@ -102,3 +106,7 @@ tests_run: all
 	@mv $(NAME) tests/
 	@cd tests && ./tester.sh
 	@rm -f tests/$(NAME)
+
+run_tests:
+	@$(CC) -o unit_tests $(TEST_SRC) $(CFLAGS) -L. -lmy --coverage -lcriterion
+	./unit_tests
