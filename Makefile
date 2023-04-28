@@ -7,6 +7,9 @@
 
 SRC	=	src/main.c					\
 		src/builtin.c				\
+		src/destroy_array.c			\
+		src/my_getline.c			\
+		src/my_str_to_array_max_size.c	\
 		src/parse_args_setenv.c		\
 		src/unsetenv.c				\
 		src/setenv.c				\
@@ -52,6 +55,8 @@ include:
 	@echo "" >> include/mysh.h
 	@echo "#ifndef __"mysh"_H" >> include/mysh.h
 	@echo "    #define __"mysh"_H" >> include/mysh.h
+	@echo "" >> include/mysh.h
+	@echo "    #include <stddef.h>" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@cat $(SRC) | grep -B1 "^{" | grep "(" | grep -v "static" | sed \
 		s/"$$"/";"/ >> include/mysh.h

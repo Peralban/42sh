@@ -6,19 +6,11 @@
 */
 
 #include <stdlib.h>
+#include "../include/my_getline.h"
 
-typedef enum swa_e {
-    SWA_BEGIN,
-    SWA_END,
-    SWA_I,
-    SWA_N,
-    SWA_K,
-    SWA_MAX
-} swa_e;
-
-char *my_strdupij(char *str, int begin, int end)
+char *my_strdupij_endin(const char *str, int begin, int end)
 {
-    char *new_str = malloc(sizeof(char) * (end - begin + 1));
+    char *new_str = malloc(sizeof(char) * (end - begin + 2));
     int j = 0;
 
     if (new_str == NULL)
@@ -29,7 +21,7 @@ char *my_strdupij(char *str, int begin, int end)
     return new_str;
 }
 
-int isin(char c, char *delim)
+int isin(char c, const char *delim)
 {
     for (int i = 0; delim[i] != '\0'; i++)
         if (c == delim[i])
@@ -43,7 +35,7 @@ void add_to_arr(char ***arr, char *str, int *swa)
     (*arr) = realloc(*arr, sizeof(char*) * (swa[SWA_N] + 2));
     if (*arr == NULL)
         return;
-    (*arr)[swa[SWA_N]] = my_strdupij(str, swa[SWA_BEGIN], swa[SWA_END]);
+    (*arr)[swa[SWA_N]] = my_strdupij_endin(str, swa[SWA_BEGIN], swa[SWA_END]);
     (*arr)[swa[SWA_N] + 1] = NULL;
     swa[SWA_N]++;
     swa[SWA_K] = -1;
@@ -69,12 +61,16 @@ void get_word(char *str, char *delim, char ***arr, int *swa)
 
 char **my_str_to_word_array_max_size(char *str, char *delim, int max_size)
 {
-    int *swa = calloc(5, sizeof(int));
+    int *swa = malloc(sizeof(int) * (SWA_MAX));
     char **arr = malloc(sizeof(char*));
     if (str == NULL || arr == NULL || swa == NULL)
         return NULL;
     swa[SWA_MAX] = max_size;
     swa[SWA_I] = 1;
+    swa[SWA_N] = 0;
+    swa[SWA_K] = 0;
+    swa[SWA_BEGIN] = 0;
+    swa[SWA_END] = 0;
     arr[0] = NULL;
     for (; str[swa[SWA_I]] != 0; swa[SWA_I]++, swa[SWA_K]++) {
         get_word(str, delim, &arr, swa);
