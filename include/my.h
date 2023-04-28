@@ -14,6 +14,7 @@ int delete_str_in_array(char **array, int index);
 int my_arraylen(char **array);
 int print_array(char **array);
 bool my_start_with(char *src, char *cmp);
+void arr_remove(char ***arr_p, int i);
 char **my_str_to_word_array(char *str, char *delim);
 void my_putstr(char *str);
 bool char_isnum(char c);

@@ -12,13 +12,13 @@
 int built_in(char **cmd, char **env, int *error)
 {
     if (strcmp(cmd[0], "cd") == 0)
-        return 1;
+        return my_cd(cmd, env, error);
     if (strcmp(cmd[0], "env") == 0)
         return print_array(env);
     if (strcmp(cmd[0], "setenv") == 0)
-        return my_setenv(cmd, env);
+        return my_setenv(cmd, env, error);
     if (strcmp(cmd[0], "unsetenv") == 0)
-        return my_unsetenv(cmd, env);
+        return my_unsetenv(cmd, env, error);
     if (strcmp(cmd[0], "exit") == 0)
         return my_exit(cmd, error);
     if (strcmp(cmd[0], "echo") == 0)

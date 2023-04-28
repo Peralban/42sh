@@ -36,6 +36,7 @@ int main(int ac, char **av, char **env)
         setup_env(env_cpy);
     while (error != -1) {
         print_prompt(env_cpy, error);
+        error = 0;
         line = my_getline(&error);
         if (line == NULL)
             continue;
