@@ -6,23 +6,12 @@
 */
 
 #include "../include/mysh.h"
-#include "../include/my.h"
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-
-typedef struct vector_s {
-    int x;
-    int y;
-} vector_t;
-
-typedef struct cursor_s {
-    vector_t pos;
-    vector_t max;
-    vector_t base;
-} cursor_t;
+#include <sys/stat.h>
 
 bool is_printable(int ch)
 {
@@ -31,87 +20,86 @@ bool is_printable(int ch)
     return false;
 }
 
-const char prompt[] = "$ hello je suis un treeeeeeeeeeeeees long prompt> ";
+const char prompt[] = "$[hello je suis un treeeeeeeeeeeeees long prompt]\n> ";
 
-void check_resize(cursor_t *cursor, vector_t prompt_pos, char *str)
+void print_from_the_end(char *buffer)
 {
-    if (cursor->max.x != getmaxx(stdscr) || cursor->max.y != getmaxy(stdscr)) {
-        cursor->max.x = getmaxx(stdscr);
-        cursor->max.y = getmaxy(stdscr);
-        clear();
-        mvprintw(prompt_pos.y, prompt_pos.x, prompt);
-        cursor->base.x = getcurx(stdscr);
-        cursor->base.y = getcury(stdscr);
-        mvprintw(cursor->base.y, cursor->base.x, str);
-        cursor->pos.y = getcurx(stdscr);
-        cursor->pos.y = getcury(stdscr);
+    char **arr = my_str_to_word_array_max_size(buffer, "\n", getmaxx(stdscr));
+    int max_y = getmaxy(stdscr);
+    int start = 0;
+    int len = 0;
+
+    for (; arr[len] != NULL; len++);
+    if (len > max_y)
+        start = len - max_y;
+    for (int i = start; i < len; i++) {
+        mvprintw(i - start, 0, arr[i]);
     }
-    //encore des bug de resize a corriger le curseur ne se deplace pas correctement
-    //les anciennes lignes disparraissent
-    //revoir la position initial de la ligne pour la re-afficher
 }
 
-char *my_getline_ncurses(void)
+void display_term(char *term_name, char *line)
+{
+    int read_fd = open(term_name, O_RDONLY);
+    struct stat sb;
+    stat(term_name, &sb);
+    char *buffer = malloc(sizeof(char) * (sb.st_size + 1));
+    read(read_fd, buffer, sb.st_size);
+    buffer[sb.st_size] = '\0';
+    close(read_fd);
+    buffer = realloc(buffer, sizeof(char) * (strlen(buffer) + strlen(line) + 1));
+    strcat(buffer, line);
+    clear();
+    print_from_the_end(buffer);
+    free(buffer);
+}
+
+char *my_getline_ncurses(char *term_name)
 {
     initscr();
     noecho();
     keypad(stdscr, TRUE);
     curs_set(1);
 
-    vector_t prompt_pos = {getcurx(stdscr), getcury(stdscr)};
-    printw(prompt);
-    cursor_t *cursor = malloc(sizeof(cursor_t));
-    cursor->pos.x = getcurx(stdscr);
-    cursor->pos.y = getcury(stdscr);
-    cursor->max.x = getmaxx(stdscr);
-    cursor->max.y = getmaxy(stdscr);
-    cursor->base.x = getcurx(stdscr);
-    cursor->base.y = getcury(stdscr);
-    move(cursor->pos.y, cursor->pos.x);
-    char *str = malloc(sizeof(char) * 1);
-    if (str == NULL)
+    int fd = open(term_name, O_RDWR | O_APPEND);
+    if (fd == -1)
         return NULL;
-    str[0] = '\0';
+    write(fd, prompt, strlen(prompt));
+
+    char *line = malloc(sizeof(char) * 1);
+    if (line == NULL)
+        return NULL;
+    line[0] = '\0';
     int len = 0;
-    for (int ch = getch(); ch != 10; ch = getch()) {
-        check_resize(cursor, prompt_pos, str);
-        len = strlen(str);
+
+    display_term(term_name, line);
+    for (int ch = getch(); ch != 10; ch = getch(), len = strlen(line)) {
         if (ch == KEY_BACKSPACE && len > 0) {
-            cursor->pos.x--;
-            if (cursor->pos.x < 0) {
-                cursor->pos.x = getmaxx(stdscr) - 1;
-                cursor->pos.y--;
-                move(cursor->pos.y, cursor->pos.x);
-            }
-            mvdelch(cursor->pos.y, cursor->pos.x);
-            str = realloc(str, sizeof(char) * (len));
-            str[len - 1] = '\0';
+            line = realloc(line, sizeof(char) * (len));
+            line[len - 1] = '\0';
         } if (is_printable(ch)) {
-            str = realloc(str, sizeof(char) * (len + 2));
-            str[len] = ch;
-            str[len + 1] = '\0';
-            mvprintw(cursor->pos.y, cursor->pos.x, "%c", ch);
-            cursor->pos.x++;
-            if (cursor->pos.x >= getmaxx(stdscr)) {
-                cursor->pos.x = 0;
-                cursor->pos.y++;
-                move(cursor->pos.y, cursor->pos.x);
-            }
+            line = realloc(line, sizeof(char) * (len + 2));
+            line[len] = ch;
+            line[len + 1] = '\0';
         }
+        display_term(term_name, line);
     }
-    cursor->pos.y++;
-    cursor->pos.x = 0;
-    move(cursor->pos.y, cursor->pos.x);
-    endwin();
-    return str;
+    write(fd, line, strlen(line));
+    write(fd, "\n", 1);
+    close(fd);
+    return line;
 }
 
-int main(int argc, char **argv, char **env)
-{
-    char *str = NULL;
-    while (1) {
-        str = my_getline_ncurses();
-    }
-    free(str);
-    return 0;
-}
+//int main(int argc, char **argv, char **env)
+//{
+//    char *str = NULL;
+//    char *term_name = "tmp";
+//
+//    remove(term_name);
+//    int fd = open(term_name, O_CREAT, 0666);
+//    close(fd);
+//    while (1) {
+//        str = my_getline_ncurses(term_name);
+//    }
+//    remove(term_name);
+//    return 0;
+//}
