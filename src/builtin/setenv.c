@@ -69,13 +69,14 @@ static int variable_and_value(char **env, char **args)
     return 0;
 }
 
-int my_setenv(char **args, char **env)
+int my_setenv(char **args, char **env, int *return_value)
 {
     int nbr_args = my_arraylen(args);
     char *tmp = NULL;
 
     if (nbr_args > 3) {
         my_putstr("setenv: Too many arguments.\n");
+        *return_value = 1;
         return 1;
     } else if (args[1] == NULL)
         return print_array(env);
