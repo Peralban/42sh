@@ -22,4 +22,9 @@ char *my_getpwd(void);
 int setup_env(char **env);
 bool var_are_init(char **env);
 
+//built-in echo functions
+int my_echo(char **cmd, int *error);
+char *find_special_char(char c);
+char *handle_backslash(char *str, char *new_str, int i, int j);
+
 #endif
