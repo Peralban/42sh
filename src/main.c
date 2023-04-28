@@ -32,6 +32,18 @@ char *my_get_line(void)
     return line;
 }
 
+static char *my_getline(int *error)
+{
+    char *line = NULL;
+
+    if (getline(&line, &size, stdin) == -1) {
+        my_exit((char *[2]){"Error", NULL}, error);
+        return NULL;
+    }
+    line[strlen(line) - 1] = '\0';
+    return line;
+}
+
 int main(int ac, char **av, char **env)
 {
     char *line = NULL;
@@ -39,6 +51,15 @@ int main(int ac, char **av, char **env)
     char **cmd = NULL;
     char **env_cpy = my_arraydup(env);
 
+    if (var_are_init(env_cpy) == false)
+        setup_env(env_cpy);
+    while (error != -1) {
+        print_prompt(env_cpy, error);
+        error = 0;
+        line = my_getline(&error);
+        if (line == NULL)
+            continue;
+            -----------------
     (void)ac;
     (void)av;
     remove(def_term_name);
@@ -48,6 +69,7 @@ int main(int ac, char **av, char **env)
         line = my_get_line();
         if (line == NULL)
             break;
+            -------------------
         cmd = my_str_to_word_array(line, " \t");
         free(line);
         if (built_in(cmd, env_cpy, &error) != 2)

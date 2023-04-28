@@ -5,15 +5,22 @@
 ## Makefile
 ##
 
-SRC	=	src/main.c					\
-		src/builtin.c				\
-		src/destroy_array.c			\
-		src/my_getline_ncurses.c	\
-		src/my_str_to_array_max_size.c	\
-		src/parse_args_setenv.c		\
-		src/unsetenv.c				\
-		src/setenv.c				\
-		src/write_in_term.c			\
+SRC	=	src/main.c							\
+		src/builtin/builtin.c				\
+		src/builtin/parse_args_setenv.c		\
+		src/builtin/unsetenv.c				\
+		src/builtin/setenv.c				\
+		src/builtin/my_exit.c				\
+		src/prompt/my_getenv.c				\
+		src/prompt/print_prompt.c			\
+		src/prompt/my_getpwd.c				\
+		src/builtin/set_environment.c		\
+		src/prompt/var_are_init.c			\
+		src/builtin/echo.c					\
+		src/builtin/echo_special_cases.c	\
+		src/builtin/my_cd.c					\
+
+TEST_SRC = tests/test_my_sh.c
 
 OBJ	=   $(SRC:.c=.o)
 
@@ -53,6 +60,8 @@ include:
 	@echo "** File description:" >> include/mysh.h
 	@echo "** The mysh's include file" >> include/mysh.h
 	@echo "*/" >> include/mysh.h
+	@echo "" >> include/mysh.h
+	@echo "#include <stdbool.h>" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "#ifndef __"mysh"_H" >> include/mysh.h
 	@echo "    #define __"mysh"_H" >> include/mysh.h
@@ -99,3 +108,7 @@ tests_run: all
 	@mv $(NAME) tests/
 	@cd tests && ./tester.sh
 	@rm -f tests/$(NAME)
+
+run_tests:
+	@$(CC) -o unit_tests $(TEST_SRC) $(CFLAGS) -L. -lmy --coverage -lcriterion
+	./unit_tests

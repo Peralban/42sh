@@ -6,7 +6,7 @@
 ##
 
 SRC =	delete_node_in_array.c	\
-		my_arraylen.c			\
+		my_array_len.c			\
 		print_array.c			\
 		my_start_with.c			\
 		my_str_to_word_array.c	\
