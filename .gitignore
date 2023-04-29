@@ -2,3 +2,4 @@ vgcore*
 42sh
 *.o
 libmy.a
+.42sh_history

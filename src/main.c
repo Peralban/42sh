@@ -40,6 +40,7 @@ int main(int ac, char **av, char **env)
         line = my_getline(&error);
         if (line == NULL)
             continue;
+        history(line, &error);
         cmd = my_str_to_word_array(line, " \t");
         if (built_in(cmd, env_cpy, &error) != 2)
             continue;

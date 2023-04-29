@@ -19,6 +19,7 @@ SRC	=	src/main.c							\
 		src/builtin/echo.c					\
 		src/builtin/echo_special_cases.c	\
 		src/builtin/my_cd.c					\
+		src/history/history.c				\
 
 TEST_SRC = tests/test_my_sh.c
 

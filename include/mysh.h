@@ -21,6 +21,7 @@ int print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 int setup_env(char **env);
 bool var_are_init(char **env);
+int history(char *line, int *error);
 int my_cd(char **cmd, char **env, int *error);
 
 //built-in echo functions
