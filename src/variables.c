@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 char *find_local_variable(char *str)
 {
@@ -31,15 +32,17 @@ char *find_other_variable(char *str, char **env)
     return find_local_variable(str);
 }
 
-char *find_special_variable(char *str, char **env, int *error)
+char *find_special_variable(char **wa, int i, char **env, int *error)
 {
     char *buff = malloc(sizeof(char) * 100);
 
-    switch (str[1]) {
+    switch (wa[i][1]) {
         case '$':
-            return NULL;
+            sprintf(buff, "%d", getpid());
+            return buff;
         case '#':
-            return NULL;
+            sprintf(buff, "%d", my_arraylen(wa) - 1);
+            return buff;
         case '*':
             return NULL;
         case '@':
@@ -54,7 +57,7 @@ char *find_special_variable(char *str, char **env, int *error)
         case '_':
             return NULL;
         default:
-            return find_other_variable(str, env);
+            return find_other_variable(wa[i], env);
     }
 }
 
@@ -65,7 +68,7 @@ char **detect_variables(char **wa, char **env, int *error)
 
     for (int i = 0; wa[i] != NULL; i++) {
         if (wa[i][0] == '$') {
-            tmp = find_special_variable(wa[i], env, error);
+            tmp = find_special_variable(wa, i, env, error);
             new_wa[i] = malloc(sizeof(char) * (strlen(tmp) + 1));
             strcpy(new_wa[i], tmp);
             continue;
