@@ -9,15 +9,14 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
-
-const char def_term_name_[] = "42sh_term";
+#include "mysh.h"
 
 void put_str_in_term(int fd, const char *str)
 {
     if (isatty(0) == 0)
         write(fd, str, strlen(str));
     else {
-        int fdp = open(def_term_name_, O_WRONLY | O_APPEND);
+        int fdp = open(get_term_name(), O_WRONLY | O_APPEND);
         if (fdp == -1)
             return;
         write(fdp, str, strlen(str));

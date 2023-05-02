@@ -12,7 +12,7 @@
 
     #include <stddef.h>
 
-char *my_get_line(int *error);
+char *my_get_line(int *error, char *term_name);
 int main(int ac, char **av, char **env);
 int built_in(char **cmd, char **env, int *error);
 int parse_args_setenv(char **args);
@@ -49,5 +49,7 @@ void my_putstr(const char *str);
 void my_putnbr(int nb);
 void print_array(char **arr);
 void my_puterror(const char *str);
+char *set_term_name(char *name);
+char *get_term_name(void);
 
 #endif

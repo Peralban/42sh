@@ -24,6 +24,7 @@ SRC	=	src/main.c							\
 		src/my_str_to_array_max_size.c		\
 		src/write_in_term.c					\
 		src/my_put.c						\
+		src/set_get_term_name.c				\
 
 
 TEST_SRC = tests/test_my_sh.c

@@ -16,6 +16,8 @@ char *my_strdupij(char *str, int begin, int end)
     char *new_str = malloc(sizeof(char) * (end - begin + 1));
     int i = 0;
 
+    if (new_str == NULL)
+        return NULL;
     for (; begin < end; begin++) {
         new_str[i] = str[begin];
         i++;
@@ -56,6 +58,8 @@ char **my_str_to_word_array(char *str, char *delim)
     int j = 0;
     int k = 0;
 
+    if (array == NULL)
+        return NULL;
     for (; str[i] != '\0'; i++) {
         if (!isin(str[i], delim)) {
             j = i;

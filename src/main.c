@@ -14,9 +14,7 @@
 #include <string.h>
 #include <fcntl.h>
 
-const char def_term_name[] = "42sh_term";
-
-char *my_get_line(int *error)
+char *my_get_line(int *error, char *term_name)
 {
     char *line = NULL;
     size_t size = 0;
@@ -28,7 +26,7 @@ char *my_get_line(int *error)
         }
         line[strlen(line) - 1] = '\0';
     } else {
-        line = my_getline_ncurses(def_term_name);
+        line = my_getline_ncurses(term_name);
         if (line == NULL) {
             my_exit((char *[2]) {"Error", NULL}, error);
             return NULL;
@@ -46,7 +44,7 @@ static void loop(char **env_cpy)
     while (error != -1) {
         print_prompt(env_cpy, error);
         error = 0;
-        line = my_get_line(&error);
+        line = my_get_line(&error, get_term_name());
         if (line == NULL || line[0] == '\0')
             continue;
         cmd = my_str_to_word_array(line, " \t");
@@ -60,6 +58,7 @@ static void loop(char **env_cpy)
 int main(int ac, char **av, char **env)
 {
     char **env_cpy = my_arraydup(env);
+    char *def_term_name = set_term_name("42sh_term");
     (void)ac;
     (void)av;
 
