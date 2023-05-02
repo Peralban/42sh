@@ -13,8 +13,10 @@ int built_in(char **cmd, char **env, int *error)
 {
     if (strcmp(cmd[0], "cd") == 0)
         return my_cd(cmd, env, error);
-    if (strcmp(cmd[0], "env") == 0)
-        return print_array(env);
+    if (strcmp(cmd[0], "env") == 0) {
+        print_array(env);
+        return 0;
+    }
     if (strcmp(cmd[0], "setenv") == 0)
         return my_setenv(cmd, env, error);
     if (strcmp(cmd[0], "unsetenv") == 0)

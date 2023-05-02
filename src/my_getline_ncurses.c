@@ -76,22 +76,20 @@ void start_ncurses(void)
     curs_set(1);
 }
 
-char *my_getline_ncurses(char *term_name, char *prompt)
+char *my_getline_ncurses(char *term_name)
 {
     int fd = open(term_name, O_RDWR | O_APPEND);
     char *line = malloc(sizeof(char) * 1);
 
     if (fd == -1 || line == NULL)
         return NULL;
-    write(fd, prompt, strlen(prompt));
+    //write(fd, prompt, strlen(prompt));
     line[0] = '\0';
-    start_ncurses();
     display_term(term_name, line);
     line = get_string(term_name, line);
     write(fd, line, strlen(line));
     write(fd, "\n", 1);
     close(fd);
-    endwin();
     return line;
 }
 

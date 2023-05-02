@@ -12,7 +12,7 @@
 
 const char def_term_name_[] = "42sh_term";
 
-void put_str_in_term(int fd, char *str)
+void put_str_in_term(int fd, const char *str)
 {
     if (isatty(0) == 0)
         write(fd, str, strlen(str));

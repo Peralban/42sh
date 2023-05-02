@@ -12,6 +12,7 @@
 
 // This function return the value of the environment variable [str] in [env].
 // If it doesn't exists it returns NULL.
+
 char *my_getenv(char **env, char *var)
 {
     int var_size = strlen(var);

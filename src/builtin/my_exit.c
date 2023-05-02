@@ -24,7 +24,6 @@ int my_exit(char **cmd, int *error)
         }
         free(cmd);
     }
-    if (isatty(0) == 1)
-        my_putstr("exit\n");
+    my_putstr("exit\n");
     return 1;
 }

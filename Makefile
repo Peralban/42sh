@@ -11,14 +11,20 @@ SRC	=	src/main.c							\
 		src/builtin/unsetenv.c				\
 		src/builtin/setenv.c				\
 		src/builtin/my_exit.c				\
+		src/builtin/echo.c					\
+        src/builtin/echo_special_cases.c	\
+        src/builtin/my_cd.c					\
+		src/builtin/set_environment.c		\
 		src/prompt/my_getenv.c				\
 		src/prompt/print_prompt.c			\
 		src/prompt/my_getpwd.c				\
-		src/builtin/set_environment.c		\
 		src/prompt/var_are_init.c			\
-		src/builtin/echo.c					\
-		src/builtin/echo_special_cases.c	\
-		src/builtin/my_cd.c					\
+		src/destroy_array.c					\
+		src/my_getline_ncurses.c			\
+		src/my_str_to_array_max_size.c		\
+		src/write_in_term.c					\
+		src/my_put.c						\
+
 
 TEST_SRC = tests/test_my_sh.c
 
