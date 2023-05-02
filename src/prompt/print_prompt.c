@@ -50,14 +50,14 @@ static void is_github_folder(char *pwd, char **env)
     chdir(pwd);
 }
 
-int print_prompt(char **env, int result_cmd)
+void print_prompt(char **env, int result_cmd)
 {
     char *home = my_getenv(env, "HOME");
     char *prompt = NULL;
     char *pwd = my_getpwd();
 
     if (isatty(0) == 0)
-        return 0;
+        return;
     if (my_start_with(pwd, home)) {
         my_putstr("~");
         my_putstr(pwd + strlen(home));
@@ -68,7 +68,6 @@ int print_prompt(char **env, int result_cmd)
     my_putstr("\n> ");
     free(prompt);
     free(pwd);
-    return 0;
 }
 
 //char *prompt_to_str(char **env)

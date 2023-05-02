@@ -24,6 +24,5 @@ int my_exit(char **cmd, int *error)
         }
         free(cmd);
     }
-    my_putstr("exit\n");
     return 1;
 }
