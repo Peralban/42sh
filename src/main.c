@@ -37,25 +37,12 @@ char *my_get_line(int *error)
     return line;
 }
 
-int main(int ac, char **av, char **env)
+static void loop(char **env_cpy)
 {
+    char **cmd = NULL;
     char *line = NULL;
     int error = 0;
-    char **cmd = NULL;
-    char **env_cpy = my_arraydup(env);
 
-    (void)ac;
-    (void)av;
-
-    remove(def_term_name);
-    int fd = open(def_term_name, O_CREAT, 0666);
-    close(fd);
-
-    if (isatty(0) == 1) {
-        start_ncurses();
-    }
-    if (var_are_init(env_cpy) == false)
-        setup_env(env_cpy);
     while (error != -1) {
         print_prompt(env_cpy, error);
         error = 0;
@@ -68,6 +55,23 @@ int main(int ac, char **av, char **env)
             continue;
         destroy_array(cmd);
     }
+}
+
+int main(int ac, char **av, char **env)
+{
+    char **env_cpy = my_arraydup(env);
+    (void)ac;
+    (void)av;
+
+    remove(def_term_name);
+    int fd = open(def_term_name, O_CREAT, 0666);
+    close(fd);
+    if (isatty(0) == 1) {
+        start_ncurses();
+    }
+    if (var_are_init(env_cpy) == false)
+        setup_env(env_cpy);
+    loop(env_cpy);
     if (isatty(0) == 1)
         endwin();
     remove(def_term_name);

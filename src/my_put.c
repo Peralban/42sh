@@ -7,6 +7,8 @@
 
 #include <../include/mysh.h>
 
+//here are all the functions that print in the terminal
+
 void my_putstr(const char *str)
 {
     put_str_in_term(1, str);

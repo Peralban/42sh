@@ -69,23 +69,3 @@ void print_prompt(char **env, int result_cmd)
     free(prompt);
     free(pwd);
 }
-
-//char *prompt_to_str(char **env)
-//{
-//    char *home = my_getenv(env, "HOME");
-//    char *prompt = NULL;
-//    char *pwd = my_getpwd();
-//
-//    if (my_start_with(pwd, home)) {
-//        prompt = malloc(sizeof(char) * (strlen(pwd) - strlen(home) + 1));
-//        prompt[0] = '~';
-//        prompt[1] = '\0';
-//        strcat(prompt, pwd + strlen(home));
-//    } else {
-//        prompt = strdup(pwd);
-//    }
-//    free(pwd);
-//    free(home);
-//    return prompt;
-//}
-//

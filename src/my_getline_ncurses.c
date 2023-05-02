@@ -83,7 +83,6 @@ char *my_getline_ncurses(char *term_name)
 
     if (fd == -1 || line == NULL)
         return NULL;
-    //write(fd, prompt, strlen(prompt));
     line[0] = '\0';
     display_term(term_name, line);
     line = get_string(term_name, line);
