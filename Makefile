@@ -17,7 +17,8 @@ SRC	=	src/main.c							\
 		src/builtin/set_environment.c		\
 		src/prompt/var_are_init.c			\
 		src/builtin/echo.c					\
-		src/builtin/echo_special_cases.c
+		src/builtin/echo_special_cases.c	\
+		src/variables.c
 
 TEST_SRC = tests/test_my_sh.c
 
