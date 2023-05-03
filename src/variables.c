@@ -66,9 +66,11 @@ char *find_special_variable(char *str, int i, char **env, int *error)
 char *create_new_line(char *new_line, char *tmp, int size)
 {
     tmp = (tmp == NULL) ? "" : tmp;
-    size = strlen(new_line) + strlen(tmp) + 1;
+    size = strlen(new_line) + strlen(tmp) + 2;
     new_line = realloc(new_line, sizeof(char) * size);
     new_line = strcat(new_line, tmp);
+    new_line[size - 2] = ' ';
+    new_line[size - 1] = '\0';
     return new_line;
 }
 
@@ -92,5 +94,6 @@ char *detect_variables(char *line, char **env, int *error)
             new_line = strncat(new_line, &line[i], 1);
         in_variable = (in_variable == true && line[i] != ' ' ? true : false);
     }
+    new_line[strlen(new_line) - 1] = '\0';
     return new_line;
 }
