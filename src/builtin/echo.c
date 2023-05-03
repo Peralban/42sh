@@ -73,11 +73,10 @@ int my_echo(char **cmd, int *error)
     bool opt = ((cmd[1] != NULL && strcmp(cmd[1], "-n") == 0) ? true : false);
     char *str_cmd = tab_to_str(cmd);
     char *str = NULL;
-    (void)error;
 
     str = test_special_cases(str_cmd);
     printf("%s", strdup(str));
     if (!opt)
         printf("\n");
-    return 0;
+    return *error;
 }

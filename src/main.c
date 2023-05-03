@@ -40,8 +40,11 @@ int main(int ac, char **av, char **env)
         line = my_getline(&error);
         if (line == NULL)
             continue;
+        line = detect_variables(line, env, &error);
+        //printf("line modified: %s\n", line);
         cmd = my_str_to_word_array(line, " \t");
-        cmd = detect_variables(cmd, env, &error);
+        //for (int i = 0; cmd[i] != NULL; i++)
+            //printf("cmd[%d] %s\n", i, cmd[i]);
         error = built_in(cmd, env_cpy, &error);
         if (error != 2)
             continue;
