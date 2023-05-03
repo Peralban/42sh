@@ -12,6 +12,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+int get_back_cmd(void)
+{
+    return -1;
+}
+
 char *find_local_variable(char *str, int i)
 {
     (void)str;
@@ -19,18 +24,68 @@ char *find_local_variable(char *str, int i)
     return NULL;
 }
 
-char *find_other_variable(char *str, char **wa, int i, char **env)
+char *join_all_args(char *str)
+{
+    char *tmp = malloc(sizeof(char *) * strlen(str) + 1);
+    int j = 0;
+    bool dont_print = true;
+
+    if (str == NULL)
+        return NULL;
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (dont_print && str[i] != ' ')
+            continue;
+        if (dont_print && str[i] == ' ') {
+            dont_print = false;
+            continue;
+        }
+        if (str[i] == '$') {
+            dont_print = true;
+            continue;
+        }
+        tmp[j] = str[i];
+        j++;
+    }
+    tmp[j - 1] = '\0';
+    return tmp;
+}
+
+char *find_num_variable(char *str, char **wa, int i, char **env)
 {
     char *tmp = NULL;
 
     if (str[i + 1] == '0')
         return NULL;
-    if (str[i + 1] <= '9' && str[i + 1] >= '0')
-        return wa[str[i + 1] - '0'];
+    if (str[i + 1] <= '9' && str[i + 1] >= '0') {
+        if (wa[str[i + 1] - '0'] == NULL)
+            return NULL;
+        if (wa[str[i + 1] - '0'][0] == '$')
+            return my_getenv(env, (wa[str[i + 1] - '0'] + 1));
+    }
     tmp = my_getenv(env, (str + i + 1));
     if (tmp != NULL)
         return my_getenv(env, (str + i + 1));
     return find_local_variable(str, i);
+}
+
+char *find_other_variable(char *str, char **wa, int i, char **env)
+{
+    int id = 0;
+
+    switch (str[i + 1]) {
+        case '!':
+            id = get_back_cmd();
+            if (id == -1)
+                return NULL;
+            else
+                return NULL;
+        case '-':
+            return NULL;
+        case '_':
+            return NULL;
+        default:
+            return find_num_variable(str, wa, i, env);
+    }
 }
 
 char *find_special_variable(char *str, int i, char **env, int *error)
@@ -46,18 +101,12 @@ char *find_special_variable(char *str, int i, char **env, int *error)
             sprintf(buff, "%d", my_arraylen(wa) - 1);
             return buff;
         case '*':
-            return NULL;
+            return join_all_args(str);
         case '@':
             return NULL;
         case '?':
             sprintf(buff, "%d", *error);
             return buff;
-        case '!':
-            return NULL;
-        case '-':
-            return NULL;
-        case '_':
-            return NULL;
         default:
             return find_other_variable(str, wa, i, env);
     }
@@ -65,7 +114,7 @@ char *find_special_variable(char *str, int i, char **env, int *error)
 
 char *create_new_line(char *new_line, char *tmp, int size)
 {
-    tmp = (tmp == NULL) ? "" : tmp;
+    tmp = (tmp == NULL) ? " " : tmp;
     size = strlen(new_line) + strlen(tmp) + 2;
     new_line = realloc(new_line, sizeof(char) * size);
     new_line = strcat(new_line, tmp);
