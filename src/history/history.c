@@ -55,6 +55,8 @@ int history(char *line, int *error)
 {
     int fd = 0;
 
+    if (line[0] == '\0')
+        return 0;
     fd = open(".42sh_history", O_WRONLY | O_CREAT | O_APPEND, 0666);
     if (history_error(fd, error) == 84)
         return 84;
