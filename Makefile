@@ -5,20 +5,23 @@
 ## Makefile
 ##
 
-SRC	=	src/main.c							\
-		src/builtin/builtin.c				\
-		src/builtin/parse_args_setenv.c		\
-		src/builtin/unsetenv.c				\
-		src/builtin/setenv.c				\
-		src/builtin/my_exit.c				\
-		src/prompt/my_getenv.c				\
-		src/prompt/print_prompt.c			\
-		src/prompt/my_getpwd.c				\
-		src/builtin/set_environment.c		\
-		src/prompt/var_are_init.c			\
-		src/builtin/echo.c					\
-		src/builtin/echo_special_cases.c	\
-		src/builtin/my_cd.c					\
+SRC	=	src/main.c								\
+		src/builtin/builtin.c					\
+		src/builtin/parse_args_setenv.c			\
+		src/builtin/unsetenv.c					\
+		src/builtin/setenv.c					\
+		src/builtin/my_exit.c					\
+		src/prompt/my_getenv.c					\
+		src/prompt/print_prompt.c				\
+		src/prompt/my_getpwd.c					\
+		src/builtin/set_environment.c			\
+		src/prompt/var_are_init.c				\
+		src/builtin/echo.c						\
+		src/builtin/echo_special_cases.c		\
+		src/builtin/my_cd.c						\
+		src/execution/my_exec.c					\
+		src/execution/command_error_handling.c	\
+		src/execution/my_put_errors.c			\
 
 TEST_SRC = tests/test_my_sh.c
 
