@@ -28,46 +28,50 @@ char *my_strdupij(char *str, int begin, int end)
 
 bool isin(char c, char *delim)
 {
-    for (int i = 0; delim[i] != '\0'; i++)
+    for (int i = 0; delim[i] != '\0'; i++) {
         if (c == delim[i])
             return true;
+    }
     return false;
 }
 
-int count_words(char *str, char *delim)
+void arr_append(char ***arr_p, char *elem)
 {
-    int count = 0;
+    char **arr = arr_p[0];
+    char **tmp = NULL;
+    int len = 0;
 
-    for (int i = 0; str[i] != '\0'; i++)
-        if (!isin(str[i], delim) && (isin(str[i + 1], delim) ||
-        str[i + 1] == '\0'))
-            count++;
-    return count;
-}
-
-void find_end(char *str, char *delim, int *i)
-{
-    for (; !isin(str[*i], delim) && str[*i] != '\0'; (*i)++);
+    for (; arr[len] != NULL; len++);
+    tmp = malloc(sizeof(char *) * (len + 2));
+    if (tmp == NULL)
+        return;
+    for (int i = 0; i < len; i++)
+        tmp[i] = arr[i];
+    tmp[len] = elem;
+    tmp[len + 1] = NULL;
+    arr_p[0] = tmp;
 }
 
 char **my_str_to_word_array(char *str, char *delim)
 {
-    int words = count_words(str, delim);
-    char **array = malloc(sizeof(char *) * (words + 1));
-    int i = 0;
-    int j = 0;
-    int k = 0;
+    int begin = 0;
+    int end = 0;
+    int i = 1;
+    char **arr = malloc(sizeof(char *));
 
-    if (array == NULL)
+    if (str == NULL)
         return NULL;
-    for (; str[i] != '\0'; i++) {
-        if (!isin(str[i], delim)) {
-            j = i;
-            find_end(str, delim, &i);
-            array[k] = my_strdupij(str, j, i);
-            k++;
+    for (arr[0] = NULL; str[i] != '\0'; i++) {
+        if (isin(str[i - 1], delim) && !(isin(str[i], delim)))
+            begin = i;
+        if (isin(str[i], delim) && !(isin(str[i - 1], delim))) {
+            end = i;
+            arr_append(&arr, my_strdupij(str, begin, end));
         }
     }
-    array[k] = NULL;
-    return array;
+    if (isin(str[i - 1], delim))
+        arr_append(&arr, my_strdupij(str, begin, i - 1));
+    else
+        arr_append(&arr, my_strdupij(str, begin, i));
+    return arr;
 }
