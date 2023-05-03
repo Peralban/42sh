@@ -35,7 +35,7 @@ void print_from_the_end(char *buffer)
 void print_term_bis(const char *line, char *buffer)
 {
     char *tmp = realloc(buffer, sizeof(char) *
-                          (strlen(buffer) + strlen(line) + 1));
+    (strlen(buffer) + strlen(line) + 1));
     if (tmp == NULL) {
         free(buffer);
         return;

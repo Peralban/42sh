@@ -13,7 +13,7 @@
     #include <stddef.h>
 
 char *my_get_line(int *error, char *term_name);
-void the_sh(int ac, char *const *av, char **env);
+void the_sh(char **env);
 int main(int ac, char **av, char **env);
 int built_in(char **cmd, char **env, int *error);
 int parse_args_setenv(char **args);

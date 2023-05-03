@@ -21,7 +21,7 @@ char *my_get_line(int *error, char *term_name)
 
     if (isatty(0) == 0 || getenv("TERM") == NULL) {
         if (getline(&line, &size, stdin) < 0) {
-            my_exit(error);
+            my_exit(    error);
             return NULL;
         }
         line[strlen(line) - 1] = '\0';
@@ -56,14 +56,11 @@ static void loop(char **env_cpy)
     }
 }
 
-
-void the_sh(int ac, char *const *av, char **env)
+void the_sh(char **env)
 {
     char **env_cpy = my_arraydup(env);
     char *def_term_name = set_term_name(".42sh_term");
     int fd = 0;
-    (void)ac;
-    (void)av;
 
     remove(def_term_name);
     fd = open(def_term_name, O_CREAT, 0666);
@@ -79,7 +76,7 @@ int main(int ac, char **av, char **env)
 {
     if (isatty(0) == 1)
         start_ncurses();
-    the_sh(ac, av, env);
+    the_sh(env);
     if (isatty(0) == 1)
         endwin();
     return 0;
