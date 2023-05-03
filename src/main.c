@@ -47,8 +47,7 @@ static void loop(char **env_cpy)
         line = my_get_line(&error, get_term_name());
         if (line == NULL || line[0] == '\0')
             continue;
-        line = detect_variables(line, env, &error);
-        //printf("line modified: %s\n", line);
+        line = detect_variables(line, env_cpy, &error);
         cmd = my_str_to_word_array(line, " \t");
         free(line);
         error = built_in(cmd, env_cpy, &error);

@@ -12,9 +12,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-char *find_local_variable(char *str)
+char *find_local_variable(char *str, int i)
 {
     (void)str;
+    (void)i;
     return NULL;
 }
 
@@ -22,14 +23,14 @@ char *find_other_variable(char *str, char **wa, int i, char **env)
 {
     char *tmp = NULL;
 
-    if (wa[i][1] == '0')
+    if (str[i + 1] == '0')
         return NULL;
-    if (wa[i][1] <= '9' && wa[i][1] >= '0')
-        return wa[wa[i][1] - '0'];
-    tmp = my_getenv(env, wa[i] + 1);
+    if (str[i + 1] <= '9' && str[i + 1] >= '0')
+        return wa[str[i + 1] - '0'];
+    tmp = my_getenv(env, (str + i + 1));
     if (tmp != NULL)
-        return my_getenv(env, wa[i] + 1);
-    return find_local_variable(wa[i]);
+        return my_getenv(env, (str + i + 1));
+    return find_local_variable(str, i);
 }
 
 char *find_special_variable(char *str, int i, char **env, int *error)
@@ -62,9 +63,19 @@ char *find_special_variable(char *str, int i, char **env, int *error)
     }
 }
 
+char *create_new_line(char *new_line, char *tmp, int size)
+{
+    tmp = (tmp == NULL) ? "" : tmp;
+    size = strlen(new_line) + strlen(tmp) + 1;
+    new_line = realloc(new_line, sizeof(char) * size);
+    new_line = strcat(new_line, tmp);
+    return new_line;
+}
+
 char *detect_variables(char *line, char **env, int *error)
 {
-    char *new_line = malloc(sizeof(char) * (strlen(line) + 1));
+    int size = strlen(line) + 1;
+    char *new_line = malloc(sizeof(char) * size);
     char *tmp = NULL;
     bool in_variable = false;
 
@@ -72,20 +83,14 @@ char *detect_variables(char *line, char **env, int *error)
     for (int i = 0; line[i] != '\0'; i++) {
         if (line[i] == '$') {
             tmp = find_special_variable(line, i, env, error);
-            if (tmp != NULL) {
-                new_line = realloc(new_line, sizeof(char) * (strlen(new_line) + strlen(tmp) + 2));
-                new_line = strcat(new_line, tmp);
-            } else
-                new_line = realloc(new_line, sizeof(char) * (strlen(new_line) + 1));
-            new_line = strcat(new_line, " ");
+            new_line = create_new_line(new_line, tmp, size);
             i++;
             in_variable = true;
             continue;
         }
         if (in_variable == false)
             new_line = strncat(new_line, &line[i], 1);
-        if (in_variable == true && line[i] == ' ')
-            in_variable = false;
+        in_variable = (in_variable == true && line[i] != ' ' ? true : false);
     }
     return new_line;
 }
