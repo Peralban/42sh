@@ -19,16 +19,16 @@ char *my_get_line(int *error, char *term_name)
     char *line = NULL;
     size_t size = 0;
 
-    if (isatty(0) == 0) {
+    if (isatty(0) == 0 || getenv("TERM") == NULL) {
         if (getline(&line, &size, stdin) < 0) {
-            my_exit((char *[2]){"Error", NULL}, error);
+            my_exit(error);
             return NULL;
         }
         line[strlen(line) - 1] = '\0';
     } else {
         line = my_getline_ncurses(term_name);
         if (line == NULL) {
-            my_exit((char *[2]) {"Error", NULL}, error);
+            my_exit(error);
             return NULL;
         }
     }
@@ -49,30 +49,38 @@ static void loop(char **env_cpy)
             continue;
         cmd = my_str_to_word_array(line, " \t");
         free(line);
-        if (built_in(cmd, env_cpy, &error) != 2)
-            continue;
+        if (built_in(cmd, env_cpy, &error) != 2) {
+
+        }
         destroy_array(cmd);
     }
 }
 
-int main(int ac, char **av, char **env)
+
+void the_sh(int ac, char *const *av, char **env)
 {
     char **env_cpy = my_arraydup(env);
-    char *def_term_name = set_term_name("42sh_term");
+    char *def_term_name = set_term_name(".42sh_term");
+    int fd = 0;
     (void)ac;
     (void)av;
 
     remove(def_term_name);
-    int fd = open(def_term_name, O_CREAT, 0666);
+    fd = open(def_term_name, O_CREAT, 0666);
     close(fd);
-    if (isatty(0) == 1) {
-        start_ncurses();
-    }
+
     if (var_are_init(env_cpy) == false)
         setup_env(env_cpy);
     loop(env_cpy);
+    remove(def_term_name);
+}
+
+int main(int ac, char **av, char **env)
+{
+    if (isatty(0) == 1)
+        start_ncurses();
+    the_sh(ac, av, env);
     if (isatty(0) == 1)
         endwin();
-    remove(def_term_name);
     return 0;
 }

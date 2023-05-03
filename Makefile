@@ -25,6 +25,7 @@ SRC	=	src/main.c							\
 		src/write_in_term.c					\
 		src/my_put.c						\
 		src/set_get_term_name.c				\
+		src/start_ncurses.c					\
 
 
 TEST_SRC = tests/test_my_sh.c

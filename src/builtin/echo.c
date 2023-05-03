@@ -43,9 +43,9 @@ char *test_special_cases(char *str)
         if (str[i] == '"')
             nb_quotes++;
     if (nb_quotes % 2 != 0)
-        return strdup("Unmatched '\"'.");
+        return "Unmatched '\"'.";
     if (nb_quotes == 0)
-        return strdup(str);
+        return str;
     return adapt_str(str, nb_quotes);
 }
 
@@ -73,15 +73,10 @@ int my_echo(char **cmd, int *error)
     bool opt = ((cmd[1] != NULL && strcmp(cmd[1], "-n") == 0) ? true : false);
     char *str_cmd = tab_to_str(cmd);
     char *str = NULL;
-    char *tmp = NULL;
     (void)error;
 
     str = test_special_cases(str_cmd);
-    tmp = strdup(str);
-    my_putstr(tmp);
-    free(tmp);
-    free(str);
-    free(str_cmd);
+    my_putstr(strdup(str));
     if (!opt)
         my_putstr("\n");
     return 0;

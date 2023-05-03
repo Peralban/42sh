@@ -32,22 +32,33 @@ void print_from_the_end(char *buffer)
     destroy_array(arr);
 }
 
+void print_term_bis(const char *line, char *buffer)
+{
+    char *tmp = realloc(buffer, sizeof(char) *
+                          (strlen(buffer) + strlen(line) + 1));
+    if (tmp == NULL) {
+        free(buffer);
+        return;
+    }
+    strcat(tmp, line);
+    clear();
+    print_from_the_end(tmp);
+    free(tmp);
+}
+
 void display_term(char *term_name, char *line)
 {
     int read_fd = open(term_name, O_RDONLY);
     struct stat sb;
-    stat(term_name, &sb);
-    char *buffer = malloc(sizeof(char) * (sb.st_size + 1));
+    char *buffer = NULL;
 
-    read(read_fd, buffer, sb.st_size);
+    stat(term_name, &sb);
+    buffer = malloc(sizeof(char) * (sb.st_size + 1));
+    if (buffer == NULL || read(read_fd, buffer, sb.st_size) < 0)
+        return;
     buffer[sb.st_size] = '\0';
     close(read_fd);
-    buffer = realloc(buffer, sizeof(char) *
-    (strlen(buffer) + strlen(line) + 1));
-    strcat(buffer, line);
-    clear();
-    print_from_the_end(buffer);
-    free(buffer);
+    print_term_bis(line, buffer);
 }
 
 char *get_string(char *term_name, char *line)
@@ -66,14 +77,6 @@ char *get_string(char *term_name, char *line)
         display_term(term_name, line);
     }
     return line;
-}
-
-void start_ncurses(void)
-{
-    initscr();
-    noecho();
-    keypad(stdscr, TRUE);
-    curs_set(1);
 }
 
 char *my_getline_ncurses(char *term_name)

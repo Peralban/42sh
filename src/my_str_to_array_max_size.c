@@ -57,6 +57,7 @@ char **my_str_to_word_array_max_size(char *str, char *delim, int max_size)
 {
     int *swa = malloc(sizeof(int) * (SWA_MAX));
     char **arr = malloc(sizeof(char*));
+
     if (str == NULL || arr == NULL || swa == NULL)
         return NULL;
     swa[SWA_MAX] = max_size;
@@ -71,8 +72,7 @@ char **my_str_to_word_array_max_size(char *str, char *delim, int max_size)
         if (arr == NULL)
             return NULL;
     }
-    if (!(isin(str[swa[SWA_I] - 1], delim))) {
+    if (!(isin(str[swa[SWA_I] - 1], delim)))
         add_to_arr(&arr, str, swa);
-    }
     return arr;
 }
