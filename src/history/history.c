@@ -32,7 +32,10 @@ static void print_history(void)
 
     while (getline(&line, &len, fd) != -1) {
         line[strlen(line) - 1] = '\0';
-        printf("%d\t%s\n", i, line);
+        my_putnbr(i);
+        my_putstr("\t");
+        my_putstr(line);
+        my_putstr("\n");
         i++;
     }
 }
@@ -47,7 +50,6 @@ static int add_in_history(char *line, int fd, int *error)
     }
     str = strcat(line, "\n");
     write(fd, str, strlen(str));
-    free(str);
     return 0;
 }
 

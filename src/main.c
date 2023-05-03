@@ -21,7 +21,7 @@ char *my_get_line(int *error, char *term_name)
 
     if (isatty(0) == 0 || getenv("TERM") == NULL) {
         if (getline(&line, &size, stdin) < 0) {
-            my_exit(    error);
+            my_exit(error);
             return NULL;
         }
         line[strlen(line) - 1] = '\0';
