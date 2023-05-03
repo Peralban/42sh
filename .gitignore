@@ -2,4 +2,5 @@ vgcore*
 42sh
 *.o
 libmy.a
+CMakeLists.txt
 .42sh_history
