@@ -5,49 +5,80 @@
 ** main.c
 */
 
-#include "mysh.h"
-#include "my.h"
+#include "../include/mysh.h"
+#include "../include/my.h"
+#include <ncurses.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
 
-static char *my_getline(int *error)
+char *my_get_line(int *error, char *term_name)
 {
-    size_t size = 0;
     char *line = NULL;
+    size_t size = 0;
 
-    if (getline(&line, &size, stdin) == -1) {
-        my_exit((char *[2]){"Error", NULL}, error);
-        return NULL;
+    if (isatty(0) == 0 || getenv("TERM") == NULL) {
+        if (getline(&line, &size, stdin) < 0) {
+            my_exit(    error);
+            return NULL;
+        }
+        line[strlen(line) - 1] = '\0';
+    } else {
+        line = my_getline_ncurses(term_name);
+        if (line == NULL) {
+            my_exit(error);
+            return NULL;
+        }
     }
-    line[strlen(line) - 1] = '\0';
     return line;
 }
 
-int main(int ac, char **av, char **env)
+static void loop(char **env_cpy)
 {
+    char **cmd = NULL;
     char *line = NULL;
     int error = 0;
-    char **cmd = NULL;
-    char **env_cpy = my_arraydup(env);
 
-    if (var_are_init(env_cpy) == false)
-        setup_env(env_cpy);
     while (error != -1) {
         print_prompt(env_cpy, error);
         error = 0;
-        line = my_getline(&error);
-        if (line == NULL)
+        line = my_get_line(&error, get_term_name());
+        if (line == NULL || line[0] == '\0')
             continue;
         line = detect_variables(line, env, &error);
         //printf("line modified: %s\n", line);
         cmd = my_str_to_word_array(line, " \t");
-        //for (int i = 0; cmd[i] != NULL; i++)
-            //printf("cmd[%d] %s\n", i, cmd[i]);
+        free(line);
         error = built_in(cmd, env_cpy, &error);
         if (error != 2)
             continue;
     }
+}
+
+void the_sh(char **env)
+{
+    char **env_cpy = my_arraydup(env);
+    char *def_term_name = set_term_name(".42sh_term");
+    int fd = 0;
+
+    remove(def_term_name);
+    fd = open(def_term_name, O_CREAT, 0666);
+    close(fd);
+
+    if (var_are_init(env_cpy) == false)
+        setup_env(env_cpy);
+    loop(env_cpy);
+    remove(def_term_name);
+}
+
+int main(int ac, char **av, char **env)
+{
+    if (isatty(0) == 1)
+        start_ncurses();
+    the_sh(env);
+    if (isatty(0) == 1)
+        endwin();
     return 0;
 }

@@ -11,76 +11,63 @@
 #include <unistd.h>
 #include <stdio.h>
 
-void arr_remove(char ***arr_p, int i)
+char *my_strdupij(char *str, int begin, int end)
 {
-    char **arr = arr_p[0];
-    int j = 0;
+    char *new_str = malloc(sizeof(char) * (end - begin + 1));
+    int i = 0;
 
-    arr[i] = NULL;
-    for (j = i + 1; arr[j] != NULL; j++) {
-        arr[j - 1] = arr[j];
+    if (new_str == NULL)
+        return NULL;
+    for (; begin < end; begin++) {
+        new_str[i] = str[begin];
+        i++;
     }
-    arr[j - 1] = NULL;
+    new_str[i] = '\0';
+    return new_str;
 }
 
-static int arr_append(char ***arr_p, char *elem)
+bool isin(char c, char *delim)
 {
-    char **arr = arr_p[0];
-    char **tmp = NULL;
-    int len = my_arraylen(arr);
-
-    tmp = malloc(sizeof(char*) * (len + 2));
-    if (tmp == NULL || elem == NULL)
-        return 1;
-    for (int i = 0; i < len; i++)
-        tmp[i] = arr[i];
-    tmp[len] = elem;
-    tmp[len + 1] = NULL;
-    arr_p[0] = tmp;
-    return 0;
-}
-
-static bool isin(char c, char *delim)
-{
-    for (int i = 0; delim[i] != 0; i++) {
+    for (int i = 0; delim[i] != '\0'; i++)
         if (c == delim[i])
             return true;
-    }
     return false;
 }
 
-static char *my_strdupij(char *str, int begin, int end)
+int count_words(char *str, char *delim)
 {
-    char *tmp = malloc(end - begin + 1);
+    int count = 0;
 
-    if (tmp == NULL)
-        return NULL;
-    for (int i = begin; i < end; i++)
-        tmp[i - begin] = str[i];
-    tmp[end - begin] = '\0';
-    return tmp;
+    for (int i = 0; str[i] != '\0'; i++)
+        if (!isin(str[i], delim) && (isin(str[i + 1], delim) ||
+        str[i + 1] == '\0'))
+            count++;
+    return count;
+}
+
+void find_end(char *str, char *delim, int *i)
+{
+    for (; !isin(str[*i], delim) && str[*i] != '\0'; (*i)++);
 }
 
 char **my_str_to_word_array(char *str, char *delim)
 {
-    int begin = 0;
-    int end = 0;
-    int i = 1;
-    char **arr = malloc(sizeof(char*));
-    if (str == NULL || arr == NULL)
+    int words = count_words(str, delim);
+    char **array = malloc(sizeof(char *) * (words + 1));
+    int i = 0;
+    int j = 0;
+    int k = 0;
+
+    if (array == NULL)
         return NULL;
-    arr[0] = NULL;
-    for (; str[i] != 0; i++) {
-        if (isin(str[i - 1], delim) && !(isin(str[i], delim)))
-            begin = i;
-        if (!(isin(str[i - 1], delim)) && isin(str[i], delim)) {
-            end = i;
-            arr_append(&arr, my_strdupij(str, begin, end));
+    for (; str[i] != '\0'; i++) {
+        if (!isin(str[i], delim)) {
+            j = i;
+            find_end(str, delim, &i);
+            array[k] = my_strdupij(str, j, i);
+            k++;
         }
-    } if (!(isin(str[i - 1], delim))) {
-        end = i;
-        if (arr_append(&arr, my_strdupij(str, begin, end)) == 1)
-            return NULL;
     }
-    return arr;
+    array[k] = NULL;
+    return array;
 }
