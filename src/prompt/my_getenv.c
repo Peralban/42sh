@@ -17,6 +17,8 @@ char *my_getenv(char **env, char *var)
     int var_size = strlen(var);
     char *var_path = 0;
 
+    if (env == NULL || var == NULL)
+        return NULL;
     for (int index = 0; env[index] != NULL; index++) {
         if (my_start_with(env[index], var) && env[index][var_size] == '=') {
             var_path = strdup(env[index] + var_size + 1);

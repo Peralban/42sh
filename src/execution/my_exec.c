@@ -58,7 +58,7 @@ void my_exec(char **cmd, char **env, int *error)
     pid_t pid = 0;
     char *new_cmd = NULL;
 
-    if (cmd == NULL || env == NULL || error == NULL)
+    if (cmd == NULL || error == NULL)
         return;
     new_cmd = search_command(cmd[0], env, error);
     if (new_cmd == NULL)

@@ -66,8 +66,6 @@ char *search_command(char *cmd, char **env, int *error)
     char *path = my_getenv(env, "PATH");
     char *tmp = NULL;
 
-    if (path == NULL || cmd == NULL)
-        return NULL;
     if ((cmd[0] == '.' && cmd[1] == '/') || cmd[0] == '/')
         return cmd;
     if (access(cmd, F_OK) == 0 && access(cmd, X_OK) == 0)
@@ -77,9 +75,9 @@ char *search_command(char *cmd, char **env, int *error)
         return NULL;
     }
     tmp = exist_in_path(cmd, path, error);
-    if (tmp != NULL)
+    if (tmp != NULL) {
         return tmp;
-    else {
+    } else {
         my_put_command_not_found(cmd);
         return NULL;
     }
