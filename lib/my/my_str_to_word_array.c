@@ -49,7 +49,8 @@ void arr_append(char ***arr_p, char *elem)
         tmp[i] = arr[i];
     tmp[len] = elem;
     tmp[len + 1] = NULL;
-    arr_p[0] = tmp;
+    *arr_p = tmp;
+    free(arr);
 }
 
 char **my_str_to_word_array(char *str, char *delim)

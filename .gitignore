@@ -3,4 +3,5 @@ vgcore*
 *.o
 libmy.a
 CMakeLists.txt
+.idea
 .42*
