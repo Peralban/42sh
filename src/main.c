@@ -64,6 +64,8 @@ void the_sh(char **env)
 
     remove(def_term_name);
     fd = open(def_term_name, O_CREAT, 0666);
+    if (fd == -1)
+        return;
     close(fd);
 
     if (var_are_init(env_cpy) == false)
