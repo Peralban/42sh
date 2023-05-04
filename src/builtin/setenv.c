@@ -77,8 +77,10 @@ static int setenv_error(char **args, int *return_value, char **env)
         my_puterror("setenv: Too many arguments.\n");
         *return_value = 1;
         return 1;
-    } else if (args[1] == NULL)
-        return print_array(env);
+    } else if (args[1] == NULL) {
+        put_array_in_term(1, env);
+        return 1;
+    }
     if (parse_args_setenv(args) == 1) {
         *return_value = 1;
         return 1;

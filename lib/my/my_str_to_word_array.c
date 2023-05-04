@@ -11,54 +11,45 @@
 #include <unistd.h>
 #include <stdio.h>
 
-void arr_remove(char ***arr_p, int i)
+char *my_strdupij(char *str, int begin, int end)
 {
-    char **arr = arr_p[0];
-    int j = 0;
+    char *new_str = malloc(sizeof(char) * (end - begin + 1));
+    int i = 0;
 
-    arr[i] = NULL;
-    for (j = i + 1; arr[j] != NULL; j++) {
-        arr[j - 1] = arr[j];
+    if (new_str == NULL)
+        return NULL;
+    for (; begin < end; begin++) {
+        new_str[i] = str[begin];
+        i++;
     }
-    arr[j - 1] = NULL;
+    new_str[i] = '\0';
+    return new_str;
 }
 
-static int arr_append(char ***arr_p, char *elem)
+bool isin(char c, char *delim)
 {
-    char **arr = arr_p[0];
-    char **tmp = NULL;
-    int len = my_arraylen(arr);
-
-    tmp = malloc(sizeof(char*) * (len + 2));
-    if (tmp == NULL || elem == NULL)
-        return 1;
-    for (int i = 0; i < len; i++)
-        tmp[i] = arr[i];
-    tmp[len] = elem;
-    tmp[len + 1] = NULL;
-    arr_p[0] = tmp;
-    return 0;
-}
-
-static bool isin(char c, char *delim)
-{
-    for (int i = 0; delim[i] != 0; i++) {
+    for (int i = 0; delim[i] != '\0'; i++) {
         if (c == delim[i])
             return true;
     }
     return false;
 }
 
-static char *my_strdupij(char *str, int begin, int end)
+void arr_append(char ***arr_p, char *elem)
 {
-    char *tmp = malloc(end - begin + 1);
+    char **arr = arr_p[0];
+    char **tmp = NULL;
+    int len = 0;
 
+    for (; arr[len] != NULL; len++);
+    tmp = malloc(sizeof(char *) * (len + 2));
     if (tmp == NULL)
-        return NULL;
-    for (int i = begin; i < end; i++)
-        tmp[i - begin] = str[i];
-    tmp[end - begin] = '\0';
-    return tmp;
+        return;
+    for (int i = 0; i < len; i++)
+        tmp[i] = arr[i];
+    tmp[len] = elem;
+    tmp[len + 1] = NULL;
+    arr_p[0] = tmp;
 }
 
 char **my_str_to_word_array(char *str, char *delim)
@@ -66,21 +57,21 @@ char **my_str_to_word_array(char *str, char *delim)
     int begin = 0;
     int end = 0;
     int i = 1;
-    char **arr = malloc(sizeof(char*));
-    if (str == NULL || arr == NULL)
+    char **arr = malloc(sizeof(char *));
+
+    if (str == NULL)
         return NULL;
-    arr[0] = NULL;
-    for (; str[i] != 0; i++) {
+    for (arr[0] = NULL; str[i] != '\0'; i++) {
         if (isin(str[i - 1], delim) && !(isin(str[i], delim)))
             begin = i;
-        if (!(isin(str[i - 1], delim)) && isin(str[i], delim)) {
+        if (isin(str[i], delim) && !(isin(str[i - 1], delim))) {
             end = i;
             arr_append(&arr, my_strdupij(str, begin, end));
         }
-    } if (!(isin(str[i - 1], delim))) {
-        end = i;
-        if (arr_append(&arr, my_strdupij(str, begin, end)) == 1)
-            return NULL;
     }
+    if (isin(str[i - 1], delim))
+        arr_append(&arr, my_strdupij(str, begin, i - 1));
+    else
+        arr_append(&arr, my_strdupij(str, begin, i));
     return arr;
 }
