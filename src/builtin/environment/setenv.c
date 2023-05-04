@@ -55,8 +55,10 @@ static int variable_and_value(char **env, char **args)
     while (env[i] != NULL && array_size != 0) {
         if (my_start_with(env[i], args[1]) == 1) {
             env[i] = malloc(sizeof(char) *
-            (strlen(args[1]) + strlen(args[2]) + 2));
-            env[i] = strcat(args[1], args[2]);
+            (strlen(args[1]) + strlen(args[2]) + 1));
+            env[i][0] = '\0';
+            strcat(env[i], args[1]);
+            strcat(env[i], args[2]);
             return 0;
         }
         i++;
@@ -77,8 +79,10 @@ static int setenv_error(char **args, int *return_value, char **env)
         my_puterror("setenv: Too many arguments.\n");
         *return_value = 1;
         return 1;
-    } else if (args[1] == NULL)
-        return print_array(env);
+    } else if (args[1] == NULL) {
+        put_array_in_term(1, env);
+        return 1;
+    }
     if (parse_args_setenv(args) == 1) {
         *return_value = 1;
         return 1;
@@ -93,8 +97,11 @@ int my_setenv(char **args, char **env, int *return_value)
     if (setenv_error(args, return_value, env) == 1)
         return 1;
     tmp = malloc(sizeof(char) * (strlen(args[1]) + 2));
-    tmp = strcpy(tmp, args[1]);
-    tmp = strcat(args[1], "=");
+    if (tmp == NULL)
+        return 1;
+    tmp[0] = '\0';
+    tmp = strcat(tmp, args[1]);
+    tmp = strcat(tmp, "=");
     args[1] = strdup(tmp);
     if (args[2] == NULL)
         variable_only(env, args);

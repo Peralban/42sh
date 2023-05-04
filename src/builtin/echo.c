@@ -76,8 +76,8 @@ int my_echo(char **cmd, int *error)
     (void)error;
 
     str = test_special_cases(str_cmd);
-    printf("%s", strdup(str));
+    my_putstr(strdup(str));
     if (!opt)
-        printf("\n");
+        my_putstr("\n");
     return 0;
 }

@@ -7,12 +7,9 @@
 
 SRC =	delete_node_in_array.c	\
 		my_array_len.c			\
-		print_array.c			\
 		my_start_with.c			\
 		my_str_to_word_array.c	\
-		my_putstr.c				\
 		char_isnum.c			\
-		my_puterror.c			\
 		my_arraydup.c			\
 		char_isalpha.c			\
 		str_isalphanum.c		\
