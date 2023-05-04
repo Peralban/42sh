@@ -53,5 +53,6 @@ void my_puterror(const char *str);
 char *set_term_name(char *name);
 char *get_term_name(void);
 void start_ncurses(void);
+void my_exec(char **cmd, char **env, int *error);
 
 #endif
