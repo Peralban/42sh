@@ -44,7 +44,6 @@ static void loop(char **env_cpy)
 
     while (exit_value != 1) {
         print_prompt(env_cpy, error);
-        // my_putstr("$> ");
         error = 0;
         line = my_get_line(get_term_name(), &exit_value);
         if (line == NULL || line[0] == '\0')
@@ -71,7 +70,6 @@ void the_sh(char **env)
     if (fd == -1)
         return;
     close(fd);
-
     if (var_are_init(env_cpy) == false)
         setup_env(env_cpy);
     loop(env_cpy);
