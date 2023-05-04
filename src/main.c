@@ -14,21 +14,21 @@
 #include <string.h>
 #include <fcntl.h>
 
-char *my_get_line(int *error, char *term_name)
+char *my_get_line(char *term_name, int *exit_value)
 {
     char *line = NULL;
     size_t size = 0;
 
     if (isatty(0) == 0 || getenv("TERM") == NULL) {
         if (getline(&line, &size, stdin) < 0) {
-            my_exit(    error);
+            my_exit(exit_value);
             return NULL;
         }
         line[strlen(line) - 1] = '\0';
     } else {
         line = my_getline_ncurses(term_name);
         if (line == NULL) {
-            my_exit(error);
+            my_exit(exit_value);
             return NULL;
         }
     }
@@ -40,18 +40,20 @@ static void loop(char **env_cpy)
     char **cmd = NULL;
     char *line = NULL;
     int error = 0;
+    int exit_value = 0;
 
-    while (error != -1) {
+    while (exit_value != 1) {
         print_prompt(env_cpy, error);
         error = 0;
-        line = my_get_line(&error, get_term_name());
+        line = my_get_line(get_term_name(), &exit_value);
         if (line == NULL || line[0] == '\0')
+            continue;
+        if (history(line, &error) == 1)
             continue;
         cmd = my_str_to_word_array(line, " \t");
         free(line);
-        if (built_in(cmd, env_cpy, &error) == 2) {
+        if (built_in(cmd, env_cpy, &error, &exit_value) == 2)
             my_exec(cmd, env_cpy, &error);
-        }
         destroy_array(cmd);
     }
 }
@@ -59,8 +61,8 @@ static void loop(char **env_cpy)
 void the_sh(char **env)
 {
     char **env_cpy = my_arraydup(env);
-
-    char *def_term_name = set_term_name(".42sh_term");
+    char *term_name = create_term_name();
+    char *def_term_name = set_term_name(term_name);
     int fd = 0;
 
     remove(def_term_name);
@@ -68,7 +70,6 @@ void the_sh(char **env)
     if (fd == -1)
         return;
     close(fd);
-
     if (var_are_init(env_cpy) == false)
         setup_env(env_cpy);
     loop(env_cpy);
