@@ -56,5 +56,6 @@ char *get_term_name(void);
 char *create_term_name(void);
 void start_ncurses(void);
 void my_exec(char **cmd, char **env, int *error);
+int history(char *line, int *error);
 
 #endif

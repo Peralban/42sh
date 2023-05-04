@@ -29,6 +29,7 @@ SRC	=	src/main.c										\
 		src/prompt/print_prompt.c						\
 		src/prompt/my_getpwd.c							\
 		src/prompt/var_are_init.c						\
+		src/history/history.c				            \
 
 
 TEST_SRC = tests/test_my_sh.c
