@@ -5,8 +5,7 @@
 ** functions that print error on function execution
 */
 
-#include "my.h"
-#include "command_error_handling.h"
+#include "mysh.h"
 
 void my_put_permission_denied(char *cmd)
 {
