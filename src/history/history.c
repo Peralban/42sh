@@ -64,6 +64,8 @@ static int add_in_history(char *line, int fd, int *error)
     }
     str = strcat(line, "\n");
     write(fd, str, strlen(str));
+    close(fd);
+    line[strlen(line) - 1] = '\0';
     return 0;
 }
 
