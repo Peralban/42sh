@@ -14,6 +14,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 static void status_handling(int status)
 {
@@ -53,6 +54,23 @@ static void exec_parent(int pid, int *error)
     *error = WEXITSTATUS(status);
 }
 
+static void exec_child(char **cmd, char **env, int *error, char *new_cmd)
+{
+    int fd = 0;
+
+    fd = open(get_term_name(), O_RDWR | O_APPEND);
+    if (fd == -1)
+        exit(84);
+    dup2(fd, 1);
+    dup2(fd, 2);
+    close(fd);
+    if (execve(new_cmd, cmd, env) == -1) {
+        my_put_command_not_found(cmd[0]);
+        *error = 1;
+    }
+    exit(0);
+}
+
 void my_exec(char **cmd, char **env, int *error)
 {
     pid_t pid = 0;
@@ -65,9 +83,7 @@ void my_exec(char **cmd, char **env, int *error)
         return;
     pid = fork();
     if (pid == 0) {
-        if (execve(new_cmd, cmd, env) == -1)
-            my_put_command_not_found(cmd[0]);
-        exit(0);
+        exec_child(cmd, env, error, new_cmd);
     } else {
         exec_parent(pid, error);
     }
