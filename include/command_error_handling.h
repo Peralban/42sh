@@ -9,8 +9,8 @@
 
 typedef enum is_existing_e {
     NOT_EXISTING,
-    ACCESSABLE,
-    NOT_ACCESSABLE,
+    ACCESSIBLE,
+    NOT_ACCESSIBLE,
     ERROR
 } is_existing_t;
 

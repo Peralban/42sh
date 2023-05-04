@@ -18,9 +18,9 @@ static int check_access(char *cmd, bool *not_access)
     if (access(cmd, F_OK) == 0) {
         if (access(cmd, X_OK) != 0) {
             *not_access = true;
-            return NOT_ACCESSABLE;
+            return NOT_ACCESSIBLE;
         }
-        return ACCESSABLE;
+        return ACCESSIBLE;
     }
     return NOT_EXISTING;
 }
@@ -51,7 +51,7 @@ static char *exist_in_path(char *cmd, char *path, int *error)
     }
     for (int i = 0; path_tab[i] != NULL; i++) {
         tmp = get_tmp(path_tab[i], cmd);
-        if (check_access(tmp, &not_access) == ACCESSABLE) {
+        if (check_access(tmp, &not_access) == ACCESSIBLE) {
             destroy_array(path_tab);
             return tmp;
         }
