@@ -4,3 +4,4 @@ vgcore*
 libmy.a
 CMakeLists.txt
 .42sh_history
+.idea

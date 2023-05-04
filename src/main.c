@@ -50,8 +50,8 @@ static void loop(char **env_cpy)
         history(line, &error);
         cmd = my_str_to_word_array(line, " \t");
         free(line);
-        if (built_in(cmd, env_cpy, &error) != 2) {
-
+        if (built_in(cmd, env_cpy, &error) == 2) {
+            my_exec(cmd, env_cpy, &error);
         }
         destroy_array(cmd);
     }
@@ -65,6 +65,8 @@ void the_sh(char **env)
 
     remove(def_term_name);
     fd = open(def_term_name, O_CREAT, 0666);
+    if (fd == -1)
+        return;
     close(fd);
 
     if (var_are_init(env_cpy) == false)
