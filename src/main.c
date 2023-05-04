@@ -50,7 +50,7 @@ static void loop(char **env_cpy)
         cmd = my_str_to_word_array(line, " \t");
         free(line);
         if (built_in(cmd, env_cpy, &error) != 2) {
-
+            my_exec(cmd, env_cpy, &error);
         }
         destroy_array(cmd);
     }
