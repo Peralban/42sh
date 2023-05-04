@@ -97,6 +97,8 @@ int my_setenv(char **args, char **env, int *return_value)
     if (setenv_error(args, return_value, env) == 1)
         return 1;
     tmp = malloc(sizeof(char) * (strlen(args[1]) + 2));
+    if (tmp == NULL)
+        return 1;
     tmp[0] = '\0';
     tmp = strcat(tmp, args[1]);
     tmp = strcat(tmp, "=");

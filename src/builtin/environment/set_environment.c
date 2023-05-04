@@ -22,6 +22,8 @@ char *gethome(char *actual_pwd)
 
     if (strcmp(array_pwd[0], "home") == 0) {
         home = malloc(sizeof(char) * (strlen(array_pwd[0]) + 3));
+        if (home == NULL)
+            return NULL;
         home[0] = '\0';
         home = strcat(home, "/");
         home = strcat(home, array_pwd[0]);
