@@ -43,7 +43,6 @@ static void loop(char **env_cpy)
     int exit_value = 0;
 
     while (exit_value != 1) {
-        my_putstr("start loop !!!\n");
         print_prompt(env_cpy, error);
         // my_putstr("$> ");
         error = 0;
@@ -55,9 +54,7 @@ static void loop(char **env_cpy)
         if (built_in(cmd, env_cpy, &error, &exit_value) != 2) {
 
         }
-        my_putstr("start end loop !!!\n");
         destroy_array(cmd);
-        my_putstr("end loop !!!\n");
     }
 }
 
