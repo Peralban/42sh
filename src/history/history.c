@@ -18,7 +18,7 @@ static char *get_history_path(void)
     char *home = getenv("HOME");
     char *path = malloc(sizeof(char) * (strlen(home) + 17));
 
-    if (path == NULL)
+    if (path == NULL || home == NULL)
         return NULL;
     path[0] = '\0';
     path = strcat(path, home);
@@ -43,6 +43,8 @@ static void print_history(void)
     size_t len = 0;
     int i = 1;
 
+    if (fd == NULL)
+        return;
     while (getline(&line, &len, fd) != -1) {
         line[strlen(line) - 1] = '\0';
         my_putnbr(i);
