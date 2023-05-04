@@ -47,12 +47,12 @@ static void loop(char **env_cpy)
         line = my_get_line(&error, get_term_name());
         if (line == NULL || line[0] == '\0')
             continue;
-        history(line, &error);
+        if (history(line, &error) == 1)
+            continue;
         cmd = my_str_to_word_array(line, " \t");
         free(line);
-        if (built_in(cmd, env_cpy, &error) == 2) {
+        if (built_in(cmd, env_cpy, &error) == 2)
             my_exec(cmd, env_cpy, &error);
-        }
         destroy_array(cmd);
     }
 }
