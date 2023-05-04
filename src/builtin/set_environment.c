@@ -21,11 +21,16 @@ char *gethome(char *actual_pwd)
     char **array_pwd = my_str_to_word_array(actual_pwd, "/");
 
     if (strcmp(array_pwd[0], "home") == 0) {
-        home = strdup("/");
+        home = malloc(sizeof(char) * (strlen(array_pwd[0]) + 3));
+        home[0] = '\0';
+        home = strcat(home, "/");
         home = strcat(home, array_pwd[0]);
         home = strcat(home, "/");
-        if (array_pwd[1] != NULL && strcmp(array_pwd[1], "lost+found") != 0)
+        if (array_pwd[1] != NULL && strcmp(array_pwd[1], "lost+found") != 0) {
+            home = realloc(home, sizeof(char) * (strlen(home) +
+            strlen(array_pwd[1]) + 1));
             home = strcat(home, array_pwd[1]);
+        }
     }
     return home;
 }
