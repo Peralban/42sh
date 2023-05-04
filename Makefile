@@ -32,7 +32,7 @@ TEST_SRC = tests/test_my_sh.c
 
 OBJ	=   $(SRC:.c=.o)
 
-SATAN = -W -Wall -Wextra -Wshadow
+SATAN = -W -Wall -Wextra -Wshadow -g
 
 INCLUDE = -I./include
 
