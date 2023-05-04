@@ -15,7 +15,7 @@
 #include "my.h"
 
 // This function return the home directory.
-static char *gethome(char *actual_pwd)
+char *gethome(char *actual_pwd)
 {
     char *home = NULL;
     char **array_pwd = my_str_to_word_array(actual_pwd, "/");
