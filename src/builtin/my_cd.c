@@ -27,7 +27,7 @@ static int cd_in_directory(char **cmd, char **env, int *error)
 {
     char *set_pwd[4] = {"setenv", strdup("PWD"), NULL, NULL};
     char *set_oldpwd[4] =
-    {"setenv", strdup("OLDPWD"), my_getenv(env, "OLDPWD"), NULL};
+    {"setenv", strdup("OLDPWD"), my_getenv(env, "PWD"), NULL};
 
     if (chdir(cmd[1]) == -1) {
         return print_error(cmd[1], 1, error);

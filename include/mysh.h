@@ -12,10 +12,10 @@
 
     #include <stddef.h>
 
-char *my_get_line(int *error, char *term_name);
+char *my_get_line(char *term_name, int *exit_value);
 void the_sh(char **env);
 int main(int ac, char **av, char **env);
-int built_in(char **cmd, char **env, int *error);
+int built_in(char **cmd, char **env, int *error, int *exit_value);
 int parse_args_setenv(char **args);
 int my_unsetenv(char **args, char **env, int *return_value);
 int my_setenv(char **args, char **env, int *return_value);
@@ -28,6 +28,7 @@ char *find_special_char_last_cases(char c);
 char *find_special_char(char c);
 char *handle_backslash(char *str, char *new_str, int i, int j);
 int my_cd(char **cmd, char **env, int *error);
+char *gethome(char *actual_pwd);
 int setup_env(char **env);
 char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
@@ -52,6 +53,7 @@ void print_array(char **arr);
 void my_puterror(const char *str);
 char *set_term_name(char *name);
 char *get_term_name(void);
+char *create_term_name(void);
 void start_ncurses(void);
 void my_exec(char **cmd, char **env, int *error);
 int history(char *line, int *error);
