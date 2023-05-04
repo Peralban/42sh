@@ -71,5 +71,4 @@ void my_exec(char **cmd, char **env, int *error)
     } else {
         exec_parent(pid, error);
     }
-    free(new_cmd);
 }
