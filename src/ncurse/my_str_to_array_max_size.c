@@ -46,7 +46,7 @@ void get_word(char *str, char *delim, char ***arr, int *swa)
     if (swa[SWA_K] >= swa[SWA_MAX] - 2 && !isin(str[swa[SWA_I] - 1], delim) &&
     !isin(str[swa[SWA_I]], delim)) {
         add_to_arr(arr, str, swa);
-        swa[SWA_K]--;
+        swa[SWA_K] -= 1;
         swa[SWA_BEGIN] = swa[SWA_I] + 1;
         if (isin(str[swa[SWA_I] + 1], delim))
             swa[SWA_I]++;

@@ -5,31 +5,34 @@
 ## Makefile
 ##
 
-SRC	=	src/main.c											\
-		src/destroy_array.c									\
-		src/builtin/builtin.c								\
-		src/builtin/my_exit.c								\
-        src/builtin/my_cd.c									\
-		src/builtin/echo.c									\
-        src/builtin/echo_special_cases.c					\
-		src/builtin/environment/setenv.c					\
-		src/builtin/environment/unsetenv.c					\
-		src/builtin/environment/set_environment.c			\
-		src/builtin/environment/parse_args_setenv.c			\
-		src/builtin/redirections/double_left_redirection.c	\
-		src/execution/my_exec.c								\
-		src/execution/command_error_handling.c				\
-		src/execution/my_put_errors.c						\
-		src/ncurse/my_getline_ncurses.c						\
-		src/ncurse/my_str_to_array_max_size.c				\
-		src/ncurse/write_in_term.c							\
-		src/ncurse/my_put.c									\
-		src/ncurse/set_get_term_name.c						\
-		src/ncurse/start_ncurses.c							\
-		src/prompt/my_getenv.c								\
-		src/prompt/print_prompt.c							\
-		src/prompt/my_getpwd.c								\
-		src/prompt/var_are_init.c							\
+SRC	=	src/main.c										\
+		src/destroy_array.c								\
+		src/builtin/builtin.c							\
+		src/builtin/my_exit.c							\
+        src/builtin/my_cd.c								\
+		src/builtin/echo.c								\
+        src/builtin/echo_special_cases.c				\
+		src/builtin/environment/setenv.c				\
+		src/builtin/environment/unsetenv.c				\
+		src/builtin/environment/set_environment.c		\
+		src/builtin/environment/parse_args_setenv.c		\
+		src/builtin/environment/set_get_env.c			\
+		src/execution/my_exec.c							\
+		src/execution/command_error_handling.c			\
+		src/execution/my_put_errors.c					\
+		src/ncurse/my_getline_ncurses.c					\
+		src/ncurse/my_str_to_array_max_size.c			\
+		src/ncurse/write_in_term.c						\
+		src/ncurse/my_put.c								\
+		src/ncurse/set_get_term_name.c					\
+		src/ncurse/start_ncurses.c						\
+		src/parser/parser.c								\
+		src/parser/get_token.c							\
+		src/prompt/my_getenv.c							\
+		src/prompt/print_prompt.c						\
+		src/prompt/my_getpwd.c							\
+		src/prompt/var_are_init.c						\
+		src/history/history.c				            \
 
 
 TEST_SRC = tests/test_my_sh.c
@@ -79,6 +82,8 @@ include:
 	@echo "    #define __"mysh"_H" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "    #include <stddef.h>" >> include/mysh.h
+	@echo "" >> include/mysh.h
+	@echo "typedef struct token_s token_t;" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@cat $(SRC) | grep -B1 "^{" | grep "(" | grep -v "static" | sed \
 		s/"$$"/";"/ >> include/mysh.h

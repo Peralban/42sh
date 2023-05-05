@@ -47,7 +47,6 @@ static void is_github_folder(char *pwd, char **env)
         }
         chdir("..");
     }
-    chdir(pwd);
 }
 
 void print_prompt(char **env, int result_cmd)
@@ -66,6 +65,7 @@ void print_prompt(char **env, int result_cmd)
     }
     is_github_folder(pwd, env);
     my_putstr("\n> ");
+    chdir(pwd);
     free(prompt);
     free(pwd);
 }
