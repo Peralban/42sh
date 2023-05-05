@@ -12,8 +12,6 @@
 #include <wait.h>
 #include <fcntl.h>
 
-void multiple_pipe(token_t *token, pipe_t *pipes, int *status);
-
 void pipes_stuff_child(pipe_t *pipes)
 {
     int fd = 0;
