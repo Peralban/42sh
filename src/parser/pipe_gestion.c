@@ -55,7 +55,8 @@ static pipe_t *set_pipes(token_t *token)
     int type = PIPE;
     int invalid = 0;
 
-    pipe->fds = NULL;
+    if (pipe == NULL)
+        return NULL;
     pipe->max = 0;
     pipe->index = 0;
     while (token->type != SEMICOLON && token->type != END) {
@@ -67,6 +68,8 @@ static pipe_t *set_pipes(token_t *token)
     }
     pipe->fds = malloc(sizeof(int) * pipe->max * 2);
     free(token);
+    if (pipe->fds == NULL)
+        return NULL;
     return pipe;
 }
 
@@ -74,6 +77,8 @@ void multiple_pipe(token_t *token, pipe_t *pipes, int *status)
 {
     int *pids = malloc(sizeof(int) * (pipes->max + 1));
 
+    if (pids == NULL)
+        return;
     pids[0] = read_command(token);
     for (pipes->index = 1; pipes->index <= pipes->max; pipes->index++) {
         get_token(token);
@@ -90,6 +95,7 @@ void read_pipe(token_t *token)
 {
     pipe_t *pipes = set_pipes(token_dup(token));
     int status = 0;
+
     if (pipes == NULL) {
         while (token->type != SEMICOLON && token->type != END)
             get_token(token);
