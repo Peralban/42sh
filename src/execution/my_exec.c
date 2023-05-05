@@ -7,6 +7,7 @@
 
 #include "my.h"
 #include "mysh.h"
+#include "parser.h"
 #include "command_error_handling.h"
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -40,7 +41,7 @@ static void status_handling(int status)
     }
 }
 
-static void exec_parent(int pid, int *error)
+void exec_parent(int pid, int *error)
 {
     int status = 0;
 
@@ -54,16 +55,12 @@ static void exec_parent(int pid, int *error)
     *error = WEXITSTATUS(status);
 }
 
-static void exec_child(char **cmd, char **env, int *error, char *new_cmd)
+static void exec_child(char **cmd, char **env, char *new_cmd, token_t *token)
 {
-    int fd = 0;
+    int *error = token->error;
+    pipe_t *pipes = token->pipes;
 
-    fd = open(get_term_name(), O_RDWR | O_APPEND);
-    if (fd == -1)
-        exit(84);
-    dup2(fd, 1);
-    dup2(fd, 2);
-    close(fd);
+    pipes_stuff_child(pipes);
     if (execve(new_cmd, cmd, env) == -1) {
         my_put_command_not_found(cmd[0]);
         *error = 1;
@@ -71,20 +68,23 @@ static void exec_child(char **cmd, char **env, int *error, char *new_cmd)
     exit(0);
 }
 
-void my_exec(char **cmd, char **env, int *error)
+int my_exec(char **cmd, char **env, token_t *token)
 {
     pid_t pid = 0;
     char *new_cmd = NULL;
+    int *error = token->error;
 
     if (cmd == NULL || error == NULL)
-        return;
+        return 0;
     new_cmd = search_command(cmd[0], env, error);
     if (new_cmd == NULL)
-        return;
+        return 0;
     pid = fork();
     if (pid == 0) {
-        exec_child(cmd, env, error, new_cmd);
+        exec_child(cmd, env, new_cmd, token);
     } else {
-        exec_parent(pid, error);
+        if (token->pipes->max == 0)
+            exec_parent(pid, error);
     }
+    return pid;
 }
