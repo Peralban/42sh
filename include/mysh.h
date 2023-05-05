@@ -12,12 +12,15 @@
 
     #include <stddef.h>
 
-char *my_get_line(int *error, char *term_name);
+typedef struct token_s token_t;
+
+char *my_get_line(char *term_name, int *exit_value);
+void exec_command(char **env_cpy, char **cmd, int *error, int *exit_value);
 void the_sh(char **env);
 int main(int ac, char **av, char **env);
 void destroy_array(char **arr);
-int built_in(char **cmd, char **env, int *error);
-int my_exit(int *error);
+int built_in(char **cmd, char **env, int *error, int *exit_value);
+int my_exit(int *exit_value);
 int my_cd(char **cmd, char **env, int *error);
 char *adapt_str(char *str, int nb_quotes);
 char *test_special_cases(char *str);
@@ -28,8 +31,11 @@ char *find_special_char(char c);
 char *handle_backslash(char *str, char *new_str, int i, int j);
 int my_setenv(char **args, char **env, int *return_value);
 int my_unsetenv(char **args, char **env, int *return_value);
+char *gethome(char *actual_pwd);
 int setup_env(char **env);
 int parse_args_setenv(char **args);
+char **set_env_tab(char **new_env);
+char **get_env_tab(void);
 void my_exec(char **cmd, char **env, int *error);
 char *search_command(char *cmd, char **env, int *error);
 void my_put_permission_denied(char *cmd);
@@ -53,11 +59,20 @@ void print_array(char **arr);
 void my_puterror(const char *str);
 char *set_term_name(char *name);
 char *get_term_name(void);
+char *create_term_name(void);
 void start_ncurses(void);
+void read_command(token_t *token);
+void parser(char *line, int *exit, int *error);
+void set_token_type(token_t *token);
+int is_special(token_t *token, int i);
+void special_operand(token_t *token, int i, int k);
+void set_token_elem(token_t *token);
+void get_token(token_t *token);
 char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 bool var_are_init(char **env);
+int history(char *line, int *error);
 void create_alias_file(char **env);
 void add_alias(char **env, char **cmd);
 void execute_alias(char **cmd, char **env, int *error);

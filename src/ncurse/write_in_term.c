@@ -38,6 +38,10 @@ void put_number_in_term(int fd, int nb)
 {
     char *str = NULL;
 
+    if (nb < 0) {
+        put_str_in_term(fd, "-");
+        nb = nb * -1;
+    }
     if (nb > 9) {
         put_number_in_term(fd, nb / 10);
         put_number_in_term(fd, nb % 10);
