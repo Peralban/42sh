@@ -3,3 +3,7 @@ vgcore*
 *.o
 libmy.a
 CMakeLists.txt
+.42sh_history
+.idea
+.42*
+val*

@@ -13,8 +13,8 @@
 
 // A function that frees the memory allocated to the array of strings
 // and print "exit". Also sets the error variable to 1. To break the main loop.
-int my_exit(int *error)
+int my_exit(int *exit_value)
 {
-    *error = -1;
+    *exit_value = 1;
     return 1;
 }

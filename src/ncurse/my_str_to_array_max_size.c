@@ -46,26 +46,31 @@ void get_word(char *str, char *delim, char ***arr, int *swa)
     if (swa[SWA_K] >= swa[SWA_MAX] - 2 && !isin(str[swa[SWA_I] - 1], delim) &&
     !isin(str[swa[SWA_I]], delim)) {
         add_to_arr(arr, str, swa);
-        swa[SWA_K]--;
+        swa[SWA_K] -= 1;
         swa[SWA_BEGIN] = swa[SWA_I] + 1;
         if (isin(str[swa[SWA_I] + 1], delim))
             swa[SWA_I]++;
     }
 }
 
-char **my_str_to_word_array_max_size(char *str, char *delim, int max_size)
+void init_swa(int max_size, int *swa)
 {
-    int *swa = malloc(sizeof(int) * (SWA_MAX));
-    char **arr = malloc(sizeof(char*));
-
-    if (str == NULL || arr == NULL || swa == NULL)
-        return NULL;
     swa[SWA_MAX] = max_size;
     swa[SWA_I] = 1;
     swa[SWA_N] = 0;
     swa[SWA_K] = 0;
     swa[SWA_BEGIN] = 0;
     swa[SWA_END] = 0;
+}
+
+char **my_str_to_word_array_max_size(char *str, char *delim, int max_size)
+{
+    int *swa = malloc(sizeof(int) * (SWA_MAX + 1));
+    char **arr = malloc(sizeof(char*));
+
+    if (str == NULL || arr == NULL || swa == NULL)
+        return NULL;
+    init_swa(max_size, swa);
     arr[0] = NULL;
     for (; str[swa[SWA_I]] != 0; swa[SWA_I]++, swa[SWA_K]++) {
         get_word(str, delim, &arr, swa);
@@ -74,5 +79,6 @@ char **my_str_to_word_array_max_size(char *str, char *delim, int max_size)
     }
     if (!(isin(str[swa[SWA_I] - 1], delim)))
         add_to_arr(&arr, str, swa);
+    free(swa);
     return arr;
 }

@@ -14,25 +14,31 @@
 #include <string.h>
 #include <fcntl.h>
 
-char *my_get_line(int *error, char *term_name)
+char *my_get_line(char *term_name, int *exit_value)
 {
     char *line = NULL;
     size_t size = 0;
 
     if (isatty(0) == 0 || getenv("TERM") == NULL) {
         if (getline(&line, &size, stdin) < 0) {
-            my_exit(    error);
+            my_exit(exit_value);
             return NULL;
         }
         line[strlen(line) - 1] = '\0';
     } else {
         line = my_getline_ncurses(term_name);
         if (line == NULL) {
-            my_exit(error);
+            my_exit(exit_value);
             return NULL;
         }
     }
     return line;
+}
+
+void exec_command(char **env_cpy, char **cmd, int *error, int *exit_value)
+{
+    if (built_in(cmd, env_cpy, error, exit_value) == 2)
+        my_exec(cmd, env_cpy, error);
 }
 
 static void loop(char **env_cpy)
@@ -40,32 +46,35 @@ static void loop(char **env_cpy)
     char **cmd = NULL;
     char *line = NULL;
     int error = 0;
+    int exit_value = 0;
 
-    while (error != -1) {
+    while (exit_value != 1) {
         print_prompt(env_cpy, error);
         error = 0;
-        line = my_get_line(&error, get_term_name());
+        line = my_get_line(get_term_name(), &exit_value);
         if (line == NULL || line[0] == '\0')
             continue;
         line = detect_variables(line, env_cpy, &error);
-        cmd = my_str_to_word_array(line, " \t");
-        free(line);
-        error = built_in(cmd, env_cpy, &error);
-        if (error != 2)
+        if (history(line, &error) == 1)
             continue;
+        parser(line, &exit_value, &error);
+        free(line);
     }
 }
 
 void the_sh(char **env)
 {
     char **env_cpy = my_arraydup(env);
-    char *def_term_name = set_term_name(".42sh_term");
+    char *term_name = create_term_name();
+    char *def_term_name = set_term_name(term_name);
     int fd = 0;
 
+    set_env_tab(env_cpy);
     remove(def_term_name);
     fd = open(def_term_name, O_CREAT, 0666);
+    if (fd == -1)
+        return;
     close(fd);
-
     if (var_are_init(env_cpy) == false)
         setup_env(env_cpy);
     loop(env_cpy);
