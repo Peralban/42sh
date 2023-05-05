@@ -35,6 +35,12 @@ char *my_get_line(char *term_name, int *exit_value)
     return line;
 }
 
+void exec_command(char **env_cpy, char **cmd, int *error, int *exit_value)
+{
+    if (built_in(cmd, env_cpy, error, exit_value) == 2)
+        my_exec(cmd, env_cpy, error);
+}
+
 static void loop(char **env_cpy)
 {
     char **cmd = NULL;
@@ -50,11 +56,8 @@ static void loop(char **env_cpy)
             continue;
         if (history(line, &error) == 1)
             continue;
-        cmd = my_str_to_word_array(line, " \t");
+        parser(line, &exit_value, &error);
         free(line);
-        if (built_in(cmd, env_cpy, &error, &exit_value) == 2)
-            my_exec(cmd, env_cpy, &error);
-        destroy_array(cmd);
     }
 }
 
@@ -63,9 +66,9 @@ void the_sh(char **env)
     char **env_cpy = my_arraydup(env);
     char *term_name = create_term_name();
     char *def_term_name = set_term_name(term_name);
-
     int fd = 0;
 
+    set_env_tab(env_cpy);
     remove(def_term_name);
     fd = open(def_term_name, O_CREAT, 0666);
     if (fd == -1)
