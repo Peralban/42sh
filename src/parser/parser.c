@@ -39,7 +39,10 @@ void parser(char *line, int *exit, int *error)
     token->error = error;
     get_token(token);
     while (token->type != END) {
-        read_command(token);
+        while (token->type != END && token->type != SEMICOLON) {
+            read_command(token);
+        }
+        get_token(token);
     }
     free(token);
 }
