@@ -5,8 +5,9 @@
 ** No file there , just an epitech header example .
 */
 
-#include "../include/mysh.h"
-#include "../include/my_getline.h"
+#include "mysh.h"
+#include "my.h"
+#include "my_getline.h"
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
@@ -64,6 +65,9 @@ void display_term(char *term_name, char *line)
 char *get_string(char *term_name, char *line)
 {
     size_t len = 0;
+    char **history = get_history_array();
+    int history_index = my_arraylen(history);
+    char *save = strdup(line);
 
     for (int ch = getch(); ch != 10; ch = getch(), len = strlen(line)) {
         if (ch == KEY_BACKSPACE && len > 0) {
@@ -73,9 +77,14 @@ char *get_string(char *term_name, char *line)
             line = realloc(line, sizeof(char) * (len + 2));
             line[len] = (char)ch;
             line[len + 1] = '\0';
+            save = strdup(line);
+        } if (ch == KEY_UP || ch == KEY_DOWN) {
+            line = history_up_and_down(ch, save, &history_index, history);
         }
         display_term(term_name, line);
     }
+    free(save);
+    destroy_array(history);
     return line;
 }
 

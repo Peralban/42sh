@@ -26,6 +26,7 @@ SRC	=	src/main.c										\
 		src/ncurse/my_put.c								\
 		src/ncurse/set_get_term_name.c					\
 		src/ncurse/start_ncurses.c						\
+		src/ncurse/line_edition/line_edition.c			\
 		src/parser/parser.c								\
 		src/parser/get_token.c							\
 		src/prompt/my_getenv.c							\
