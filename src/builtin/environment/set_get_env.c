@@ -9,7 +9,7 @@
 #include <string.h>
 #include "my.h"
 
-char **my_set_env_tab(char **new_env)
+char **set_env_tab(char **new_env)
 {
     static char **env = NULL;
 
@@ -18,7 +18,7 @@ char **my_set_env_tab(char **new_env)
     return env;
 }
 
-char **my_get_env_tab(void)
+char **get_env_tab(void)
 {
-    return my_set_env_tab(NULL);
+    return set_env_tab(NULL);
 }
