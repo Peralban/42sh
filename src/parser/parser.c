@@ -14,6 +14,9 @@
 void read_command(token_t *token)
 {
     char **arr = malloc(sizeof(char*) * 1);
+
+    if (arr == NULL)
+        return;
     arr[0] = NULL;
     do {
         arr_append(&arr, strdup(token->elem));
