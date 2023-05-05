@@ -84,8 +84,9 @@ void multiple_pipe(token_t *token, pipe_t *pipes, int *status)
         get_token(token);
         pids[pipes->index] = read_command(token);
     }
-    for (int i = 0; i < pipes->max * 2; i++)
+    for (int i = 0; i < pipes->max * 2; i++) {
         close(pipes->fds[i]);
+    }
     for (int i = 0; i < pipes->max + 1; i++) {
         exec_parent(pids[i], status);
     }

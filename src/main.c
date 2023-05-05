@@ -40,6 +40,7 @@ int exec_command(char **env_cpy, char **cmd, token_t *token)
 {
     int *error = token->error;
     int *exit_value = token->exit;
+
     if (built_in(cmd, env_cpy, error, exit_value) == 2)
         return my_exec(cmd, env_cpy, token);
     return 0;
