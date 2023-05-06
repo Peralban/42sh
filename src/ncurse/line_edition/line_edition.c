@@ -8,9 +8,10 @@
 #include "mysh.h"
 #include "my.h"
 #include <ncurses.h>
+#include <stdlib.h>
 #include <string.h>
 
-char *history_up_and_down(int ch, char *save, int *index, char **history)
+static char *move_in_history(char *save, int *index, char **history, int ch)
 {
     int len = my_arraylen(history) - 1;
     char *line = NULL;
@@ -22,15 +23,28 @@ char *history_up_and_down(int ch, char *save, int *index, char **history)
             (*index)--;
             line = strdup(history[*index]);
         }
-    } else if (ch == KEY_DOWN) {
-        if (*index >= len && save != NULL) {
+    } if (ch == KEY_DOWN) {
+        if (*index >= len && save != NULL)
             line = save;
-            return line;
-        }
         if (*index < len) {
             (*index)++;
             line = strdup(history[*index]);
         }
     }
     return line;
+}
+
+char *line_edition(int ch, char *save, int *index, char **history)
+{
+    char *line = NULL;
+
+    if (ch == KEY_UP || ch == KEY_DOWN)
+        line = move_in_history(save, index, history, ch);
+    return line;
+}
+
+void free_line_edition(char **history, char *save)
+{
+    destroy_array(history);
+    free(save);
 }
