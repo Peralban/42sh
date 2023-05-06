@@ -34,6 +34,7 @@ SRC	=	src/main.c										\
 		src/prompt/my_getpwd.c							\
 		src/prompt/var_are_init.c						\
 		src/history/history.c				            \
+		src/history/get_history_array.c					\
 
 
 TEST_SRC = tests/test_my_sh.c
