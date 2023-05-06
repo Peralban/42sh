@@ -77,9 +77,10 @@ char *get_string(char *term_name, char *line)
             line = realloc(line, sizeof(char) * (len + 2));
             line[len] = (char)ch;
             line[len + 1] = '\0';
+            free(save);
             save = strdup(line);
         } if (ch == KEY_UP || ch == KEY_DOWN) {
-            line = history_up_and_down(ch, save, &history_index, history);
+            line = strdup(history_up_and_down(ch, save, &history_index, history));
         }
         display_term(term_name, line);
     }
