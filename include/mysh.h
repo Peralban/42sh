@@ -65,6 +65,8 @@ char *set_term_name(char *name);
 char *get_term_name(void);
 char *create_term_name(void);
 void start_ncurses(void);
+char *line_edition(int ch, char *save, int *index, char **history);
+void free_line_edition(char **history, char *save);
 int read_command(token_t *token);
 void parser(char *line, int *exit, int *error);
 void set_token_type(token_t *token);
@@ -80,6 +82,8 @@ char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 bool var_are_init(char **env);
+char *get_history_path(void);
 int history(char *line, int *error);
+char **get_history_array(void);
 
 #endif
