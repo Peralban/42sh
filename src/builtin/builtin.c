@@ -8,6 +8,7 @@
 #include "mysh.h"
 #include "my.h"
 #include <string.h>
+#include <ncurses.h>
 
 int built_in(char **cmd, char **env, int *error, int *exit_value)
 {
@@ -25,5 +26,8 @@ int built_in(char **cmd, char **env, int *error, int *exit_value)
         return my_exit(exit_value);
     if (strcmp(cmd[0], "echo") == 0)
         return my_echo(cmd, error);
+    if (strcmp(cmd[0], "clear") == 0) {
+        return clear_screen();
+    }
     return 2;
 }
