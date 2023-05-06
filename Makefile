@@ -29,6 +29,8 @@ SRC	=	src/main.c										\
 		src/ncurse/line_edition/line_edition.c			\
 		src/parser/parser.c								\
 		src/parser/get_token.c							\
+		src/parser/token_dup.c							\
+		src/parser/pipe_gestion.c						\
 		src/prompt/my_getenv.c							\
 		src/prompt/print_prompt.c						\
 		src/prompt/my_getpwd.c							\
@@ -84,8 +86,10 @@ include:
 	@echo "    #define __"mysh"_H" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "    #include <stddef.h>" >> include/mysh.h
+	@echo "    #include <unistd.h>" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "typedef struct token_s token_t;" >> include/mysh.h
+	@echo "typedef struct pipe_s pipe_t;" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@cat $(SRC) | grep -B1 "^{" | grep "(" | grep -v "static" | sed \
 		s/"$$"/";"/ >> include/mysh.h

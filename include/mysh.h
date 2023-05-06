@@ -11,11 +11,13 @@
     #define __mysh_H
 
     #include <stddef.h>
+    #include <unistd.h>
 
 typedef struct token_s token_t;
+typedef struct pipe_s pipe_t;
 
 char *my_get_line(char *term_name, int *exit_value);
-void exec_command(char **env_cpy, char **cmd, int *error, int *exit_value);
+int exec_command(char **env_cpy, char **cmd, token_t *token);
 void the_sh(char **env);
 int main(int ac, char **av, char **env);
 void destroy_array(char **arr);
@@ -36,7 +38,8 @@ int setup_env(char **env);
 int parse_args_setenv(char **args);
 char **set_env_tab(char **new_env);
 char **get_env_tab(void);
-void my_exec(char **cmd, char **env, int *error);
+void exec_parent(int pid, int *error);
+int my_exec(char **cmd, char **env, token_t *token);
 char *search_command(char *cmd, char **env, int *error);
 void my_put_permission_denied(char *cmd);
 void my_put_command_not_found(char *cmd);
@@ -61,6 +64,7 @@ char *set_term_name(char *name);
 char *get_term_name(void);
 char *create_term_name(void);
 void start_ncurses(void);
+int read_command(token_t *token);
 char *line_edition(int ch, char *save, int *index, char **history);
 void free_line_edition(char **history, char *save);
 void read_command(token_t *token);
@@ -70,6 +74,10 @@ int is_special(token_t *token, int i);
 void special_operand(token_t *token, int i, int k);
 void set_token_elem(token_t *token);
 void get_token(token_t *token);
+token_t *token_dup(token_t *token);
+void pipes_stuff_child(pipe_t *pipes);
+void multiple_pipe(token_t *token, pipe_t *pipes, int *status);
+void read_pipe(token_t *token);
 char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
