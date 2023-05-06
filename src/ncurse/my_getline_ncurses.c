@@ -68,24 +68,21 @@ char *get_string(char *term_name, char *line)
     char **history = get_history_array();
     int history_index = my_arraylen(history);
     char *save = strdup(line);
-
-    for (int ch = getch(); ch != 10; ch = getch(), len = strlen(line)) {
-        if (ch == KEY_BACKSPACE && len > 0) {
+    for (int c = getch(); c != 10; c = getch(), len = strlen(line)) {
+        if (c == KEY_BACKSPACE && len > 0) {
             line = realloc(line, sizeof(char) * (len));
             line[len - 1] = '\0';
-        } if (PRINTABLE(ch)) {
+        } if (PRINTABLE(c)) {
             line = realloc(line, sizeof(char) * (len + 2));
-            line[len] = (char)ch;
+            line[len] = (char)c;
             line[len + 1] = '\0';
             free(save);
             save = strdup(line);
-        } if (ch == KEY_UP || ch == KEY_DOWN) {
-            line = strdup(history_up_and_down(ch, save, &history_index, history));
-        }
+        } if (c == KEY_UP || c == KEY_DOWN)
+            line = strdup(line_edition(c, save, &history_index, history));
         display_term(term_name, line);
     }
-    free(save);
-    destroy_array(history);
+    free_line_edition(history, save);
     return line;
 }
 
