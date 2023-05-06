@@ -69,8 +69,7 @@ static void loop(char **env_cpy)
 void the_sh(char **env)
 {
     char **env_cpy = my_arraydup(env);
-    char *term_name = create_term_name();
-    char *def_term_name = set_term_name(term_name);
+    char *def_term_name = set_term_name(get_path(".42sh_term"));
     int fd = 0;
 
     set_env_tab(env_cpy);

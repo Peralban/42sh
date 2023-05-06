@@ -6,6 +6,7 @@
 ##
 
 SRC	=	src/main.c										\
+		src/get_file_path.c								\
 		src/destroy_array.c								\
 		src/builtin/builtin.c							\
 		src/builtin/my_exit.c							\
