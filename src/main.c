@@ -7,6 +7,7 @@
 
 #include "../include/mysh.h"
 #include "../include/my.h"
+#include "parser.h"
 #include <ncurses.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -35,10 +36,14 @@ char *my_get_line(char *term_name, int *exit_value)
     return line;
 }
 
-void exec_command(char **env_cpy, char **cmd, int *error, int *exit_value)
+int exec_command(char **env_cpy, char **cmd, token_t *token)
 {
+    int *error = token->error;
+    int *exit_value = token->exit;
+
     if (built_in(cmd, env_cpy, error, exit_value) == 2)
-        my_exec(cmd, env_cpy, error);
+        return my_exec(cmd, env_cpy, token);
+    return 0;
 }
 
 static void loop(char **env_cpy)
