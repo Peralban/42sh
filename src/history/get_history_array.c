@@ -21,7 +21,7 @@ static int put_line_edition_error(char *str)
 
 static int open_history_file(void)
 {
-    char *history_path = get_history_path();
+    char *history_path = get_path(".42sh_history");
     int fd = 0;
 
     if (history_path == NULL)
@@ -35,7 +35,7 @@ static int open_history_file(void)
 static char *read_history_file(int fd)
 {
     struct stat st;
-    char *history_path = get_history_path();
+    char *history_path = get_path(".42sh_history");
     char *history_in_line = NULL;
 
     if (history_path == NULL)

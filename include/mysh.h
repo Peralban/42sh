@@ -20,6 +20,7 @@ char *my_get_line(char *term_name, int *exit_value);
 int exec_command(char **env_cpy, char **cmd, token_t *token);
 void the_sh(char **env);
 int main(int ac, char **av, char **env);
+char *get_path(char *file_name);
 void destroy_array(char **arr);
 int built_in(char **cmd, char **env, int *error, int *exit_value);
 int my_exit(int *exit_value);
