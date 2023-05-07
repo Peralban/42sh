@@ -16,6 +16,8 @@
 char *get_history_path(void)
 {
     char *home = getenv("HOME");
+    if (home == NULL)
+        return NULL;
     char *path = malloc(sizeof(char) * (strlen(home) + 17));
 
     if (path == NULL || home == NULL)
@@ -29,7 +31,6 @@ char *get_history_path(void)
 static int history_error(int fd, int *error)
 {
     if (fd == -1) {
-        my_puterror("open");
         *error = 1;
         return 84;
     }
