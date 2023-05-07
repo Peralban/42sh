@@ -12,6 +12,7 @@
 
     #include <stddef.h>
     #include <unistd.h>
+    #include "parser.h"
 
 typedef struct token_s token_t;
 typedef struct pipe_s pipe_t;
@@ -81,8 +82,8 @@ char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 bool var_are_init(char **env);
-char *get_history_path(void);
 int history(char *line, int *error);
 char **get_history_array(void);
+int right_redirection(char *file_path, special_type_e type);
 
 #endif
