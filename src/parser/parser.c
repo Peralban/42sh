@@ -28,15 +28,17 @@ int read_command(token_t *token)
     return pid;
 }
 
-void read_and_or(token_t *token) {
+void read_and_or(token_t *token)
+{
     do {
         read_pipe(token);
         if (*token->error != 0 && token->type == AND) {
-            while (token->type != END && token->type != SEMICOLON && token->type != OR)
+            while (token->type != END && token->type != SEMICOLON &&
+            token->type != OR)
                 get_token(token);
         }
         if (*token->error == 0 && token->type == OR) {
-            while (token->type != END && token->type != SEMICOLON && token->type != AND)
+            while (token->type != END && token->type != SEMICOLON)
                 get_token(token);
         }
         get_token(token);
