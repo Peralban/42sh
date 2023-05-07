@@ -38,8 +38,12 @@ static char *read_history_file(int fd)
     char *history_path = get_history_path();
     char *history_in_line = NULL;
 
+    if (history_path == NULL)
+        return NULL;
     stat(history_path, &st);
     history_in_line = malloc(sizeof(char) * (st.st_size + 1));
+    if (history_in_line == NULL)
+        return NULL;
     if (read(fd, history_in_line, st.st_size) == -1) {
         put_line_edition_error("read");
         return NULL;
