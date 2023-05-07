@@ -32,8 +32,10 @@ static void get_keyboard_event(int ch, char *save, char *line, int len)
 
 static void free_history_and_save(char **history, char *save)
 {
-    destroy_array(history);
-    free(save);
+    if (history != NULL)
+        destroy_array(history);
+    if (save != NULL)
+        free(save);
 }
 
 char *get_string(char *term_name, char *line)
