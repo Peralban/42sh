@@ -5,8 +5,9 @@
 ** No file there , just an epitech header example .
 */
 
-#include "../include/mysh.h"
-#include "../include/my_getline.h"
+#include "mysh.h"
+#include "my.h"
+#include "my_getline.h"
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,24 +62,6 @@ void display_term(char *term_name, char *line)
     print_term_bis(line, buffer);
 }
 
-char *get_string(char *term_name, char *line)
-{
-    size_t len = 0;
-
-    for (int ch = getch(); ch != 10; ch = getch(), len = strlen(line)) {
-        if (ch == KEY_BACKSPACE && len > 0) {
-            line = realloc(line, sizeof(char) * (len));
-            line[len - 1] = '\0';
-        } if (PRINTABLE(ch)) {
-            line = realloc(line, sizeof(char) * (len + 2));
-            line[len] = (char)ch;
-            line[len + 1] = '\0';
-        }
-        display_term(term_name, line);
-    }
-    return line;
-}
-
 char *my_getline_ncurses(char *term_name)
 {
     int fd = open(term_name, O_RDWR | O_APPEND);
@@ -94,18 +77,3 @@ char *my_getline_ncurses(char *term_name)
     close(fd);
     return line;
 }
-
-//int main(int argc, char **argv, char **env)
-//{
-//    char *str = NULL;
-//    char *term_name = "tmp";
-//
-//    remove(term_name);
-//    int fd = open(term_name, O_CREAT, 0666);
-//    close(fd);
-//    while (1) {
-//        str = my_getline_ncurses(term_name);
-//    }
-//    remove(term_name);
-//    return 0;
-//}
