@@ -29,7 +29,6 @@ static void get_keyboard_event(int ch, char *save, char *line, int len)
             return;
         line[len] = (char)ch;
         line[len + 1] = '\0';
-        free(save);
         save = strdup(line);
     }
 }
