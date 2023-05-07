@@ -27,7 +27,7 @@ int built_in(char **cmd, char **env, int *error, int *exit_value)
     if (strcmp(cmd[0], "echo") == 0)
         return my_echo(cmd, error);
     if (strcmp(cmd[0], "clear") == 0) {
-        return clear_screen();
+        return clear_screen(cmd);
     }
     return 2;
 }

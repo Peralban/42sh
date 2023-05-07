@@ -23,7 +23,7 @@ int main(int ac, char **av, char **env);
 char *get_path(char *file_name);
 void destroy_array(char **arr);
 int built_in(char **cmd, char **env, int *error, int *exit_value);
-int clear_screen(void);
+int clear_screen(char **cmd);
 int my_exit(int *exit_value);
 int my_cd(char **cmd, char **env, int *error);
 char *adapt_str(char *str, int nb_quotes);
