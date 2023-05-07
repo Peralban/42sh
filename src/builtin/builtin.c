@@ -11,6 +11,7 @@
 
 int built_in(char **cmd, char **env, int *error, int *exit_value)
 {
+    *error = 0;
     if (strcmp(cmd[0], "cd") == 0)
         return my_cd(cmd, env, error);
     if (strcmp(cmd[0], "env") == 0) {

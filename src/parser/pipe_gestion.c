@@ -95,7 +95,6 @@ void multiple_pipe(token_t *token, pipe_t *pipes, int *status)
 void read_pipe(token_t *token)
 {
     pipe_t *pipes = set_pipes(token_dup(token));
-    int status = 0;
 
     if (pipes == NULL) {
         while (token->type != SEMICOLON && token->type != END)
@@ -108,7 +107,7 @@ void read_pipe(token_t *token)
     if (pipes->max == 0) {
         read_command(token);
     } else {
-        multiple_pipe(token, pipes, &status);
+        multiple_pipe(token, pipes, token->error);
     }
     free(pipes->fds);
     free(pipes);
