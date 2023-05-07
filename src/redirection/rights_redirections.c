@@ -15,6 +15,19 @@
 #include "parser.h"
 #include <errno.h>
 
+static int get_term_fd(void)
+{
+    int fd = 0;
+    char term_name = get_term_name();
+
+    if (term_name == NULL)
+        return -1;
+    fd = open(term_name, O_RDWR);
+    if (fd == -1)
+        return -1;
+    return fd;
+}
+
 static void open_redirection(int *fd, special_type_e type, char *file_path)
 {
     if (type == REDIR_RIGHT)
@@ -27,6 +40,7 @@ int right_redirection(char *file_path, special_type_e type)
 {
     struct stat path;
     int fd = 0;
+    int fd_ncurse = STDOUT_FILENO;
 
     if (stat(file_path, &path) == 0 && type == 3) {
         my_puterror(file_path);
@@ -34,13 +48,13 @@ int right_redirection(char *file_path, special_type_e type)
         return 1;
     }
     open_redirection(&fd, type, file_path);
-    if (fd == -1) {
-        my_puterror(file_path);
-        my_puterror(": ");
-        my_puterror(strerror(errno));
+    if (isatty(STDOUT_FILENO) == 1)
+        fd_ncurse = get_term_fd();
+    if (fd == -1 || fd_ncurse == -1) {
+        my_puterror("Failed to open file.\n");
         return 1;
     }
-    dup2(fd, STDOUT_FILENO);
+    dup2(fd, fd_ncurse);
     close(fd);
     return 0;
 }
