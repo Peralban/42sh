@@ -46,7 +46,6 @@ void my_put_command_not_found(char *cmd);
 void print_from_the_end(char *buffer);
 void print_term_bis(const char *line, char *buffer);
 void display_term(char *term_name, char *line);
-char *get_string(char *term_name, char *line);
 char *my_getline_ncurses(char *term_name);
 char *my_strdupij_endin(const char *str, int begin, int end);
 void add_to_arr(char ***arr, char *str, int *swa);
@@ -64,6 +63,8 @@ char *set_term_name(char *name);
 char *get_term_name(void);
 char *create_term_name(void);
 void start_ncurses(void);
+char *move_in_history(int ch, char *save, int *index, char **history);
+char *get_string(char *term_name, char *line);
 int read_command(token_t *token);
 void parser(char *line, int *exit, int *error);
 void set_token_type(token_t *token);
@@ -79,6 +80,8 @@ char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 bool var_are_init(char **env);
+char *get_history_path(void);
 int history(char *line, int *error);
+char **get_history_array(void);
 
 #endif

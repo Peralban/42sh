@@ -13,7 +13,7 @@
 #include "mysh.h"
 #include "my.h"
 
-static char *get_history_path(void)
+char *get_history_path(void)
 {
     char *home = getenv("HOME");
     if (home == NULL)
