@@ -32,9 +32,15 @@ char *find_num_variable(char *str, char **wa, int i, char **env)
 
 char *create_new_line(char *new_line, char *tmp, int size)
 {
+    if (new_line == NULL)
+        return NULL;
+    if (tmp == NULL)
+        return new_line;
     tmp = (tmp == NULL) ? " " : tmp;
     size = strlen(new_line) + strlen(tmp) + 2;
     new_line = realloc(new_line, sizeof(char) * size);
+    if (new_line == NULL)
+        return NULL;
     new_line = strcat(new_line, tmp);
     new_line[size - 1] = '\0';
     return new_line;
@@ -56,7 +62,7 @@ char *detect_variables(char *line, char **env, int *error)
             in_variable = true;
             continue;
         }
-        if (in_variable == false)
+        if (in_variable == false && new_line != NULL)
             new_line = strncat(new_line, &line[i], 1);
         in_variable = (in_variable == true && line[i] != ' ' ? true : false);
     }

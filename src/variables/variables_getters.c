@@ -15,7 +15,7 @@ char *get_var(char *str, int i)
     char *tmp = malloc(sizeof(char *) * strlen(str) + 1);
     int j = 0;
 
-    if (str == NULL)
+    if (str == NULL || tmp == NULL)
         return NULL;
     while (str[i] != '\0' && str[i] != ' ') {
         tmp[j] = str[i];
@@ -31,7 +31,7 @@ char *get_var_name(char *str, int i)
     char *tmp = malloc(sizeof(char *) * strlen(str) + 1);
     int j = 0;
 
-    if (str == NULL)
+    if (str == NULL || tmp == NULL)
         return NULL;
     while (str[i] != '\0' && str[i] != ' ')
         i--;

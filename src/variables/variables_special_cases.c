@@ -21,7 +21,7 @@ char *join_all_args(char *str)
     int j = 0;
     bool dont_print = true;
 
-    if (str == NULL)
+    if (str == NULL || tmp == NULL)
         return NULL;
     for (int i = 0; str[i] != '\0'; i++) {
         if (dont_print && str[i] != ' ')
@@ -49,8 +49,8 @@ char *find_other_variable(char *str, char **wa, int i, char **env)
             else
                 return NULL;
         case '-':
-            return NULL;
         case '_':
+        case '@':
             return NULL;
         default:
             return find_num_variable(str, wa, i, env);
@@ -62,6 +62,8 @@ char *find_special_variable(char *str, int i, char **env, int *error)
     char *buff = malloc(sizeof(char) * 100);
     char **wa = my_str_to_word_array(str, " \t\n");
 
+    if (buff == NULL || wa == NULL)
+        return NULL;
     switch (str[i + 1]) {
         case '$':
             sprintf(buff, "%d", getpid());
@@ -71,8 +73,6 @@ char *find_special_variable(char *str, int i, char **env, int *error)
             return buff;
         case '*':
             return join_all_args(str);
-        case '@':
-            return NULL;
         case '?':
             sprintf(buff, "%d", *error);
             return buff;

@@ -58,6 +58,8 @@ bool detect_variable_attribution(char **line)
     char *new_line = malloc(sizeof(char) * strlen(*line));
     int size = 0;
 
+    if (new_line == NULL)
+        return true;
     for (int i = 0; (*line)[i] != '\0'; i++) {
         if ((*line)[i] == '=') {
             size -= handle_equal_sign(line, i);
@@ -83,7 +85,7 @@ char *find_local_variable(char *str, int i)
     FILE *fd = fopen(path, "r");
     size_t len = 0;
 
-    if (fd == NULL)
+    if (fd == NULL || var == NULL)
         return NULL;
     while (getline(&line, &len, fd) != -1) {
         if (strncmp(line, var, strlen(var)) == 0) {
