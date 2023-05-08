@@ -6,6 +6,7 @@
 ##
 
 SRC	=	src/main.c										\
+		src/get_file_path.c								\
 		src/destroy_array.c								\
 		src/builtin/builtin.c							\
 		src/builtin/my_exit.c							\
@@ -26,13 +27,19 @@ SRC	=	src/main.c										\
 		src/ncurse/my_put.c								\
 		src/ncurse/set_get_term_name.c					\
 		src/ncurse/start_ncurses.c						\
+		src/ncurse/line_edition/move_in_history.c		\
+		src/ncurse/get_string.c							\
 		src/parser/parser.c								\
 		src/parser/get_token.c							\
+		src/parser/token_dup.c							\
+		src/parser/pipe_gestion.c						\
 		src/prompt/my_getenv.c							\
 		src/prompt/print_prompt.c						\
 		src/prompt/my_getpwd.c							\
 		src/prompt/var_are_init.c						\
 		src/history/history.c				            \
+		src/history/get_history_array.c					\
+		src/redirection/rights_redirections.c			\
 
 
 TEST_SRC = tests/test_my_sh.c
@@ -82,8 +89,11 @@ include:
 	@echo "    #define __"mysh"_H" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "    #include <stddef.h>" >> include/mysh.h
+	@echo "    #include <unistd.h>" >> include/mysh.h
+	@echo "    #include \"parser.h\"" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "typedef struct token_s token_t;" >> include/mysh.h
+	@echo "typedef struct pipe_s pipe_t;" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@cat $(SRC) | grep -B1 "^{" | grep "(" | grep -v "static" | sed \
 		s/"$$"/";"/ >> include/mysh.h
