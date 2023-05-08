@@ -31,6 +31,8 @@ SRC	=	src/main.c										\
 		src/ncurse/is_ncurses.c							\
 		src/ncurse/get_string.c							\
 		src/parser/parser.c								\
+		src/parser/parsing_error.c						\
+		src/parser/parsing_error_pipe.c					\
 		src/parser/get_token.c							\
 		src/parser/token_dup.c							\
 		src/parser/pipe_gestion.c						\
