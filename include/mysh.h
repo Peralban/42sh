@@ -68,6 +68,7 @@ void start_ncurses(void);
 char *move_in_history(int ch, char *save, int *index, char **history);
 char *get_string(char *term_name, char *line);
 int read_command(token_t *token);
+void read_and_or(token_t *token);
 void parser(char *line, int *exit, int *error);
 void set_token_type(token_t *token);
 int is_special(token_t *token, int i);
@@ -84,6 +85,8 @@ char *my_getpwd(void);
 bool var_are_init(char **env);
 int history(char *line, int *error);
 char **get_history_array(void);
+int get_term_fd(void);
 int right_redirection(char *file_path, special_type_e type);
+int double_left_redirection(char *brackets, char **args);
 
 #endif

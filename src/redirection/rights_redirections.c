@@ -15,7 +15,7 @@
 #include "parser.h"
 #include <errno.h>
 
-static int get_term_fd(void)
+int get_term_fd(void)
 {
     int fd = 0;
     char term_name = get_term_name();
