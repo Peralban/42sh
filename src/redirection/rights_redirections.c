@@ -15,10 +15,10 @@
 #include "parser.h"
 #include <errno.h>
 
-static int get_term_fd(void)
+int get_term_fd(void)
 {
     int fd = 0;
-    char term_name = get_term_name();
+    char *term_name = get_term_name();
 
     if (term_name == NULL)
         return -1;
@@ -48,7 +48,7 @@ int right_redirection(char *file_path, special_type_e type)
         return 1;
     }
     open_redirection(&fd, type, file_path);
-    if (isatty(STDOUT_FILENO) == 1)
+    if (is_ncurses() == true)
         fd_ncurse = get_term_fd();
     if (fd == -1 || fd_ncurse == -1) {
         my_puterror("Failed to open file.\n");

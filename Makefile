@@ -28,8 +28,11 @@ SRC	=	src/main.c										\
 		src/ncurse/set_get_term_name.c					\
 		src/ncurse/start_ncurses.c						\
 		src/ncurse/line_edition/move_in_history.c		\
+		src/ncurse/is_ncurses.c							\
 		src/ncurse/get_string.c							\
 		src/parser/parser.c								\
+		src/parser/parsing_error.c						\
+		src/parser/parsing_error_pipe.c					\
 		src/parser/get_token.c							\
 		src/parser/token_dup.c							\
 		src/parser/pipe_gestion.c						\
@@ -44,7 +47,7 @@ SRC	=	src/main.c										\
 		src/variables/variables_getters.c				\
 		src/variables/variables_special_cases.c			\
 		src/variables/local_variables.c					\
-
+		src/redirection/double_left_redirection.c		\
 
 TEST_SRC = tests/test_my_sh.c
 

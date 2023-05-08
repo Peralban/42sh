@@ -55,7 +55,7 @@ void print_prompt(char **env, int result_cmd)
     char *prompt = NULL;
     char *pwd = my_getpwd();
 
-    if (isatty(0) == 0)
+    if (is_ncurses() == false)
         return;
     if (my_start_with(pwd, home)) {
         my_putstr("~");
