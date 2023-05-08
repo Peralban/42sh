@@ -11,13 +11,17 @@
     #define __mysh_H
 
     #include <stddef.h>
+    #include <unistd.h>
+    #include "parser.h"
 
 typedef struct token_s token_t;
+typedef struct pipe_s pipe_t;
 
 char *my_get_line(char *term_name, int *exit_value);
-void exec_command(char **env_cpy, char **cmd, int *error, int *exit_value);
+int exec_command(char **env_cpy, char **cmd, token_t *token);
 void the_sh(char **env);
 int main(int ac, char **av, char **env);
+char *get_path(char *file_name);
 void destroy_array(char **arr);
 int built_in(char **cmd, char **env, int *error, int *exit_value);
 int my_exit(int *exit_value);
@@ -36,14 +40,14 @@ int setup_env(char **env);
 int parse_args_setenv(char **args);
 char **set_env_tab(char **new_env);
 char **get_env_tab(void);
-void my_exec(char **cmd, char **env, int *error);
+void exec_parent(int pid, int *error);
+int my_exec(char **cmd, char **env, token_t *token);
 char *search_command(char *cmd, char **env, int *error);
 void my_put_permission_denied(char *cmd);
 void my_put_command_not_found(char *cmd);
 void print_from_the_end(char *buffer);
 void print_term_bis(const char *line, char *buffer);
 void display_term(char *term_name, char *line);
-char *get_string(char *term_name, char *line);
 char *my_getline_ncurses(char *term_name);
 char *my_strdupij_endin(const char *str, int begin, int end);
 void add_to_arr(char ***arr, char *str, int *swa);
@@ -61,17 +65,25 @@ char *set_term_name(char *name);
 char *get_term_name(void);
 char *create_term_name(void);
 void start_ncurses(void);
-void read_command(token_t *token);
+char *move_in_history(int ch, char *save, int *index, char **history);
+char *get_string(char *term_name, char *line);
+int read_command(token_t *token);
 void parser(char *line, int *exit, int *error);
 void set_token_type(token_t *token);
 int is_special(token_t *token, int i);
 void special_operand(token_t *token, int i, int k);
 void set_token_elem(token_t *token);
 void get_token(token_t *token);
+token_t *token_dup(token_t *token);
+void pipes_stuff_child(pipe_t *pipes);
+void multiple_pipe(token_t *token, pipe_t *pipes, int *status);
+void read_pipe(token_t *token);
 char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 bool var_are_init(char **env);
 int history(char *line, int *error);
+char **get_history_array(void);
+int right_redirection(char *file_path, special_type_e type);
 
 #endif
