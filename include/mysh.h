@@ -66,9 +66,18 @@ char *get_term_name(void);
 char *create_term_name(void);
 void start_ncurses(void);
 char *move_in_history(int ch, char *save, int *index, char **history);
+int ncurses_on_off(int on_off);
+int is_ncurses(void);
 char *get_string(char *term_name, char *line);
 int read_command(token_t *token);
+void read_and_or(token_t *token);
 void parser(char *line, int *exit, int *error);
+int pipe_right_side(token_t *token);
+void parsing_error_pipe(token_t *token);
+int and_or_right_side(token_t *token);
+void parsing_error_and_or(token_t *token);
+void parsing_display_error(int code);
+int parsing_error(token_t *token);
 void set_token_type(token_t *token);
 int is_special(token_t *token, int i);
 void special_operand(token_t *token, int i, int k);
@@ -84,7 +93,9 @@ char *my_getpwd(void);
 bool var_are_init(char **env);
 int history(char *line, int *error);
 char **get_history_array(void);
+int get_term_fd(void);
 int right_redirection(char *file_path, special_type_e type);
+int double_left_redirection(char *brackets, char **args);
 
 //variables
 char *find_local_variable(char *str, int i);
