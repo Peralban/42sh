@@ -48,7 +48,6 @@ int exec_command(char **env_cpy, char **cmd, token_t *token)
 
 static void loop(char **env_cpy)
 {
-    char **cmd = NULL;
     char *line = NULL;
     int error = 0;
     int exit_value = 0;
@@ -59,8 +58,10 @@ static void loop(char **env_cpy)
         line = my_get_line(get_term_name(), &exit_value);
         if (line == NULL || line[0] == '\0')
             continue;
-        line = detect_variables(line, env_cpy, &error);
         if (history(line, &error) == 1)
+            continue;
+        line = detect_variables(line, env_cpy, &error);
+        if (echo_execution(line, &error) == true)
             continue;
         parser(line, &exit_value, &error);
         free(line);

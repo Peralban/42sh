@@ -6,6 +6,7 @@
 */
 
 #include "mysh.h"
+#include "my.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -13,21 +14,20 @@
 
 char *adapt_str(char *str, int nb_quotes)
 {
-    int size = strlen(str) - nb_quotes;
-    char *new_str = malloc(sizeof(char) * size + 1);
+    char *new_str = malloc(sizeof(char) * strlen(str) - nb_quotes + 1);
     int j = 0;
+    bool quote = false;
 
     if (new_str == NULL)
         return NULL;
     for (int i = 0; str[i] != '\0'; i++) {
-        if (str[i] == '\"')
-            continue;
-        if (str[i] == '\\' && str[i + 1] != '\0' && str[i + 1] != 34) {
-            handle_backslash(str, new_str, i, j);
-            i++;
-            j++;
+        quote = ((str[i] == '\"' || str[i] == '\'') ? !quote : quote);
+        if (str[i] == '\\' && quote) {
+            handle_backslash(str, new_str, i++, j++);
             continue;
         }
+        if (str[i] == '\"' || str[i] == '\'' || str[i] == '\\')
+            continue;
         new_str[j] = str[i];
         j++;
     }
@@ -35,48 +35,49 @@ char *adapt_str(char *str, int nb_quotes)
     return new_str;
 }
 
-char *test_special_cases(char *str)
+char *test_echo_special_cases(char *str)
 {
+    int nb_db_quotes = 0;
     int nb_quotes = 0;
 
-    for (int i = 0; str[i] != '\0'; i++)
-        if (str[i] == '"')
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == '\"')
+            nb_db_quotes++;
+        if (str[i] == '\'')
             nb_quotes++;
-    if (nb_quotes % 2 != 0)
-        return "Unmatched '\"'.";
-    if (nb_quotes == 0)
-        return str;
-    return adapt_str(str, nb_quotes);
-}
-
-char *tab_to_str(char **cmd)
-{
-    char *str = NULL;
-    int size = 0;
-
-    for (int i = 1; cmd[i] != NULL; i++)
-        size += strlen(cmd[i]) + 1;
-    str = malloc(sizeof(char) * size);
-    str[0] = '\0';
-    if (str == NULL)
-        return NULL;
-    for (int i = 1; cmd[i] != NULL; i++) {
-        strcat(str, cmd[i]);
-        if (cmd[i + 1] != NULL)
-            strcat(str, " ");
     }
-    return str;
+    if (nb_db_quotes % 2 != 0)
+        return "Unmatched '\"'.";
+    if (nb_quotes % 2 != 0)
+        return "Unmatched '\''.";
+    return adapt_str(str, nb_quotes + nb_db_quotes);
 }
 
-int my_echo(char **cmd, int *error)
+int my_echo(char *line, int *error)
 {
-    bool opt = ((cmd[1] != NULL && strcmp(cmd[1], "-n") == 0) ? true : false);
-    char *str_cmd = tab_to_str(cmd);
+    char **cmd = my_str_to_word_array(line, " \t");
+    bool opt = ((cmd[0] != NULL && strcmp(cmd[0], "-n") == 0) ? true : false);
     char *str = NULL;
 
-    str = test_special_cases(str_cmd);
+    if (opt)
+        line = line + 2;
+    str = test_echo_special_cases(line);
     my_putstr(strdup(str));
     if (!opt)
         my_putstr("\n");
     return *error;
+}
+
+bool echo_execution(char *line, int *error)
+{
+    if (line == NULL)
+        return false;
+    if (strcmp(line, "echo") == 0) {
+        my_putstr("\n");
+        return true;
+    }
+    if (strncmp(line, "echo ", 5) != 0)
+        return false;
+    *error = my_echo((line + 5), error);
+    return true;
 }

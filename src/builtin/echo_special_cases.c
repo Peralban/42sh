@@ -49,6 +49,8 @@ char *handle_backslash(char *str, char *new_str, int i, int j)
 {
     char *tmp = NULL;
 
+    if (str[i + 1] == '\0' || str[i + 1] == 34)
+        return new_str;
     tmp = find_special_char(str[i + 1]);
     if (strlen(tmp) == 2) {
         new_str[j] = tmp[0];
