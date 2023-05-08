@@ -40,7 +40,10 @@ SRC	=	src/main.c										\
 		src/history/history.c				            \
 		src/history/get_history_array.c					\
 		src/redirection/rights_redirections.c			\
-		src/variables.c						\
+		src/variables/variables.c						\
+		src/variables/variables_getters.c				\
+		src/variables/variables_special_cases.c			\
+		src/variables/local_variables.c					\
 
 
 TEST_SRC = tests/test_my_sh.c
