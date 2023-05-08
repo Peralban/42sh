@@ -26,7 +26,8 @@ void pipes_stuff_child(pipe_t *pipes)
         for (int i = 0; i < pipes->max * 2; i++) {
             close(pipes->fds[i]);
         }
-    } if (pipes->index == pipes->max && isatty(0) == 1) {
+    }
+    if (pipes->index == pipes->max && is_ncurses() == true) {
         fd = open(get_term_name(), O_RDWR | O_APPEND);
         if (fd == -1)
             exit(84);

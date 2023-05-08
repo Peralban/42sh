@@ -28,6 +28,7 @@ SRC	=	src/main.c										\
 		src/ncurse/set_get_term_name.c					\
 		src/ncurse/start_ncurses.c						\
 		src/ncurse/line_edition/move_in_history.c		\
+		src/ncurse/is_ncurses.c							\
 		src/ncurse/get_string.c							\
 		src/parser/parser.c								\
 		src/parser/get_token.c							\

@@ -88,8 +88,10 @@ int main(int ac, char **av, char **env)
 {
     if (isatty(0) == 1)
         start_ncurses();
+    else
+        ncurses_on_off(0);
     the_sh(env);
-    if (isatty(0) == 1)
+    if (is_ncurses() == true)
         endwin();
     return 0;
 }
