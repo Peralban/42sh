@@ -75,9 +75,11 @@ bool var_are_init(char **env);
 int history(char *line, int *error);
 void create_alias_file(char **env);
 void add_alias(char **env, char **cmd);
-void execute_alias(char **cmd, char **env, int *error);
+void execute_alias(char **cmd, char **env, int *error, int *exit_value);
 char *get_cmd_from_alias(char **env, char *cmd);
 char **get_alias_file(char **env);
 int get_alias_file_fd(char **env);
+void handle_aliases(char **cmd, char **env, int *error, int *exit_value);
+void remove_alias(char **env, char **cmd);
 
 #endif

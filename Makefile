@@ -37,6 +37,8 @@ SRC	=	src/main.c										\
 		src/aliases/temporary/add_alias.c				\
 		src/aliases/temporary/execute_alias.c			\
 		src/aliases/temporary/get_alias.c				\
+		src/aliases/temporary/handle_aliases.c			\
+		src/aliases/temporary/remove_alias.c			\
 
 
 TEST_SRC = tests/test_my_sh.c
