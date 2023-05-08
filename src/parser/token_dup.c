@@ -18,5 +18,7 @@ token_t *token_dup(token_t *token)
     new->type = token->type;
     new->index = token->index;
     new->line = token->line;
+    new->error = token->error;
+    new->exit = token->exit;
     return new;
 }
