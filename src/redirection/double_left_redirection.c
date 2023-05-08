@@ -51,7 +51,7 @@ static int print_in_term(char **content)
 {
     int fd = STDIN_FILENO;
 
-    if (isatty(STDOUT_FILENO) == 1)
+    if (is_ncurses() == true)
             fd = get_term_fd();
     if (fd == -1)
         return 1;
