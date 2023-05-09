@@ -26,13 +26,6 @@ void destroy_array(char **arr);
 int built_in(char **cmd, char **env, int *error, int *exit_value);
 int my_exit(int *exit_value);
 int my_cd(char **cmd, char **env, int *error);
-char *adapt_str(char *str, int nb_quotes);
-char *test_special_cases(char *str);
-char *tab_to_str(char **cmd);
-int my_echo(char **cmd, int *error);
-char *find_special_char_last_cases(char c);
-char *find_special_char(char c);
-char *handle_backslash(char *str, char *new_str, int i, int j);
 int my_setenv(char **args, char **env, int *return_value);
 int my_unsetenv(char **args, char **env, int *return_value);
 char *gethome(char *actual_pwd);
@@ -96,5 +89,22 @@ char **get_history_array(void);
 int get_term_fd(void);
 int right_redirection(char *file_path, special_type_e type);
 int double_left_redirection(char *brackets, char **args);
+
+//variables
+char *detect_variables(char *line, char **env, int *error);
+char *find_local_variable(char *str, int i);
+char *get_var(char *str, int i);
+char *get_var_name(char *str, int i);
+char *find_num_variable(char *str, char **wa, int i, char **env);
+char *find_special_variable(char *str, int i, char **env, int *error);
+bool detect_variable_attribution(char **line);
+
+//echo
+char *adapt_str(char *str, int nb_quotes);
+char *test_echo_special_cases(char *str);
+bool echo_execution(char *line, int *error);
+char *find_special_char_last_cases(char c);
+char *find_special_char(char c);
+char *handle_backslash(char *str, char *new_str, int i, int j);
 
 #endif
