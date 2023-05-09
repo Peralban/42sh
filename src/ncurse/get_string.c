@@ -15,21 +15,21 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-static void get_keyboard_event(int ch, char *save, char *line, int len)
+static void get_keyboard_event(int ch, char **save, char **line, size_t len)
 {
     if (ch == KEY_BACKSPACE && len > 0) {
-        line = realloc(line, sizeof(char) * (len));
-        if (line == NULL)
+        *line = realloc(*line, sizeof(char) * (len));
+        if (*line == NULL)
             return;
-        line[len - 1] = '\0';
+        *line[len - 1] = '\0';
     }
     if (PRINTABLE(ch)) {
-        line = realloc(line, sizeof(char) * (len + 2));
-        if (line == NULL)
+        *line = realloc(*line, sizeof(char) * (len + 2));
+        if (*line == NULL)
             return;
-        line[len] = (char)ch;
-        line[len + 1] = '\0';
-        save = strdup(line);
+        *line[len] = (char)ch;
+        *line[len + 1] = '\0';
+        *save = strdup(*line);
     }
 }
 
@@ -49,7 +49,7 @@ char *get_string(char *term_name, char *line)
     char *save = strdup(line);
 
     for (int ch = getch(); ch != 10; ch = getch(), len = strlen(line)) {
-        get_keyboard_event(ch, save, line, len);
+        get_keyboard_event(ch, &save, &line, len);
         if (ch == KEY_UP || ch == KEY_DOWN)
             line = strdup(move_in_history(ch, save, &history_index, history));
         display_term(term_name, line);
