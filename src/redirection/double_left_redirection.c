@@ -34,7 +34,6 @@ static char **add_string(char **content, char *buffer)
 static char **get_content(char **args, char *brackets)
 {
     char **content = my_arraydup(args);
-    size_t len = 0;
     char *term_name = get_term_name();
     char *buffer = my_getline_ncurses(term_name);
 
