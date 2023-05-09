@@ -43,7 +43,7 @@ int exec_command(char **env_cpy, char **cmd, token_t *token)
 
     if (built_in(cmd, env_cpy, error, exit_value) == 2)
         return my_exec(cmd, env_cpy, token);
-    return 0;
+    return *error;
 }
 
 static void loop(char **env_cpy)

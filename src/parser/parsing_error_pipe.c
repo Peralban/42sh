@@ -25,7 +25,7 @@ void get_token_with_redir(token_t *token, int nb_pipe)
             return;
         }
         token->left = true;
-        get_token(token);
+        return;
     }
     if (token->type == REDIR_RIGHT || token->type == DOUBLE_REDIR_RIGHT) {
         get_token(token);
@@ -38,7 +38,7 @@ void get_token_with_redir(token_t *token, int nb_pipe)
             return;
         }
         token->right = true;
-        get_token(token);
+        return;
     }
 }
 
@@ -69,7 +69,9 @@ void parsing_error_pipe(token_t *token)
             *token->error = 9;
             return;
         }
-        while (token->type == NONE)
+        while (token->type == NONE || token->type == REDIR_LEFT ||
+        token->type == REDIR_RIGHT || token->type == DOUBLE_REDIR_LEFT ||
+        token->type == DOUBLE_REDIR_RIGHT)
             get_token_with_redir(token, nb_pipe);
         if (pipe_right_side(token, &nb_pipe) == 1)
             return;

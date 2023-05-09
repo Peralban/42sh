@@ -40,13 +40,17 @@ void parsing_error_and_or(token_t *token)
 
 // code 1: "(null) || cmd" error 'Invalid null command.'
 // code 2: "cmd || (null)" error 'Invalid null command.'
+// (note: you can replace || with && in the above error messages)
+//
 // code 8: "cmd | (null)" error 'Invalid null command.'
 // code 9: "(null) | cmd" error 'Invalid null command.'
 //
 // code: 11 "cmd < file < file" error 'Ambiguous input redirect.'
 // code: 12 "cmd | cmd < file" error 'Ambiguous input redirect.'
+//
 // code: 21 "cmd > file > file" error 'Ambiguous output redirect.'
 // code: 22 "cmd > file | cmd" error 'Ambiguous output redirect.'
+//
 // code: 31 "cmd < (null)" error 'Missing name for redirect.'
 // code: 32 "cmd > (null)" error 'Missing name for redirect.'
 //

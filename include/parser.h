@@ -27,6 +27,8 @@ typedef struct token_s {
     int *exit;
     int *error;
     pipe_t *pipes;
+    int right;
+    int left;
 } token_t;
 
 typedef enum special_type_e {
