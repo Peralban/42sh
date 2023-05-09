@@ -42,7 +42,7 @@ SRC	=	src/main.c										\
 		src/prompt/var_are_init.c						\
 		src/history/history.c				            \
 		src/history/get_history_array.c					\
-		src/redirection/right_redirections.c			\
+		src/redirection/redirections.c					\
 		src/variables/variables.c						\
 		src/variables/variables_getters.c				\
 		src/variables/variables_special_cases.c			\
