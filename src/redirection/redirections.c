@@ -34,9 +34,11 @@ static void open_redirection(int *fd, special_type_e type, char *file_path)
         *fd = open(file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (type == DOUBLE_REDIR_RIGHT)
         *fd = open(file_path, O_CREAT | O_APPEND | O_WRONLY, 0644);
+    if (type == REDIR_LEFT)
+        *fd = open(file_path, O_RDONLY, 0644);
 }
 
-int right_redirection(char *file_path, special_type_e type)
+int redirection(char *file_path, special_type_e type)
 {
     struct stat path;
     int fd = 0;
@@ -54,7 +56,7 @@ int right_redirection(char *file_path, special_type_e type)
         my_puterror("Failed to open file.\n");
         return 1;
     }
-    dup2(fd, fd_ncurse);
+    dup2(fd, (type == REDIR_LEFT) ? STDIN_FILENO : fd_ncurse);
     close(fd);
     return 0;
 }
