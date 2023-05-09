@@ -31,6 +31,7 @@ static int clear_option(char **cmd)
         } if (strcmp(cmd[1], "-V") == 0) {
             my_putstr("ncurses version ");
             my_putstr(NCURSES_VERSION);
+            my_putstr("\n");
             return 0;
         } if (strcmp(cmd[1], "-x") == 0) {
             my_putstr("clear: -x option not implemented yet.\n");
