@@ -50,13 +50,13 @@ int redirect_left(int fd, special_type_e type, char *file_path)
     return 0;
 }
 
-int redirect_right(int fd, special_type_e type, int fd_ncurse)
+int redirect_right(int fd)
 {
     if (fd == -1) {
         my_puterror("Failed to open file.\n");
         return 1;
     }
-    dup2(fd, fd_ncurse);
+    dup2(fd, STDOUT_FILENO);
     close(fd);
     return 0;
 }
@@ -65,19 +65,16 @@ int redirection(char *file_path, special_type_e type)
 {
     struct stat path;
     int fd = 0;
-    int fd_ncurse = STDOUT_FILENO;
 
-    if (stat(file_path, &path) == 0 && type == 3) {
+    if (stat(file_path, &path) == 0 && !S_ISREG(path.st_mode)) {
         my_puterror(file_path);
         my_puterror(": Is a directory.\n");
         return 1;
     }
     open_redirection(&fd, type, file_path);
-    if (is_ncurses() == true)
-        fd_ncurse = get_term_fd();
     if (type == REDIR_LEFT)
         return redirect_left(fd, type, file_path);
     if (type == REDIR_RIGHT || type == DOUBLE_REDIR_RIGHT)
-        return redirect_right(fd, type, fd_ncurse);
+        return redirect_right(fd);
     return 0;
 }
