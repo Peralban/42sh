@@ -97,4 +97,12 @@ int get_term_fd(void);
 int right_redirection(char *file_path, special_type_e type);
 int double_left_redirection(char *brackets, char **args);
 
+//variables
+char *find_local_variable(char *str, int i);
+char *get_var(char *str, int i);
+char *get_var_name(char *str, int i);
+char *find_num_variable(char *str, char **wa, int i, char **env);
+char *find_special_variable(char *str, int i, char **env, int *error);
+bool detect_variable_attribution(char **line);
+
 #endif
