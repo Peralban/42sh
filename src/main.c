@@ -48,7 +48,6 @@ int exec_command(char **env_cpy, char **cmd, token_t *token)
 
 static void loop(char **env_cpy)
 {
-    char **cmd = NULL;
     char *line = NULL;
     int error = 0;
     int exit_value = 0;
@@ -86,6 +85,8 @@ void the_sh(char **env)
 
 int main(int ac, char **av, char **env)
 {
+    (void) ac;
+    (void) av;
     if (isatty(0) == 1)
         start_ncurses();
     else
