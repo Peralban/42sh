@@ -15,8 +15,8 @@ void set_redirection_name(token_t *token)
         token->redir[0].type = token->type;
         get_token(token);
         token->redir[0].name = strdup(token->elem);
-    }
-    else if (token->type == REDIR_RIGHT || token->type == DOUBLE_REDIR_RIGHT) {
+    } else if (token->type == REDIR_RIGHT ||
+    token->type == DOUBLE_REDIR_RIGHT) {
         token->right = 1;
         token->redir[1].type = token->type;
         get_token(token);

@@ -51,7 +51,7 @@ typedef enum special_type_e {
 } special_type_e;
 
     #define ANY_REDIR_TYPE(type) \
-    (type == REDIR_LEFT || type == DOUBLE_REDIR_LEFT || \
-    type == REDIR_RIGHT || type == DOUBLE_REDIR_RIGHT)
+(type == REDIR_LEFT || type == DOUBLE_REDIR_LEFT || \
+type == REDIR_RIGHT || type == DOUBLE_REDIR_RIGHT)
 
 #endif //INC_42SH_REPO_PARSER_H
