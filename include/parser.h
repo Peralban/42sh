@@ -19,6 +19,11 @@ typedef struct pipe_s {
     int index;
 } pipe_t;
 
+typedef struct redir_s {
+    int type;
+    char *name;
+} redir_t;
+
 typedef struct token_s {
     int index;
     int type;
@@ -27,6 +32,9 @@ typedef struct token_s {
     int *exit;
     int *error;
     pipe_t *pipes;
+    int right;
+    int left;
+    redir_t redir[2];
 } token_t;
 
 typedef enum special_type_e {
@@ -41,5 +49,9 @@ typedef enum special_type_e {
     AND,
     OR
 } special_type_e;
+
+    #define ANY_REDIR_TYPE(type) \
+(type == REDIR_LEFT || type == DOUBLE_REDIR_LEFT || \
+type == REDIR_RIGHT || type == DOUBLE_REDIR_RIGHT)
 
 #endif //INC_42SH_REPO_PARSER_H
