@@ -47,9 +47,9 @@ char *test_echo_special_cases(char *str)
             nb_quotes++;
     }
     if (nb_db_quotes % 2 != 0)
-        return "Unmatched '\"'.";
+        return strdup("Unmatched '\"'.");
     if (nb_quotes % 2 != 0)
-        return "Unmatched '\''.";
+        return strdup("Unmatched '\''.");
     return adapt_str(str, nb_quotes + nb_db_quotes);
 }
 
@@ -59,12 +59,17 @@ int my_echo(char *line, int *error)
     bool opt = ((cmd[0] != NULL && strcmp(cmd[0], "-n") == 0) ? true : false);
     char *str = NULL;
 
+    if (cmd == NULL)
+        return 0;
     if (opt)
         line = line + 2;
     str = test_echo_special_cases(line);
-    my_putstr(strdup(str));
+    if (str == NULL)
+        return 0;
+    my_putstr(str);
     if (!opt)
         my_putstr("\n");
+    free(str);
     return *error;
 }
 
@@ -73,7 +78,7 @@ bool echo_execution(char *line, int *error)
     if (line == NULL)
         return false;
     if (strcmp(line, "echo") == 0) {
-        my_putstr("\n");
+        my_putstr(" \n");
         return true;
     }
     if (strncmp(line, "echo ", 5) != 0)
