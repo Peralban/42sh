@@ -12,6 +12,7 @@
 
     #include <stddef.h>
     #include <unistd.h>
+    #include "parser.h"
 
 typedef struct token_s token_t;
 typedef struct pipe_s pipe_t;
@@ -26,13 +27,6 @@ int built_in(char **cmd, char **env, int *error, int *exit_value);
 int clear_screen(char **cmd);
 int my_exit(int *exit_value);
 int my_cd(char **cmd, char **env, int *error);
-char *adapt_str(char *str, int nb_quotes);
-char *test_special_cases(char *str);
-char *tab_to_str(char **cmd);
-int my_echo(char **cmd, int *error);
-char *find_special_char_last_cases(char c);
-char *find_special_char(char c);
-char *handle_backslash(char *str, char *new_str, int i, int j);
 int my_setenv(char **args, char **env, int *return_value);
 int my_unsetenv(char **args, char **env, int *return_value);
 char *gethome(char *actual_pwd);
@@ -48,7 +42,6 @@ void my_put_command_not_found(char *cmd);
 void print_from_the_end(char *buffer);
 void print_term_bis(const char *line, char *buffer);
 void display_term(char *term_name, char *line);
-char *get_string(char *term_name, char *line);
 char *my_getline_ncurses(char *term_name);
 char *my_strdupij_endin(const char *str, int begin, int end);
 void add_to_arr(char ***arr, char *str, int *swa);
@@ -66,10 +59,19 @@ char *set_term_name(char *name);
 char *get_term_name(void);
 char *create_term_name(void);
 void start_ncurses(void);
-char *line_edition(int ch, char *save, int *index, char **history);
-void free_line_edition(char **history, char *save);
+char *move_in_history(int ch, char *save, int *index, char **history);
+int ncurses_on_off(int on_off);
+int is_ncurses(void);
+char *get_string(char *term_name, char *line);
 int read_command(token_t *token);
+void read_and_or(token_t *token);
 void parser(char *line, int *exit, int *error);
+int pipe_right_side(token_t *token);
+void parsing_error_pipe(token_t *token);
+int and_or_right_side(token_t *token);
+void parsing_error_and_or(token_t *token);
+void parsing_display_error(int code);
+int parsing_error(token_t *token);
 void set_token_type(token_t *token);
 int is_special(token_t *token, int i);
 void special_operand(token_t *token, int i, int k);
@@ -85,5 +87,25 @@ char *my_getpwd(void);
 bool var_are_init(char **env);
 int history(char *line, int *error);
 char **get_history_array(void);
+int get_term_fd(void);
+int right_redirection(char *file_path, special_type_e type);
+int double_left_redirection(char *brackets, char **args);
+
+//variables
+char *detect_variables(char *line, char **env, int *error);
+char *find_local_variable(char *str, int i);
+char *get_var(char *str, int i);
+char *get_var_name(char *str, int i);
+char *find_num_variable(char *str, char **wa, int i, char **env);
+char *find_special_variable(char *str, int i, char **env, int *error);
+bool detect_variable_attribution(char **line);
+
+//echo
+char *adapt_str(char *str, int nb_quotes);
+char *test_echo_special_cases(char *str);
+bool echo_execution(char *line, int *error);
+char *find_special_char_last_cases(char c);
+char *find_special_char(char c);
+char *handle_backslash(char *str, char *new_str, int i, int j);
 
 #endif

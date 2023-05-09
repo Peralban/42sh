@@ -28,8 +28,12 @@ SRC	=	src/main.c										\
 		src/ncurse/my_put.c								\
 		src/ncurse/set_get_term_name.c					\
 		src/ncurse/start_ncurses.c						\
-		src/ncurse/line_edition/line_edition.c			\
+		src/ncurse/line_edition/move_in_history.c		\
+		src/ncurse/is_ncurses.c							\
+		src/ncurse/get_string.c							\
 		src/parser/parser.c								\
+		src/parser/parsing_error.c						\
+		src/parser/parsing_error_pipe.c					\
 		src/parser/get_token.c							\
 		src/parser/token_dup.c							\
 		src/parser/pipe_gestion.c						\
@@ -39,7 +43,12 @@ SRC	=	src/main.c										\
 		src/prompt/var_are_init.c						\
 		src/history/history.c				            \
 		src/history/get_history_array.c					\
-
+		src/redirection/redirections.c					\
+		src/variables/variables.c						\
+		src/variables/variables_getters.c				\
+		src/variables/variables_special_cases.c			\
+		src/variables/local_variables.c					\
+		src/redirection/double_left_redirection.c		\
 
 TEST_SRC = tests/test_my_sh.c
 
@@ -89,6 +98,7 @@ include:
 	@echo "" >> include/mysh.h
 	@echo "    #include <stddef.h>" >> include/mysh.h
 	@echo "    #include <unistd.h>" >> include/mysh.h
+	@echo "    #include \"parser.h\"" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "typedef struct token_s token_t;" >> include/mysh.h
 	@echo "typedef struct pipe_s pipe_t;" >> include/mysh.h

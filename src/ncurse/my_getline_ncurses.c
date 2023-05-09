@@ -62,30 +62,6 @@ void display_term(char *term_name, char *line)
     print_term_bis(line, buffer);
 }
 
-char *get_string(char *term_name, char *line)
-{
-    size_t len = 0;
-    char **history = get_history_array();
-    int history_index = my_arraylen(history);
-    char *save = strdup(line);
-    for (int c = getch(); c != 10; c = getch(), len = strlen(line)) {
-        if (c == KEY_BACKSPACE && len > 0) {
-            line = realloc(line, sizeof(char) * (len));
-            line[len - 1] = '\0';
-        } if (PRINTABLE(c)) {
-            line = realloc(line, sizeof(char) * (len + 2));
-            line[len] = (char)c;
-            line[len + 1] = '\0';
-            free(save);
-            save = strdup(line);
-        } if (c == KEY_UP || c == KEY_DOWN)
-            line = strdup(line_edition(c, save, &history_index, history));
-        display_term(term_name, line);
-    }
-    free_line_edition(history, save);
-    return line;
-}
-
 char *my_getline_ncurses(char *term_name)
 {
     int fd = open(term_name, O_RDWR | O_APPEND);
@@ -101,18 +77,3 @@ char *my_getline_ncurses(char *term_name)
     close(fd);
     return line;
 }
-
-//int main(int argc, char **argv, char **env)
-//{
-//    char *str = NULL;
-//    char *term_name = "tmp";
-//
-//    remove(term_name);
-//    int fd = open(term_name, O_CREAT, 0666);
-//    close(fd);
-//    while (1) {
-//        str = my_getline_ncurses(term_name);
-//    }
-//    remove(term_name);
-//    return 0;
-//}

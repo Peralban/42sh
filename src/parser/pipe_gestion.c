@@ -26,7 +26,7 @@ void pipes_stuff_child(pipe_t *pipes)
         for (int i = 0; i < pipes->max * 2; i++) {
             close(pipes->fds[i]);
         }
-    } if (pipes->index == pipes->max) {
+    } if (pipes->index == pipes->max && is_ncurses() == true) {
         fd = open(get_term_name(), O_RDWR | O_APPEND);
         if (fd == -1)
             exit(84);
@@ -36,35 +36,19 @@ void pipes_stuff_child(pipe_t *pipes)
     }
 }
 
-static void set_pipes_loop(token_t *token, pipe_t *pipe,
-int *type, int *invalid)
-{
-    if (token->type == PIPE) {
-        if ((*type) == PIPE) {
-            (*invalid) = 1;
-        }
-        pipe->max++;
-    }
-    (*type) = token->type;
-    get_token(token);
-}
-
 static pipe_t *set_pipes(token_t *token)
 {
     pipe_t *pipe = malloc(sizeof(pipe_t));
-    int type = PIPE;
-    int invalid = 0;
 
     if (pipe == NULL)
         return NULL;
     pipe->max = 0;
     pipe->index = 0;
     while (token->type != SEMICOLON && token->type != END) {
-        set_pipes_loop(token, pipe, &type, &invalid);
-    }
-    if (invalid == 1 || type == PIPE) {
-        my_puterror("Invalid null command.\n");
-        return NULL;
+        if (token->type == PIPE) {
+            pipe->max++;
+        }
+        get_token(token);
     }
     pipe->fds = malloc(sizeof(int) * pipe->max * 2);
     free(token);
@@ -95,7 +79,6 @@ void multiple_pipe(token_t *token, pipe_t *pipes, int *status)
 void read_pipe(token_t *token)
 {
     pipe_t *pipes = set_pipes(token_dup(token));
-    int status = 0;
 
     if (pipes == NULL) {
         while (token->type != SEMICOLON && token->type != END)
@@ -108,7 +91,7 @@ void read_pipe(token_t *token)
     if (pipes->max == 0) {
         read_command(token);
     } else {
-        multiple_pipe(token, pipes, &status);
+        multiple_pipe(token, pipes, token->error);
     }
     free(pipes->fds);
     free(pipes);

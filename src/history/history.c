@@ -16,7 +16,6 @@
 static int history_error(int fd, int *error)
 {
     if (fd == -1) {
-        my_puterror("open");
         *error = 1;
         return 84;
     }

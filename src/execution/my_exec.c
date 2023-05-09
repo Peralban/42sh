@@ -57,15 +57,12 @@ void exec_parent(int pid, int *error)
 
 static void exec_child(char **cmd, char **env, char *new_cmd, token_t *token)
 {
-    int *error = token->error;
     pipe_t *pipes = token->pipes;
 
     pipes_stuff_child(pipes);
     if (execve(new_cmd, cmd, env) == -1) {
-        my_put_command_not_found(cmd[0]);
-        *error = 1;
+        my_puterror("Execve failed\n");
     }
-    exit(0);
 }
 
 int my_exec(char **cmd, char **env, token_t *token)
@@ -77,8 +74,10 @@ int my_exec(char **cmd, char **env, token_t *token)
     if (cmd == NULL || error == NULL)
         return 0;
     new_cmd = search_command(cmd[0], env, error);
-    if (new_cmd == NULL)
+    if (new_cmd == NULL) {
+        *error = 1;
         return 0;
+    }
     pid = fork();
     if (pid == 0) {
         exec_child(cmd, env, new_cmd, token);

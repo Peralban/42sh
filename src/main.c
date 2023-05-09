@@ -48,7 +48,6 @@ int exec_command(char **env_cpy, char **cmd, token_t *token)
 
 static void loop(char **env_cpy)
 {
-    char **cmd = NULL;
     char *line = NULL;
     int error = 0;
     int exit_value = 0;
@@ -60,6 +59,9 @@ static void loop(char **env_cpy)
         if (line == NULL || line[0] == '\0')
             continue;
         if (history(line, &error) == 1)
+            continue;
+        line = detect_variables(line, env_cpy, &error);
+        if (echo_execution(line, &error) == true)
             continue;
         parser(line, &exit_value, &error);
         free(line);
@@ -86,10 +88,14 @@ void the_sh(char **env)
 
 int main(int ac, char **av, char **env)
 {
+    if (ac != 1 || av[0] == NULL)
+        return 84;
     if (isatty(0) == 1)
         start_ncurses();
+    else
+        ncurses_on_off(0);
     the_sh(env);
-    if (isatty(0) == 1)
+    if (is_ncurses() == true)
         endwin();
     return 0;
 }

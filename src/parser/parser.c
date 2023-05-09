@@ -28,6 +28,37 @@ int read_command(token_t *token)
     return pid;
 }
 
+void skip_and_or(token_t *token)
+{
+    if (*token->error != 0 && token->type == AND) {
+        while (token->type != END && token->type != SEMICOLON &&
+        token->type != OR)
+            get_token(token);
+    }
+    if (*token->error == 0 && token->type == OR) {
+        while (token->type != END && token->type != SEMICOLON)
+            get_token(token);
+    }
+}
+
+void read_and_or(token_t *token)
+{
+    *token->error = 0;
+    while (token->type == AND) {
+        get_token(token);
+    }
+    if (token->type == END || token->type == SEMICOLON)
+        return;
+    do {
+        if (token->type == AND)
+            break;
+        read_pipe(token);
+        skip_and_or(token);
+        get_token(token);
+    }
+    while (token->type == AND || token->type == OR);
+}
+
 void parser(char *line, int *exit, int *error)
 {
     token_t *token = malloc(sizeof(token_t));
@@ -40,9 +71,12 @@ void parser(char *line, int *exit, int *error)
     token->exit = exit;
     token->error = error;
     get_token(token);
+    if (parsing_error(token_dup(token)) != 0) {
+        return;
+    }
     while (token->type != END) {
         while (token->type != END && token->type != SEMICOLON) {
-            read_pipe(token);
+            read_and_or(token);
         }
         get_token(token);
     }
