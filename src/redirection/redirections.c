@@ -38,7 +38,7 @@ static void open_redirection(int *fd, special_type_e type, char *file_path)
         *fd = open(file_path, O_RDONLY, 0644);
 }
 
-int redirect_left(int fd, special_type_e type, char *file_path)
+int redirect_left(int fd, char *file_path)
 {
     if (fd == -1) {
         my_puterror(file_path);
@@ -50,7 +50,7 @@ int redirect_left(int fd, special_type_e type, char *file_path)
     return 0;
 }
 
-int redirect_right(int fd, special_type_e type, int fd_ncurse)
+int redirect_right(int fd, int fd_ncurse)
 {
     if (fd == -1) {
         my_puterror("Failed to open file.\n");
@@ -76,8 +76,8 @@ int redirection(char *file_path, special_type_e type)
     if (is_ncurses() == true)
         fd_ncurse = get_term_fd();
     if (type == REDIR_LEFT)
-        return redirect_left(fd, type, file_path);
+        return redirect_left(fd, file_path);
     if (type == REDIR_RIGHT || type == DOUBLE_REDIR_RIGHT)
-        return redirect_right(fd, type, fd_ncurse);
+        return redirect_right(fd, fd_ncurse);
     return 0;
 }
