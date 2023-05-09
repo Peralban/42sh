@@ -34,30 +34,38 @@ static char **add_string(char **content, char *buffer)
 static char **get_content(char **args, char *brackets)
 {
     char **content = my_arraydup(args);
-    char *buffer = NULL;
     size_t len = 0;
+    char *term_name = get_term_name();
+    char *buffer = my_getline_ncurses(term_name);
 
-    while (getline(&buffer, &len, STDIN_FILENO) != -1) {
+    while (buffer != NULL) {
         if (strcmp(buffer, brackets) == 0)
             break;
         content = add_string(content, buffer);
         if (content == NULL)
             return NULL;
+        buffer = my_getline_ncurses(term_name);
     }
+    free(buffer);
+    free(term_name);
     return content;
 }
 
 static int print_in_term(char **content)
 {
-    int fd = STDIN_FILENO;
+    int fd = open("/tmp/42sh", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    char *actual_path = my_getpwd();
+    char *file_path = malloc(sizeof(char) * (strlen(actual_path) + 10));
 
-    if (is_ncurses() == true)
-            fd = get_term_fd();
-    if (fd == -1)
+    if (fd == -1 || file_path == NULL || actual_path == NULL)
         return 1;
-    dup2(fd, STDIN_FILENO);
+    file_path[0] = '\0';
     for (int i = 0; content[i] != NULL; i++)
-        my_putstr(content[i]);
+        write(fd, content[i], strlen(content[i]));
+    close(fd);
+    file_path = strcat(file_path, actual_path);
+    file_path = strcat(file_path, "/tmp/42sh");
+    redirection(file_path, REDIR_LEFT);
     return 0;
 }
 
