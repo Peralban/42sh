@@ -49,7 +49,7 @@ char *get_string(char *term_name, char *line)
     char *save = strdup(line);
 
     for (int ch = getch(); ch != 10; ch = getch(), len = strlen(line)) {
-        save = get_keyboard_event(ch, &save, &line, len);
+        get_keyboard_event(ch, &save, &line, len);
         if (ch == KEY_UP || ch == KEY_DOWN)
             line = strdup(move_in_history(ch, save, &history_index, history));
         display_term(term_name, line);
