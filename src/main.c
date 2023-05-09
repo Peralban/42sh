@@ -20,7 +20,7 @@ char *my_get_line(char *term_name, int *exit_value)
     char *line = NULL;
     size_t size = 0;
 
-    if (isatty(0) == 0 || getenv("TERM") == NULL) {
+    if (is_ncurses() == 0) {
         if (getline(&line, &size, stdin) < 0) {
             my_exit(exit_value);
             return NULL;
