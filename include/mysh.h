@@ -34,6 +34,8 @@ char *find_special_char_last_cases(char c);
 char *find_special_char(char c);
 char *handle_backslash(char *str, char *new_str, int i, int j);
 int my_setenv(char **args, char **env, int *return_value);
+void variable_and_value(char **env, char **args);
+void variable_only(char **env, char *variable);
 int my_unsetenv(char **args, char **env, int *return_value);
 char *gethome(char *actual_pwd);
 int setup_env(char **env);

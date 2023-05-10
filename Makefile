@@ -15,6 +15,7 @@ SRC	=	src/main.c										\
 		src/builtin/echo.c								\
         src/builtin/echo_special_cases.c				\
 		src/builtin/environment/setenv.c				\
+		src/builtin/environment/setenv_variable.c		\
 		src/builtin/environment/unsetenv.c				\
 		src/builtin/environment/set_environment.c		\
 		src/builtin/environment/parse_args_setenv.c		\
