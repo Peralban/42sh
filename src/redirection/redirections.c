@@ -66,7 +66,8 @@ int redirection(char *file_path, special_type_e type)
     struct stat path;
     int fd = 0;
 
-    if (stat(file_path, &path) == 0 && !S_ISREG(path.st_mode)) {
+    if (stat(file_path, &path) == 0 && !S_ISREG(path.st_mode)
+    && type != DOUBLE_REDIR_LEFT && type != REDIR_LEFT) {
         my_puterror(file_path);
         my_puterror(": Is a directory.\n");
         return 1;
