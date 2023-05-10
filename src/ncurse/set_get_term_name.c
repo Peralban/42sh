@@ -23,19 +23,3 @@ char *get_term_name(void)
 {
     return set_term_name(NULL);
 }
-
-char *create_term_name(void)
-{
-    char *term_name = NULL;
-    char *file = ".42sh_term";
-    char *home = gethome(my_getpwd());
-
-    term_name = malloc(sizeof(char) * (strlen(home) + strlen(file) + 2));
-    if (term_name == NULL)
-        return NULL;
-    term_name[0] = '\0';
-    strcat(term_name, home);
-    strcat(term_name, "/");
-    strcat(term_name, file);
-    return term_name;
-}
