@@ -19,10 +19,15 @@ int read_command(token_t *token)
     if (arr == NULL)
         return 0;
     arr[0] = NULL;
+    reset_redir_name(token);
     do {
+        if (ANY_REDIR_TYPE(token->type)) {
+            set_redirection_name(token);
+            continue;
+        }
         arr_append(&arr, strdup(token->elem));
         get_token(token);
-    } while (token->type == NONE);
+    } while (token->type == NONE || ANY_REDIR_TYPE(token->type));
     pid = exec_command(get_env_tab(), arr, token);
     free(arr);
     return pid;

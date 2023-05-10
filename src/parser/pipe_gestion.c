@@ -12,7 +12,7 @@
 #include <wait.h>
 #include <fcntl.h>
 
-void pipes_stuff_child(pipe_t *pipes)
+void pipes_stuff_child(pipe_t *pipes, int right)
 {
     int fd = 0;
 
@@ -26,13 +26,21 @@ void pipes_stuff_child(pipe_t *pipes)
         for (int i = 0; i < pipes->max * 2; i++) {
             close(pipes->fds[i]);
         }
-    } if (pipes->index == pipes->max && is_ncurses() == true) {
+    } if (pipes->index == pipes->max && is_ncurses() == true && right == 0) {
         fd = open(get_term_name(), O_RDWR | O_APPEND);
         if (fd == -1)
             exit(84);
         dup2(fd, 1);
         dup2(fd, 2);
         close(fd);
+    }
+}
+
+static void skip_redir(token_t *token)
+{
+    if (ANY_REDIR_TYPE(token->type)) {
+        get_token(token);
+        get_token(token);
     }
 }
 
@@ -44,10 +52,12 @@ static pipe_t *set_pipes(token_t *token)
         return NULL;
     pipe->max = 0;
     pipe->index = 0;
-    while (token->type != SEMICOLON && token->type != END) {
+    while (token->type != SEMICOLON && token->type != END &&
+    token->type != OR && token->type != AND) {
         if (token->type == PIPE) {
             pipe->max++;
         }
+        skip_redir(token);
         get_token(token);
     }
     pipe->fds = malloc(sizeof(int) * pipe->max * 2);
@@ -81,8 +91,10 @@ void read_pipe(token_t *token)
     pipe_t *pipes = set_pipes(token_dup(token));
 
     if (pipes == NULL) {
-        while (token->type != SEMICOLON && token->type != END)
+        while (token->type != SEMICOLON && token->type != END &&
+        token->type != OR && token->type != AND)
             get_token(token);
+        *token->error = -1;
         return;
     }
     for (int i = 0; i < pipes->max; i++)

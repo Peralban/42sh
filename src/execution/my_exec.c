@@ -59,10 +59,18 @@ static void exec_child(char **cmd, char **env, char *new_cmd, token_t *token)
 {
     pipe_t *pipes = token->pipes;
 
-    pipes_stuff_child(pipes);
+    pipes_stuff_child(pipes, token->right);
     if (execve(new_cmd, cmd, env) == -1) {
         my_puterror("Execve failed\n");
     }
+}
+
+void exec_redirections(const token_t *token)
+{
+    if (token->left)
+        redirection(token->redir[0].name, token->redir[0].type);
+    if (token->right)
+        redirection(token->redir[1].name, token->redir[1].type);
 }
 
 int my_exec(char **cmd, char **env, token_t *token)
@@ -80,6 +88,7 @@ int my_exec(char **cmd, char **env, token_t *token)
     }
     pid = fork();
     if (pid == 0) {
+        exec_redirections(token);
         exec_child(cmd, env, new_cmd, token);
     } else {
         if (token->pipes->max == 0)
