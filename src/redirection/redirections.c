@@ -38,7 +38,7 @@ static void open_redirection(int *fd, special_type_e type, char *file_path)
         *fd = open(file_path, O_RDONLY, 0644);
 }
 
-int redirect_left(int fd, special_type_e type, char *file_path)
+int redirect_left(int fd, char *file_path)
 {
     if (fd == -1) {
         my_puterror(file_path);
@@ -73,7 +73,7 @@ int redirection(char *file_path, special_type_e type)
     }
     open_redirection(&fd, type, file_path);
     if (type == REDIR_LEFT)
-        return redirect_left(fd, type, file_path);
+        return redirect_left(fd, file_path);
     if (type == REDIR_RIGHT || type == DOUBLE_REDIR_RIGHT)
         return redirect_right(fd);
     return 0;

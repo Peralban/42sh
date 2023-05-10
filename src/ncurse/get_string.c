@@ -24,7 +24,7 @@ static void get_keyboard_event(int ch, char **save, char **line, size_t len)
         (*line)[len - 1] = '\0';
     }
     if (PRINTABLE(ch)) {
-        *line = realloc(*line, sizeof(char) * (len + 2));
+        (*line) = realloc(*line, sizeof(char) * (len + 2));
         if (*line == NULL)
             return;
         (*line)[len] = (char)ch;
