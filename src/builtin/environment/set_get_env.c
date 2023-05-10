@@ -14,7 +14,7 @@ char **set_env_tab(char **new_env)
     static char **env = NULL;
 
     if (new_env != NULL)
-        env = my_arraydup(new_env);
+        env = new_env;
     return env;
 }
 
