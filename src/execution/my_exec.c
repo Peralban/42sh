@@ -61,7 +61,9 @@ static void exec_child(char **cmd, char **env, char *new_cmd, token_t *token)
 
     pipes_stuff_child(pipes, token->right);
     if (execve(new_cmd, cmd, env) == -1) {
-        my_puterror("Execve failed\n");
+        my_puterror(cmd[0]);
+        my_puterror(": Command not found.\n");
+        exit(1);
     }
 }
 
