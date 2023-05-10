@@ -66,7 +66,6 @@ void print_array(char **arr);
 void my_puterror(const char *str);
 char *set_term_name(char *name);
 char *get_term_name(void);
-char *create_term_name(void);
 void start_ncurses(void);
 char *move_in_history(int ch, char *save, int *index, char **history);
 int ncurses_on_off(int on_off);
