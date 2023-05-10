@@ -54,7 +54,7 @@ static char **get_content(char *brackets)
 
 static int print_in_term(int fd, char **content)
 {
-    char *file_path = strdup("/tmp/42sh");
+    char *file_path = strdup("/tmp/42sh_double_redir");
 
     if (file_path == NULL)
         return 1;
@@ -69,7 +69,7 @@ static int print_in_term(int fd, char **content)
 int double_left_redirection(char *brackets)
 {
     char **content = NULL;
-    int fd = open("/tmp/42sh", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int fd = open("/tmp/42sh_double_redir", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
     if (fd == -1)
         return 1;
