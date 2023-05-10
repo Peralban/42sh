@@ -20,25 +20,27 @@ static bool variable_exist(char **env, char *variable)
     return false;
 }
 
-static void reset_variable(char **env, char *variable, char *value)
+static void reset_variable(char **env, char *var, char *value)
 {
-    char *tmp = malloc(sizeof(char) * (strlen(variable) + 1));
+    char *tmp = malloc(sizeof(char) * (strlen(var) + 1));
 
+    if (tmp == NULL)
+        return;
     tmp[0] = '\0';
-    strcat(tmp, variable);
+    strcat(tmp, var);
     if (value != NULL) {
-        tmp = realloc(tmp, sizeof(char) *
-        (strlen(variable) + strlen(value) + 1));
+        tmp = realloc(tmp, sizeof(char) * (strlen(var) + strlen(value) + 1));
+        if (tmp == NULL)
+            return;
         strcat(tmp, value);
     }
-    for (int i = 0; env[i] != NULL; i++) {
-        if (my_start_with(env[i], variable) == true) {
+    for (int i = 0; env[i] != NULL; i++)
+        if (my_start_with(env[i], var) == true) {
             free(env[i]);
             env[i] = strdup(tmp);
             free(tmp);
             return;
         }
-    }
 }
 
 static int complete_new_env(char **new_env, char **args, int i)
@@ -93,7 +95,7 @@ void variable_only(char **env, char *variable)
     if (new_env == NULL)
         return;
     for (; i < my_arraylen(env); i++)
-        new_env[i] = (env)[i];
+        new_env[i] = env[i];
     new_env[i] = strdup(variable);
     new_env[i + 1] = NULL;
     set_env_tab(new_env);
