@@ -73,6 +73,10 @@ void variable_and_value(char **env, char **args)
         new_env[i] = env[i];
     if (complete_new_env(new_env, args, i) == 0) {
         set_env_tab(new_env);
+    } else {
+        for (int j = 0; new_env[j] != NULL; j++)
+            free(new_env[j]);
+        free(new_env);
     }
 }
 
