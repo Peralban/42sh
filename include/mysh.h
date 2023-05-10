@@ -100,7 +100,7 @@ bool var_are_init(char **env);
 int history(char *line, int *error);
 char **get_history_array(void);
 int get_term_fd(void);
-int redirect_left(int fd, special_type_e type, char *file_path);
+int redirect_left(int fd, char *file_path);
 int redirect_right(int fd);
 int redirection(char *file_path, special_type_e type);
 int double_left_redirection(char *brackets, char **args);
