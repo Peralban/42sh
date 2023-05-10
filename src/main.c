@@ -25,7 +25,7 @@ char *my_get_line(char *term_name, int *exit_value)
             my_exit(exit_value);
             return NULL;
         }
-        line[strlen(line) - 1] = '\0';
+        line[strlen(line) - 1] == '\n' ? line[strlen(line) - 1] = '\0' : 0;
     } else {
         line = my_getline_ncurses(term_name);
         if (line == NULL) {
@@ -46,21 +46,21 @@ int exec_command(char **env_cpy, char **cmd, token_t *token)
     return *error;
 }
 
-static void loop(char **env_cpy)
+static void loop(void)
 {
     char *line = NULL;
     int error = 0;
     int exit_value = 0;
 
     while (exit_value != 1) {
-        print_prompt(env_cpy, error);
+        print_prompt(get_env_tab(), error);
         error = 0;
         line = my_get_line(get_term_name(), &exit_value);
         if (line == NULL || line[0] == '\0')
             continue;
         if (history(line, &error) == 1)
             continue;
-        line = detect_variables(line, env_cpy, &error);
+        line = detect_variables(line, get_env_tab(), &error);
         if (echo_execution(line, &error) == true)
             continue;
         parser(line, &exit_value, &error);
@@ -82,7 +82,7 @@ void the_sh(char **env)
     close(fd);
     if (var_are_init(env_cpy) == false)
         setup_env(env_cpy);
-    loop(env_cpy);
+    loop();
     remove(def_term_name);
 }
 
