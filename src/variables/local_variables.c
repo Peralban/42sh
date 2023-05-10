@@ -55,7 +55,7 @@ int handle_equal_sign(char **line, int i)
 bool detect_variable_attribution(char **line)
 {
     bool in_variable = false;
-    char *new_line = malloc(sizeof(char) * strlen(*line));
+    char *new_line = malloc(sizeof(char) * (strlen(*line) + 1));
     int size = 0;
 
     if (new_line == NULL)

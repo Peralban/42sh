@@ -21,22 +21,22 @@ static void status_handling(int status)
 {
     switch (WTERMSIG(status)) {
         case SIGINT:
-            my_puterror("Interrupted");
+            my_putstr("Interrupted");
             break;
         case SIGILL:
-            my_puterror("Illegal inscruction");
+            my_putstr("Illegal inscruction");
             break;
         case SIGABRT:
-            my_puterror("Abort");
+            my_putstr("Abort");
             break;
         case SIGFPE:
-            my_puterror("Floating exception");
+            my_putstr("Floating exception");
             break;
         case SIGSEGV:
-            my_puterror("Segmentation fault");
+            my_putstr("Segmentation fault");
             break;
         case SIGTERM:
-            my_puterror("Terminated");
+            my_putstr("Terminated");
             break;
     }
 }
@@ -49,8 +49,8 @@ void exec_parent(int pid, int *error)
     if (WIFSIGNALED(status) != 0) {
         status_handling(status);
         if (WCOREDUMP(status) != 0)
-            my_puterror(" (core dumped)");
-        my_puterror("\n");
+            my_putstr(" (core dumped)");
+        my_putstr("\n");
     }
     *error = WEXITSTATUS(status);
 }
