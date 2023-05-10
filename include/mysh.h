@@ -100,10 +100,12 @@ bool var_are_init(char **env);
 int history(char *line, int *error);
 char **get_history_array(void);
 int get_term_fd(void);
-int right_redirection(char *file_path, special_type_e type);
-int double_left_redirection(char *brackets, char **args);
-
-//variables
+int redirect_left(int fd, char *file_path);
+int redirect_right(int fd);
+int redirection(char *file_path, special_type_e type);
+int double_left_redirection(char *brackets);
+char *find_num_variable(char *str, char **wa, int i, char **env);
+char *create_new_line(char *new_line, char *tmp, int size);
 char *detect_variables(char *line, char **env, int *error);
 char *get_var(char *str, int i);
 char *get_var_name(char *str, int i);
@@ -115,5 +117,6 @@ void delete_local_variable(char *name);
 void append_local_variable(char *name, char *value);
 int handle_equal_sign(char **line, int i);
 bool detect_variable_attribution(char **line);
+char *find_local_variable(char *str, int i);
 
 #endif
