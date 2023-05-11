@@ -21,14 +21,16 @@ void delete_local_variable(char *name)
 
     if (fd == NULL || fd_tmp == NULL)
         return;
-    while (getline(&line, &len, fd) != -1) {
+    while (getline(&line, &len, fd) != -1)
         if (strncmp(line, name, strlen(name)) != 0)
             fprintf(fd_tmp, "%s", line);
-    }
     fclose(fd);
     fclose(fd_tmp);
     remove(path);
     rename(tmp, path);
+    free(path);
+    free(tmp);
+    free(line);
 }
 
 void append_local_variable(char *name, char *value)
@@ -42,6 +44,7 @@ void append_local_variable(char *name, char *value)
         delete_local_variable(name);
     fprintf(fd, "%s %s\n", name, value);
     fclose(fd);
+    free(path);
 }
 
 int display_local_variables(void)
@@ -53,9 +56,14 @@ int display_local_variables(void)
 
     if (fd == NULL)
         return 1;
-    while (getline(&line, &len, fd) != -1)
+    while (getline(&line, &len, fd) != -1) {
+        line[strlen(line) - 1] = '\0';
         my_putstr(line);
+        my_putstr("\n");
+    }
     fclose(fd);
+    free(path);
+    free(line);
     return 0;
 }
 
@@ -73,6 +81,8 @@ int my_set(char **cmd, int *error)
         value = get_var_value(cmd[i], 0);
         append_local_variable(name, value);
     }
+    free(name);
+    free(value);
     return 0;
 }
 
@@ -89,5 +99,6 @@ int my_unset(char **cmd, int *error)
         name = cmd[i];
         delete_local_variable(name);
     }
+    free(name);
     return 0;
 }
