@@ -10,6 +10,14 @@
 #include <string.h>
 #include <stdio.h>
 
+void free_find_local_var(char *var, char *path, char *line, int fd)
+{
+    free(var);
+    free(path);
+    free(line);
+    fclose(fd);
+}
+
 char *find_local_variable(char *str, int i)
 {
     char *var = get_var_name(str, i + 1);
@@ -25,10 +33,11 @@ char *find_local_variable(char *str, int i)
         if (strncmp(line, var, strlen(var)) == 0) {
             tmp = strdup(line + strlen(var) + 1);
             tmp[strlen(tmp) - 1] = '\0';
-            fclose(fd);
+            free_find_local_var(var, path, line, fd);
             return tmp;
         }
     }
-    fclose(fd);
+    free_find_local_var(var, path, line, fd);
+    free(tmp);
     return NULL;
 }
