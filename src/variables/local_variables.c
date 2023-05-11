@@ -12,7 +12,7 @@
 
 char *find_local_variable(char *str, int i)
 {
-    char *var = get_var_name(str, i);
+    char *var = get_var_name(str, i + 1);
     char *path = get_path(".42sh_variables");
     char *tmp = NULL;
     char *line = NULL;
