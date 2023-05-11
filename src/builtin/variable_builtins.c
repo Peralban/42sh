@@ -53,9 +53,8 @@ int display_local_variables(void)
 
     if (fd == NULL)
         return 1;
-    while (getline(&line, &len, fd) != -1) {
-        printf("%s", line);
-    }
+    while (getline(&line, &len, fd) != -1)
+        my_putstr(line);
     fclose(fd);
     return 0;
 }
