@@ -104,7 +104,7 @@ int get_term_fd(void);
 int redirect_left(int fd, char *file_path);
 int redirect_right(int fd);
 int redirection(char *file_path, special_type_e type);
-int double_left_redirection(char *brackets, char **args);
+int double_left_redirection(char *brackets);
 char *find_num_variable(char *str, char **wa, int i, char **env);
 char *create_new_line(char *new_line, char *tmp, int size);
 char *detect_variables(char *line, char **env, int *error);

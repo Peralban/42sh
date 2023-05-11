@@ -34,7 +34,7 @@ static void open_redirection(int *fd, special_type_e type, char *file_path)
         *fd = open(file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (type == DOUBLE_REDIR_RIGHT)
         *fd = open(file_path, O_CREAT | O_APPEND | O_WRONLY, 0644);
-    if (type == REDIR_LEFT)
+    if (type == REDIR_LEFT || type == DOUBLE_REDIR_LEFT)
         *fd = open(file_path, O_RDONLY, 0644);
 }
 
@@ -66,11 +66,14 @@ int redirection(char *file_path, special_type_e type)
     struct stat path;
     int fd = 0;
 
-    if (stat(file_path, &path) == 0 && !S_ISREG(path.st_mode)) {
+    if (stat(file_path, &path) == 0 && !S_ISREG(path.st_mode)
+    && type != DOUBLE_REDIR_LEFT && type != REDIR_LEFT) {
         my_puterror(file_path);
         my_puterror(": Is a directory.\n");
         return 1;
     }
+    if (type == DOUBLE_REDIR_LEFT)
+        return double_left_redirection(file_path);
     open_redirection(&fd, type, file_path);
     if (type == REDIR_LEFT)
         return redirect_left(fd, file_path);

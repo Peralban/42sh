@@ -31,48 +31,55 @@ static char **add_string(char **content, char *buffer)
     return new_content;
 }
 
-static char **get_content(char **args, char *brackets)
+static char **get_content(char *brackets)
 {
-    char **content = my_arraydup(args);
+    char **content = NULL;
+    char *term_name = get_term_name();
     char *buffer = NULL;
-    size_t len = 0;
 
-    while (getline(&buffer, &len, STDIN_FILENO) != -1) {
+    my_putstr("? ");
+    buffer = my_getline_ncurses(term_name);
+    while (buffer != NULL) {
         if (strcmp(buffer, brackets) == 0)
             break;
         content = add_string(content, buffer);
         if (content == NULL)
             return NULL;
+        my_putstr("? ");
+        buffer = my_getline_ncurses(term_name);
     }
+    free(buffer);
     return content;
 }
 
-static int print_in_term(char **content)
+static int print_in_term(int fd, char **content)
 {
-    int fd = STDIN_FILENO;
+    char *file_path = strdup("/tmp/42sh_double_redir");
 
-    if (is_ncurses() == true)
-            fd = get_term_fd();
-    if (fd == -1)
+    if (file_path == NULL)
         return 1;
-    dup2(fd, STDIN_FILENO);
-    for (int i = 0; content[i] != NULL; i++)
-        my_putstr(content[i]);
-    return 0;
+    for (int i = 0; content[i] != NULL; i++) {
+        write(fd, content[i], strlen(content[i]));
+        write(fd, "\n", 1);
+    }
+    close(fd);
+    return redirection(file_path, REDIR_LEFT);
 }
 
-int double_left_redirection(char *brackets, char **args)
+int double_left_redirection(char *brackets)
 {
     char **content = NULL;
+    int fd = open("/tmp/42sh_double_redir", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
+    if (fd == -1)
+        return 1;
     if (brackets == NULL) {
         my_puterror("Missing name for redirect.\n");
+        close(fd);
         return 1;
     }
-    content = get_content(args, brackets);
-    if (args != NULL)
-        destroy_array(args);
+    content = get_content(brackets);
     if (content == NULL)
         return 0;
-    return print_in_term(content);
+    return print_in_term(fd, content);
 }
