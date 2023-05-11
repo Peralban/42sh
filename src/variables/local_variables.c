@@ -10,7 +10,7 @@
 #include <string.h>
 #include <stdio.h>
 
-void free_find_local_var(char *var, char *path, char *line, int fd)
+void free_find_local_var(char *var, char *path, char *line, FILE *fd)
 {
     free(var);
     free(path);
