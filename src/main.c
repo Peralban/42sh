@@ -20,12 +20,12 @@ char *my_get_line(char *term_name, int *exit_value)
     char *line = NULL;
     size_t size = 0;
 
-    if (isatty(0) == 0 || getenv("TERM") == NULL) {
+    if (is_ncurses() == 0) {
         if (getline(&line, &size, stdin) < 0) {
             my_exit(exit_value);
             return NULL;
         }
-        line[strlen(line) - 1] = '\0';
+        line[strlen(line) - 1] == '\n' ? line[strlen(line) - 1] = '\0' : 0;
     } else {
         line = my_getline_ncurses(term_name);
         if (line == NULL) {
@@ -43,23 +43,25 @@ int exec_command(char **env_cpy, char **cmd, token_t *token)
 
     if (built_in(cmd, env_cpy, error, exit_value) == 2)
         return my_exec(cmd, env_cpy, token);
-    return 0;
+    return *error;
 }
 
-static void loop(char **env_cpy)
+static void loop(void)
 {
-    char **cmd = NULL;
     char *line = NULL;
     int error = 0;
     int exit_value = 0;
 
     while (exit_value != 1) {
-        print_prompt(env_cpy, error);
+        print_prompt(get_env_tab(), error);
         error = 0;
         line = my_get_line(get_term_name(), &exit_value);
         if (line == NULL || line[0] == '\0')
             continue;
         if (history(line, &error) == 1)
+            continue;
+        line = detect_variables(line, get_env_tab(), &error);
+        if (echo_execution(line, &error) == true)
             continue;
         parser(line, &exit_value, &error);
         free(line);
@@ -80,12 +82,16 @@ void the_sh(char **env)
     close(fd);
     if (var_are_init(env_cpy) == false)
         setup_env(env_cpy);
-    loop(env_cpy);
+    loop();
     remove(def_term_name);
 }
 
 int main(int ac, char **av, char **env)
 {
+    if (ac != 1 || av[0] == NULL)
+        return 84;
+    if (sizeof(void *) == 4)
+        return 84;
     if (isatty(0) == 1)
         start_ncurses();
     else

@@ -34,27 +34,50 @@ static void open_redirection(int *fd, special_type_e type, char *file_path)
         *fd = open(file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (type == DOUBLE_REDIR_RIGHT)
         *fd = open(file_path, O_CREAT | O_APPEND | O_WRONLY, 0644);
+    if (type == REDIR_LEFT || type == DOUBLE_REDIR_LEFT)
+        *fd = open(file_path, O_RDONLY, 0644);
 }
 
-int right_redirection(char *file_path, special_type_e type)
+int redirect_left(int fd, char *file_path)
+{
+    if (fd == -1) {
+        my_puterror(file_path);
+        my_puterror(": No such file or directory.\n");
+        return 1;
+    }
+    dup2(fd, STDIN_FILENO);
+    close(fd);
+    return 0;
+}
+
+int redirect_right(int fd)
+{
+    if (fd == -1) {
+        my_puterror("Failed to open file.\n");
+        return 1;
+    }
+    dup2(fd, STDOUT_FILENO);
+    close(fd);
+    return 0;
+}
+
+int redirection(char *file_path, special_type_e type)
 {
     struct stat path;
     int fd = 0;
-    int fd_ncurse = STDOUT_FILENO;
 
-    if (stat(file_path, &path) == 0 && type == 3) {
+    if (stat(file_path, &path) == 0 && !S_ISREG(path.st_mode)
+    && type != DOUBLE_REDIR_LEFT && type != REDIR_LEFT) {
         my_puterror(file_path);
         my_puterror(": Is a directory.\n");
         return 1;
     }
+    if (type == DOUBLE_REDIR_LEFT)
+        return double_left_redirection(file_path);
     open_redirection(&fd, type, file_path);
-    if (is_ncurses() == true)
-        fd_ncurse = get_term_fd();
-    if (fd == -1 || fd_ncurse == -1) {
-        my_puterror("Failed to open file.\n");
-        return 1;
-    }
-    dup2(fd, fd_ncurse);
-    close(fd);
+    if (type == REDIR_LEFT)
+        return redirect_left(fd, file_path);
+    if (type == REDIR_RIGHT || type == DOUBLE_REDIR_RIGHT)
+        return redirect_right(fd);
     return 0;
 }
