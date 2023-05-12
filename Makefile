@@ -6,46 +6,66 @@
 ##
 
 SRC	=	src/main.c										\
+		src/get_file_path.c								\
 		src/destroy_array.c								\
+		\
 		src/builtin/builtin.c							\
 		src/builtin/my_exit.c							\
         src/builtin/my_cd.c								\
 		src/builtin/echo.c								\
         src/builtin/echo_special_cases.c				\
 		src/builtin/environment/setenv.c				\
+		src/builtin/environment/setenv_variable.c		\
 		src/builtin/environment/unsetenv.c				\
 		src/builtin/environment/set_environment.c		\
 		src/builtin/environment/parse_args_setenv.c		\
 		src/builtin/environment/set_get_env.c			\
+		\
 		src/execution/my_exec.c							\
 		src/execution/command_error_handling.c			\
 		src/execution/my_put_errors.c					\
+		src/execution/check_usr_bin.c					\
+		\
 		src/ncurse/my_getline_ncurses.c					\
 		src/ncurse/my_str_to_array_max_size.c			\
 		src/ncurse/write_in_term.c						\
 		src/ncurse/my_put.c								\
 		src/ncurse/set_get_term_name.c					\
 		src/ncurse/start_ncurses.c						\
+		src/ncurse/line_edition/move_in_history.c		\
+		src/ncurse/is_ncurses.c							\
+		src/ncurse/get_string.c							\
+		\
 		src/parser/parser.c								\
+		src/parser/parsing_error.c						\
+		src/parser/parsing_error_pipe.c					\
+		src/parser/parsing_error_redir.c				\
 		src/parser/get_token.c							\
+		src/parser/token_dup.c							\
+		src/parser/pipe_gestion.c						\
+		src/parser/redir_gestion.c						\
+		\
 		src/prompt/my_getenv.c							\
 		src/prompt/print_prompt.c						\
 		src/prompt/my_getpwd.c							\
 		src/prompt/var_are_init.c						\
+		\
 		src/history/history.c				            \
-		src/aliases/temporary/create_alias_file.c		\
-		src/aliases/temporary/add_alias.c				\
-		src/aliases/temporary/execute_alias.c			\
-		src/aliases/temporary/get_alias.c				\
-		src/aliases/temporary/handle_aliases.c			\
-		src/aliases/temporary/remove_alias.c			\
-
+		src/history/get_history_array.c					\
+		\
+		src/redirection/redirections.c					\
+		src/redirection/double_left_redirection.c		\
+		\
+		src/variables/variables.c						\
+		src/variables/variables_getters.c				\
+		src/variables/variables_special_cases.c			\
+		src/variables/local_variables.c					\
 
 TEST_SRC = tests/test_my_sh.c
 
 OBJ	=   $(SRC:.c=.o)
 
-SATAN = -W -Wall -Wextra -Wshadow -g
+SATAN = -W -Wall -Wextra -Wshadow
 
 INCLUDE = -I./include
 
@@ -88,8 +108,11 @@ include:
 	@echo "    #define __"mysh"_H" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "    #include <stddef.h>" >> include/mysh.h
+	@echo "    #include <unistd.h>" >> include/mysh.h
+	@echo "    #include \"parser.h\"" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "typedef struct token_s token_t;" >> include/mysh.h
+	@echo "typedef struct pipe_s pipe_t;" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@cat $(SRC) | grep -B1 "^{" | grep "(" | grep -v "static" | sed \
 		s/"$$"/";"/ >> include/mysh.h

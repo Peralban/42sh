@@ -13,23 +13,9 @@
 #include "mysh.h"
 #include "my.h"
 
-static char *get_history_path(void)
-{
-    char *home = getenv("HOME");
-    char *path = malloc(sizeof(char) * (strlen(home) + 17));
-
-    if (path == NULL || home == NULL)
-        return NULL;
-    path[0] = '\0';
-    path = strcat(path, home);
-    path = strcat(path, "/.42sh_history");
-    return path;
-}
-
 static int history_error(int fd, int *error)
 {
     if (fd == -1) {
-        my_puterror("open");
         *error = 1;
         return 84;
     }
@@ -39,7 +25,7 @@ static int history_error(int fd, int *error)
 static void print_history(void)
 {
     char *line = NULL;
-    FILE *fd = fopen(get_history_path(), "r");
+    FILE *fd = fopen(get_path(".42sh_history"), "r");
     size_t len = 0;
     int i = 1;
 
@@ -56,18 +42,11 @@ static void print_history(void)
     fclose(fd);
 }
 
-static int add_in_history(char *line, int fd, int *error)
+static int add_in_history(char *line, int fd)
 {
-    char *str = malloc(sizeof(char) * (strlen(line) + 2));
-
-    if (str == NULL) {
-        *error = 1;
-        return 84;
-    }
-    str = strcat(line, "\n");
-    write(fd, str, strlen(str));
+    write(fd, line, strlen(line));
+    write(fd, "\n", 1);
     close(fd);
-    line[strlen(line) - 1] = '\0';
     return 0;
 }
 
@@ -77,18 +56,18 @@ int history(char *line, int *error)
 
     if (line[0] == '\0')
         return 0;
-    fd = open(get_history_path(), O_WRONLY | O_CREAT | O_APPEND, 0666);
+    fd = open(get_path(".42sh_history"), O_WRONLY | O_CREAT | O_APPEND, 0666);
     if (history_error(fd, error) == 84)
         return 84;
     if (strcmp(line, "history-clear") == 0) {
-        fd = open(get_history_path(), O_WRONLY | O_CREAT | O_TRUNC, 0666);
+        fd = open(get_path(".42sh_history"), O_RDWR | O_CREAT | O_TRUNC, 0666);
         if (history_error(fd, error) == 84)
             return 84;
     } else if (strcmp(line, "history") == 0) {
         close(fd);
         print_history();
     } else {
-        if (add_in_history(line, fd, error) == 84)
+        if (add_in_history(line, fd) == 84)
             return 84;
         return 0;
     }

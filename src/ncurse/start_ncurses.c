@@ -7,6 +7,7 @@
 
 #include <ncurses.h>
 #include <stdlib.h>
+#include "mysh.h"
 
 void start_ncurses(void)
 {
@@ -15,4 +16,5 @@ void start_ncurses(void)
     noecho();
     keypad(stdscr, TRUE);
     curs_set(1);
+    ncurses_on_off(true);
 }

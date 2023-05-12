@@ -7,9 +7,11 @@
 
 #include "my.h"
 #include "mysh.h"
+#include "parser.h"
 #include "command_error_handling.h"
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
@@ -20,27 +22,27 @@ static void status_handling(int status)
 {
     switch (WTERMSIG(status)) {
         case SIGINT:
-            my_puterror("Interrupted");
+            my_putstr("Interrupted");
             break;
         case SIGILL:
-            my_puterror("Illegal inscruction");
+            my_putstr("Illegal inscruction");
             break;
         case SIGABRT:
-            my_puterror("Abort");
+            my_putstr("Abort");
             break;
         case SIGFPE:
-            my_puterror("Floating exception");
+            my_putstr("Floating exception");
             break;
         case SIGSEGV:
-            my_puterror("Segmentation fault");
+            my_putstr("Segmentation fault");
             break;
         case SIGTERM:
-            my_puterror("Terminated");
+            my_putstr("Terminated");
             break;
     }
 }
 
-static void exec_parent(int pid, int *error)
+void exec_parent(int pid, int *error)
 {
     int status = 0;
 
@@ -48,43 +50,58 @@ static void exec_parent(int pid, int *error)
     if (WIFSIGNALED(status) != 0) {
         status_handling(status);
         if (WCOREDUMP(status) != 0)
-            my_puterror(" (core dumped)");
-        my_puterror("\n");
+            my_putstr(" (core dumped)");
+        my_putstr("\n");
     }
     *error = WEXITSTATUS(status);
 }
 
-static void exec_child(char **cmd, char **env, int *error, char *new_cmd)
+static void exec_child(char **cmd, char **env, char *new_cmd, token_t *token)
 {
-    int fd = 0;
+    pipe_t *pipes = token->pipes;
+    struct stat st;
 
-    fd = open(get_term_name(), O_RDWR | O_APPEND);
-    if (fd == -1)
-        exit(84);
-    dup2(fd, 1);
-    dup2(fd, 2);
-    close(fd);
+    pipes_stuff_child(pipes, token->right);
     if (execve(new_cmd, cmd, env) == -1) {
-        my_put_command_not_found(cmd[0]);
-        *error = 1;
+        if (stat(cmd[0], &st) == 0 && !S_ISREG(st.st_mode)) {
+        my_puterror(cmd[0]);
+        my_puterror(": Is a directory.\n");
+        exit(1);
     }
-    exit(0);
+        my_puterror(cmd[0]);
+        my_puterror(": Command not found.\n");
+        exit(1);
+    }
 }
 
-void my_exec(char **cmd, char **env, int *error)
+void exec_redirections(const token_t *token)
+{
+    if (token->left)
+        redirection(token->redir[0].name, token->redir[0].type);
+    if (token->right)
+        redirection(token->redir[1].name, token->redir[1].type);
+}
+
+int my_exec(char **cmd, char **env, token_t *token)
 {
     pid_t pid = 0;
     char *new_cmd = NULL;
+    int *error = token->error;
 
     if (cmd == NULL || error == NULL)
-        return;
+        return 0;
     new_cmd = search_command(cmd[0], env, error);
-    if (new_cmd == NULL)
-        return;
+    if (new_cmd == NULL) {
+        *error = 1;
+        return 0;
+    }
     pid = fork();
     if (pid == 0) {
-        exec_child(cmd, env, error, new_cmd);
+        exec_redirections(token);
+        exec_child(cmd, env, new_cmd, token);
     } else {
-        exec_parent(pid, error);
+        if (token->pipes->max == 0)
+            exec_parent(pid, error);
     }
+    return pid;
 }

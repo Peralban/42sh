@@ -9,12 +9,15 @@
 #include "my.h"
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 static int print_error(char *cmd, int msg, int *error)
 {
-    char *error_msg[2] = {
+    char *error_msg[4] = {
         ": Too many arguments.\n",
-        ": No such file or directory.\n"
+        ": No such file or directory.\n",
+        ": Not a directory.\n",
+        ": No home directory.\n"
     };
 
     my_puterror(cmd);
@@ -28,9 +31,13 @@ static int cd_in_directory(char **cmd, char **env, int *error)
     char *set_pwd[4] = {"setenv", strdup("PWD"), NULL, NULL};
     char *set_oldpwd[4] =
     {"setenv", strdup("OLDPWD"), my_getenv(env, "PWD"), NULL};
+    struct stat sb;
 
+    stat(cmd[1], &sb);
+    if (!S_ISDIR(sb.st_mode))
+        return print_error(cmd[1], 2, error);
     if (chdir(cmd[1]) == -1) {
-        return print_error(cmd[1], 1, error);
+        print_error(cmd[1], 1, error);
     } else {
         set_pwd[2] = my_getpwd();
         my_setenv(set_pwd, env, (int *) {0});
@@ -47,7 +54,7 @@ static int cd_in_home_directory(char **env, int *error)
     {"setenv", strdup("OLDPWD"), my_getenv(env, "PWD"), NULL};
 
     if (chdir(home) == -1) {
-        return print_error("", 1, error);
+        return print_error("cd", 3, error);
     } else {
         set_pwd[2] = home;
         my_setenv(set_pwd, env, (int *) {0});
@@ -58,12 +65,12 @@ static int cd_in_home_directory(char **env, int *error)
 
 static int cd_in_oldpwd_directory(char **env, int *error)
 {
-    char *oldpwd = my_getenv(env, "OLDPWD");
     char *set_pwd[4] = {"setenv", strdup("PWD"), NULL, NULL};
     char *set_oldpwd[4] =
     {"setenv", strdup("OLDPWD"), my_getenv(env, "PWD"), NULL};
+    char *oldpwd = my_getenv(env, "OLDPWD");
 
-    if (oldpwd == NULL) {
+    if (oldpwd == NULL || oldpwd[0] == '\0') {
         return print_error("", 1, error);
     } else {
         chdir(oldpwd);
