@@ -20,6 +20,7 @@ SRC	=	src/main.c										\
 		src/builtin/environment/set_environment.c		\
 		src/builtin/environment/parse_args_setenv.c		\
 		src/builtin/environment/set_get_env.c			\
+		src/builtin/variable_builtins.c					\
 		\
 		src/execution/my_exec.c							\
 		src/execution/command_error_handling.c			\
