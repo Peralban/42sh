@@ -90,6 +90,8 @@ int main(int ac, char **av, char **env)
 {
     if (ac != 1 || av[0] == NULL)
         return 84;
+    if (sizeof(void *) == 4)
+        return 84;
     if (isatty(0) == 1)
         start_ncurses();
     else

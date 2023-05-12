@@ -24,6 +24,7 @@ SRC	=	src/main.c										\
 		src/execution/my_exec.c							\
 		src/execution/command_error_handling.c			\
 		src/execution/my_put_errors.c					\
+		src/execution/check_usr_bin.c					\
 		\
 		src/ncurse/my_getline_ncurses.c					\
 		src/ncurse/my_str_to_array_max_size.c			\
