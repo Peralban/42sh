@@ -110,7 +110,7 @@ int double_left_redirection(char *brackets);
 char *find_num_variable(char *str, char **wa, int i, char **env);
 char *create_new_line(char *new_line, char *tmp, int size);
 char *detect_variables(char *line, char **env, int *error);
-char *get_var(char *str, int i);
+char *get_var_value(char *str, int i);
 char *get_var_name(char *str, int i);
 int get_back_cmd(void);
 char *join_all_args(char *str);
@@ -118,9 +118,9 @@ char *find_other_variable(char *str, char **wa, int i, char **env);
 char *find_special_variable(char *str, int i, char **env, int *error);
 void delete_local_variable(char *name);
 void append_local_variable(char *name, char *value);
-int handle_equal_sign(char **line, int i);
-bool detect_variable_attribution(char **line);
 char *find_local_variable(char *str, int i);
+int my_set(char **cmd, int *error);
+int my_unset(char **cmd, int *error);
 int cmd_in_sublime(char **line);
 
 #endif
