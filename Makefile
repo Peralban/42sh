@@ -113,6 +113,7 @@ include:
 	@echo "" >> include/mysh.h
 	@echo "    #include <stddef.h>" >> include/mysh.h
 	@echo "    #include <unistd.h>" >> include/mysh.h
+	@echo "    #include <stdio.h>" >> include/mysh.h
 	@echo "    #include \"parser.h\"" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "typedef struct token_s token_t;" >> include/mysh.h
