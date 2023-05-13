@@ -50,15 +50,8 @@ static int add_in_history(char *line, int fd)
     return 0;
 }
 
-int history(char *line, int *error)
+static int history_managemnt(char *line, int fd, int *error)
 {
-    int fd = 0;
-
-    if (line[0] == '\0')
-        return 0;
-    fd = open(get_path(".42sh_history"), O_WRONLY | O_CREAT | O_APPEND, 0666);
-    if (history_error(fd, error) == 84)
-        return 84;
     if (strcmp(line, "history-clear") == 0) {
         fd = open(get_path(".42sh_history"), O_RDWR | O_CREAT | O_TRUNC, 0666);
         if (history_error(fd, error) == 84)
@@ -72,4 +65,35 @@ int history(char *line, int *error)
         return 0;
     }
     return 1;
+}
+
+static int search_cmd(char **line)
+{
+    char **history = get_history_array();
+
+    if (strlen(*line) == 1)
+        return 0;
+    if (history == NULL)
+        return 84;
+    for (int i = my_arraylen(history) - 1; i >= 0; i--) {
+        if (my_start_with(history[i], (*line) + 1) == 1) {
+            (*line) = strdup(history[i]);
+            return 0;
+        }
+    }
+    return 0;
+}
+
+int history(char **line, int *error)
+{
+    int fd = 0;
+
+    if (*line[0] == '\0')
+        return 0;
+    fd = open(get_path(".42sh_history"), O_WRONLY | O_CREAT | O_APPEND, 0666);
+    if (history_error(fd, error) == 84)
+        return 84;
+    if (my_start_with(*line, "!") == 1)
+        return search_cmd(line);
+    return history_managemnt(*line, fd, error);
 }
