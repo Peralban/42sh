@@ -30,6 +30,7 @@ SRC	=	src/main.c										\
 		\
 		src/ncurse/my_getline_ncurses.c					\
 		src/ncurse/my_str_to_array_max_size.c			\
+		src/ncurse/word_array_model.c					\
 		src/ncurse/write_in_term.c						\
 		src/ncurse/my_put.c								\
 		src/ncurse/set_get_term_name.c					\
@@ -37,6 +38,7 @@ SRC	=	src/main.c										\
 		src/ncurse/line_edition/move_in_history.c		\
 		src/ncurse/is_ncurses.c							\
 		src/ncurse/get_string.c							\
+		src/ncurse/color_gestion.c						\
 		\
 		src/parser/parser.c								\
 		src/parser/parsing_error.c						\

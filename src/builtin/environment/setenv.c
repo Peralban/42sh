@@ -21,7 +21,7 @@ static int setenv_error(char **args, int *return_value, char **env)
         *return_value = 1;
         return 1;
     } else if (args[1] == NULL) {
-        put_array_in_term(1, env);
+        print_array(env);
         return 1;
     }
     if (parse_args_setenv(args) == 1) {

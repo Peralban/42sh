@@ -63,6 +63,7 @@ static void loop(void)
         line = detect_variables(line, get_env_tab(), &error);
         parser(line, &exit_value, &error);
         free(line);
+        fill_color_file();
     }
 }
 
@@ -95,7 +96,8 @@ int main(int ac, char **av, char **env)
     else
         ncurses_on_off(0);
     the_sh(env);
-    if (is_ncurses() == true)
-        endwin();
+    if (is_ncurses() == true) {
+        end_ncurses();
+    }
     return 0;
 }
