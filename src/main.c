@@ -61,8 +61,6 @@ static void loop(void)
         if (history(line, &error) == 1)
             continue;
         line = detect_variables(line, get_env_tab(), &error);
-        if (echo_execution(line, &error) == true)
-            continue;
         parser(line, &exit_value, &error);
         free(line);
     }

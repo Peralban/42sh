@@ -24,7 +24,7 @@ char *find_num_variable(char *str, char **wa, int i, char **env)
         if (wa[str[i + 1] - '0'][0] == '$')
             return my_getenv(env, (wa[str[i + 1] - '0'] + 1));
     }
-    tmp = my_getenv(env, get_var(str, i + 1));
+    tmp = my_getenv(env, get_var_name(str, i + 1));
     if (tmp != NULL)
         return tmp;
     return find_local_variable(str, i);
@@ -51,7 +51,7 @@ char *detect_variables(char *line, char **env, int *error)
     int size = strlen(line) + 1;
     char *new_line = malloc(sizeof(char) * size);
     char *tmp = NULL;
-    bool in_variable = detect_variable_attribution(&line);
+    bool in_variable = false;
 
     new_line[0] = '\0';
     for (int i = 0; line[i] != '\0'; i++) {
