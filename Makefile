@@ -62,6 +62,8 @@ SRC	=	src/main.c										\
 		src/variables/variables_getters.c				\
 		src/variables/variables_special_cases.c			\
 		src/variables/local_variables.c					\
+		\
+		src/sublime/cmd_in_sublime.c					\
 
 TEST_SRC = tests/test_my_sh.c
 
@@ -111,6 +113,7 @@ include:
 	@echo "" >> include/mysh.h
 	@echo "    #include <stddef.h>" >> include/mysh.h
 	@echo "    #include <unistd.h>" >> include/mysh.h
+	@echo "    #include <stdio.h>" >> include/mysh.h
 	@echo "    #include \"parser.h\"" >> include/mysh.h
 	@echo "" >> include/mysh.h
 	@echo "typedef struct token_s token_t;" >> include/mysh.h
