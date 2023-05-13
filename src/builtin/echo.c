@@ -12,23 +12,18 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-char *adapt_str(char *str, int nb_quotes)
+char *adapt_str(char *str)
 {
-    char *new_str = malloc(sizeof(char) * strlen(str) - nb_quotes + 1);
+    char *new_str = malloc(sizeof(char) * strlen(str));
     int j = 0;
-    bool quote = false;
 
     if (new_str == NULL)
         return NULL;
-    for (int i = 0; str[i] != '\0'; i++) {
-        quote = ((str[i] == '\"' || str[i] == '\'') ? !quote : quote);
-        if (str[i] == '\\' && quote) {
-            handle_backslash(str, new_str, i++, j++);
-            continue;
-        }
-        if (str[i] == '\"' || str[i] == '\'' || str[i] == '\\')
-            continue;
-        new_str[j] = str[i];
+    for (int i = 1; str[i] != '\"' && str[i] != '\0'; i++) {
+        if (str[i] == '\\')
+            handle_backslash(str, new_str, i++, j);
+        else
+            new_str[j] = str[i];
         j++;
     }
     new_str[j] = '\0';
@@ -37,52 +32,29 @@ char *adapt_str(char *str, int nb_quotes)
 
 char *test_echo_special_cases(char *str)
 {
-    int nb_db_quotes = 0;
-    int nb_quotes = 0;
-
-    for (int i = 0; str[i] != '\0'; i++) {
-        if (str[i] == '\"')
-            nb_db_quotes++;
-        if (str[i] == '\'')
-            nb_quotes++;
-    }
-    if (nb_db_quotes % 2 != 0)
-        return strdup("Unmatched '\"'.");
-    if (nb_quotes % 2 != 0)
-        return strdup("Unmatched '\''.");
-    return adapt_str(str, nb_quotes + nb_db_quotes);
+    if (str == NULL)
+        return NULL;
+    if (str[0] == '\"' || str[0] == '\'')
+        return adapt_str(str);
+    return str;
 }
 
-int my_echo(char *line, int *error)
+int my_echo(char **cmd, int *error)
 {
-    char **cmd = my_str_to_word_array(line, " \t");
-    bool opt = ((cmd[0] != NULL && strcmp(cmd[0], "-n") == 0) ? true : false);
+    bool opt = false;
     char *str = NULL;
 
     if (cmd == NULL)
         return 0;
-    if (opt)
-        line = line + 2;
-    str = test_echo_special_cases(line);
-    if (str == NULL)
-        return 0;
-    my_putstr(str);
+    opt = ((cmd[1] != NULL && strcmp(cmd[1], "-n") == 0) ? true : false);
+    for (int i = (opt ? 2 : 1); cmd[i] != NULL; i++) {
+        str = test_echo_special_cases(cmd[i]);
+        my_putstr(str);
+        if (cmd[i + 1] != NULL)
+            my_putstr(" ");
+    }
     if (!opt)
         my_putstr("\n");
     free(str);
     return *error;
-}
-
-bool echo_execution(char *line, int *error)
-{
-    if (line == NULL)
-        return false;
-    if (strcmp(line, "echo") == 0) {
-        my_putstr(" \n");
-        return true;
-    }
-    if (strncmp(line, "echo ", 5) != 0)
-        return false;
-    *error = my_echo((line + 5), error);
-    return true;
 }
