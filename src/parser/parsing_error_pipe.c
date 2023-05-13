@@ -26,20 +26,20 @@ int pipe_right_side(token_t *token, int *nb_pipe)
 
 void parsing_error_pipe(token_t *token)
 {
+    int nb_pipe = 0;
+
     token->right = false;
     token->left = false;
-    int nb_pipe = 0;
     do {
         if (token->type == PIPE) {
             *token->error = 9;
             return;
         }
-        while (token->type == NONE || ANY_REDIR_TYPE(token->type))
+        while ((token->type == NONE || ANY_REDIR_TYPE(token->type))
+        && *token->error == 0)
             get_token_with_redir(token, nb_pipe);
         if (pipe_right_side(token, &nb_pipe) == 1)
             return;
-        if (*token->error != 0)
-            return;
     }
-    while (token->type == NONE);
+    while (token->type == NONE && *token->error == 0);
 }

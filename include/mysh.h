@@ -26,10 +26,7 @@ void destroy_array(char **arr);
 int built_in(char **cmd, char **env, int *error, int *exit_value);
 int my_exit(int *exit_value);
 int my_cd(char **cmd, char **env, int *error);
-char *adapt_str(char *str, int nb_quotes);
 char *test_echo_special_cases(char *str);
-int my_echo(char *line, int *error);
-bool echo_execution(char *line, int *error);
 char *find_special_char_last_cases(char c);
 char *find_special_char(char c);
 char *handle_backslash(char *str, char *new_str, int i, int j);
@@ -121,5 +118,7 @@ void append_local_variable(char *name, char *value);
 char *find_local_variable(char *str, int i);
 int my_set(char **cmd, int *error);
 int my_unset(char **cmd, int *error);
+int my_echo(char **cmd, int *error);
+char *adapt_str(char *str);
 
 #endif

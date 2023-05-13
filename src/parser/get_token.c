@@ -13,6 +13,8 @@ void set_token_type(token_t *token)
 {
     int i = 0;
 
+    if (token->elem == NULL)
+        return;
     for (i = 0; special[i].str != NULL; i++) {
         if (strcmp(token->elem, special[i].str) == 0) {
             token->type = special[i].type;
@@ -49,9 +51,11 @@ void special_operand(token_t *token, int i, int k)
 
 void set_token_elem(token_t *token)
 {
-    int k = 0;
-
-    for (int i = TI; TL[i] != '\0'; i++) {
+    if (TL[TI] == '\"' || TL[TI] == '\'') {
+        token->elem = get_quote(token);
+        return;
+    }
+    for (int i = TI, k = 0; TL[i] != '\0'; i++) {
         if (TL[i] == ' ' || TL[i] == '\t') {
             token->elem = strndup(TL + TI, i - TI);
             TI = i;
@@ -61,8 +65,7 @@ void set_token_elem(token_t *token)
         if (k > 0) {
             special_operand(token, i, k);
             break;
-        }
-        if (TL[i + 1] == '\0') {
+        } if (TL[i + 1] == '\0') {
             token->elem = strndup(TL + TI, i - TI + 1);
             TI = i + 1;
             break;
