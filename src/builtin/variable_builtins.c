@@ -40,6 +40,8 @@ void append_local_variable(char *name, char *value)
 
     delete_local_variable(name);
     fd = fopen(path, "a");
+    if (fd == NULL)
+        return;
     fprintf(fd, "%s %s\n", name, value);
     fclose(fd);
     free(path);
