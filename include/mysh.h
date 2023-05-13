@@ -27,6 +27,7 @@ void destroy_array(char **arr);
 char **delete_quotes(char **cmd);
 int local_var_built_in(char **cmd, int *error);
 int built_in(char **cmd, char **env, int *error, int *exit_value);
+int clear_screen(char **cmd);
 int my_exit(int *exit_value);
 int my_cd(char **cmd, char **env, int *error);
 char *adapt_str(char *str);

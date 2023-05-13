@@ -10,6 +10,7 @@ SRC	=	src/main.c										\
 		src/destroy_array.c								\
 		\
 		src/builtin/builtin.c							\
+		src/builtin/clear_screen.c						\
 		src/builtin/my_exit.c							\
         src/builtin/my_cd.c								\
 		src/builtin/echo.c								\

@@ -8,6 +8,7 @@
 #include "mysh.h"
 #include "my.h"
 #include <string.h>
+#include <ncurses.h>
 
 char **delete_quotes(char **cmd)
 {
@@ -46,5 +47,7 @@ int built_in(char **cmd, char **env, int *error, int *exit_value)
         return my_unsetenv(cmd, env, error);
     if (strcmp(cmd[0], "exit") == 0)
         return my_exit(exit_value);
+    if (strcmp(cmd[0], "clear") == 0)
+        return clear_screen(cmd);
     return local_var_built_in(cmd, error);
 }
