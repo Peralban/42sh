@@ -10,6 +10,28 @@
 #include "my.h"
 #include "mysh.h"
 #include "parser.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+
+char **create_command(token_t *token, char **arr)
+{
+    do {
+        if (ANY_REDIR_TYPE(token->type)) {
+            set_redirection_name(token);
+            continue;
+        }
+        if (token->type == BACKTICK) {
+            parser_backtick(token, &arr);
+            continue;
+        }
+        arr_append(&arr, strdup(token->elem));
+        get_token(token);
+    } while (token->type == NONE || ANY_REDIR_TYPE(token->type) ||
+    token->type == BACKTICK);
+    return arr;
+}
 
 int read_command(token_t *token)
 {
@@ -20,14 +42,7 @@ int read_command(token_t *token)
         return 0;
     arr[0] = NULL;
     reset_redir_name(token);
-    do {
-        if (ANY_REDIR_TYPE(token->type)) {
-            set_redirection_name(token);
-            continue;
-        }
-        arr_append(&arr, strdup(token->elem));
-        get_token(token);
-    } while (token->type == NONE || ANY_REDIR_TYPE(token->type));
+    arr = create_command(token, arr);
     pid = exec_command(get_env_tab(), arr, token);
     free(arr);
     return pid;

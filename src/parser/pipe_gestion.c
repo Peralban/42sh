@@ -54,6 +54,7 @@ static pipe_t *set_pipes(token_t *token)
     pipe->index = 0;
     while (token->type != SEMICOLON && token->type != END &&
     token->type != OR && token->type != AND) {
+        backtick_gestion(token);
         if (token->type == PIPE) {
             pipe->max++;
         }

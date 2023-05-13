@@ -34,8 +34,11 @@ void parsing_error_pipe(token_t *token)
             *token->error = 9;
             return;
         }
-        while (token->type == NONE || ANY_REDIR_TYPE(token->type))
+        while (token->type == NONE || ANY_REDIR_TYPE(token->type) ||
+        token->type == BACKTICK) {
+            get_token(token);
             get_token_with_redir(token, nb_pipe);
+        }
         if (pipe_right_side(token, &nb_pipe) == 1)
             return;
         if (*token->error != 0)

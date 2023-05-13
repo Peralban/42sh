@@ -43,6 +43,7 @@ SRC	=	src/main.c										\
 		src/parser/token_dup.c							\
 		src/parser/pipe_gestion.c						\
 		src/parser/redir_gestion.c						\
+		src/parser/parser_backtick.c					\
 		\
 		src/prompt/my_getenv.c							\
 		src/prompt/print_prompt.c						\

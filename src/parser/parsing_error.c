@@ -54,6 +54,7 @@ void parsing_error_and_or(token_t *token)
 // code: 31 "cmd < (null)" error 'Missing name for redirect.'
 // code: 32 "cmd > (null)" error 'Missing name for redirect.'
 //
+// code: 41 "cmd ` (null)" error 'Unmatched '`'.'
 void parsing_display_error(int code)
 {
     if (code >= 1 && code < 10)
@@ -64,6 +65,8 @@ void parsing_display_error(int code)
         my_putstr("Ambiguous output redirect.\n");
     if (code >= 31 && code < 40)
         my_putstr("Missing name for redirect.\n");
+    if (code >= 41 && code < 50)
+        my_putstr("Unmatched '`'.\n");
 }
 
 int parsing_error(token_t *token)
