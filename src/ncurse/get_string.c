@@ -52,6 +52,8 @@ char *get_string(char *term_name, char *line)
     size_t len = 0;
     char **history = get_history_array();
     int history_index = my_arraylen(history);
+    int cursor_index = 0;
+    char *second_part = strdup("");
     char *save = strdup(line);
 
     for (int ch = getch(); ch != 10; ch = getch(), len = strlen(line)) {
@@ -59,6 +61,7 @@ char *get_string(char *term_name, char *line)
         if (ch == KEY_UP || ch == KEY_DOWN)
             line = strdup(move_in_history(ch, save, &history_index, history));
         display_term(term_name, line);
+        if (ch == KEY_LEFT || ch == KEY_RIGHT)
     }
     free_history_and_save(history, save);
     return line;
