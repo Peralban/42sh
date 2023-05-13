@@ -100,7 +100,7 @@ char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 bool var_are_init(char **env);
-int history(char *line, int *error);
+int history(char **line, int *error);
 char **get_history_array(void);
 int get_term_fd(void);
 int redirect_left(int fd, char *file_path);
