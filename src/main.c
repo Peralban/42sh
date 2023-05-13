@@ -58,7 +58,7 @@ static void loop(void)
         line = my_get_line(get_term_name(), &exit_value);
         if (line == NULL || line[0] == '\0')
             continue;
-        if (history(line, &error) == 1)
+        if (history(&line, &error) == 1)
             continue;
         line = detect_variables(line, get_env_tab(), &error);
         parser(line, &exit_value, &error);
