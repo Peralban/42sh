@@ -63,6 +63,8 @@ SRC	=	src/main.c										\
 		src/variables/variables_getters.c				\
 		src/variables/variables_special_cases.c			\
 		src/variables/local_variables.c					\
+		\
+		src/sublime/cmd_in_sublime.c					\
 
 TEST_SRC = tests/test_my_sh.c
 

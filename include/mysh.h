@@ -112,7 +112,7 @@ char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 bool var_are_init(char **env);
-int history(char *line, int *error);
+int history(char **line, int *error);
 char **get_history_array(void);
 int get_term_fd(void);
 int redirect_left(int fd, char *file_path);
@@ -130,5 +130,6 @@ char *find_other_variable(char *str, char **wa, int i, char **env);
 char *find_special_variable(char *str, int i, char **env, int *error);
 void free_find_local_var(char *var, char *path, char *line, FILE *fd);
 char *find_local_variable(char *str, int i);
+int cmd_in_sublime(char **line);
 
 #endif
