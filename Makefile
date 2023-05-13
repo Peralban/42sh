@@ -20,6 +20,7 @@ SRC	=	src/main.c										\
 		src/builtin/environment/set_environment.c		\
 		src/builtin/environment/parse_args_setenv.c		\
 		src/builtin/environment/set_get_env.c			\
+		src/builtin/variable_builtins.c					\
 		\
 		src/execution/my_exec.c							\
 		src/execution/command_error_handling.c			\
@@ -44,6 +45,7 @@ SRC	=	src/main.c										\
 		src/parser/token_dup.c							\
 		src/parser/pipe_gestion.c						\
 		src/parser/redir_gestion.c						\
+		src/parser/get_quote.c							\
 		\
 		src/prompt/my_getenv.c							\
 		src/prompt/print_prompt.c						\
@@ -60,6 +62,8 @@ SRC	=	src/main.c										\
 		src/variables/variables_getters.c				\
 		src/variables/variables_special_cases.c			\
 		src/variables/local_variables.c					\
+		\
+		src/sublime/cmd_in_sublime.c					\
 
 TEST_SRC = tests/test_my_sh.c
 
