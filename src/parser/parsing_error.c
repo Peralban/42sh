@@ -35,7 +35,8 @@ void parsing_error_and_or(token_t *token)
         if (and_or_right_side(token) == 1)
             return;
     }
-    while (token->type == AND || token->type == OR);
+    while ((token->type == AND || token->type == OR) &&
+    *token->error == 0);
 }
 
 // code 1: "(null) || cmd" error 'Invalid null command.'
@@ -67,6 +68,10 @@ void parsing_display_error(int code)
         my_putstr("Missing name for redirect.\n");
     if (code >= 41 && code < 50)
         my_putstr("Unmatched '`'.\n");
+    if (code == 51)
+        my_putstr("Unmatched '\"'.\n");
+    if (code == 52)
+        my_putstr("Unmatched '\''.\n");
 }
 
 int parsing_error(token_t *token)

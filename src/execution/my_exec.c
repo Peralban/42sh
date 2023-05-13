@@ -11,6 +11,7 @@
 #include "command_error_handling.h"
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
@@ -58,9 +59,15 @@ void exec_parent(int pid, int *error)
 static void exec_child(char **cmd, char **env, char *new_cmd, token_t *token)
 {
     pipe_t *pipes = token->pipes;
+    struct stat st;
 
     pipes_stuff_child(pipes, token->right);
     if (execve(new_cmd, cmd, env) == -1) {
+        if (stat(cmd[0], &st) == 0 && !S_ISREG(st.st_mode)) {
+        my_puterror(cmd[0]);
+        my_puterror(": Is a directory.\n");
+        exit(1);
+    }
         my_puterror(cmd[0]);
         my_puterror(": Command not found.\n");
         exit(1);

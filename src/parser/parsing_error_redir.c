@@ -40,6 +40,8 @@ void get_token_right(token_t *token)
 
 void get_token_with_redir(token_t *token, int nb_pipe)
 {
+    if (*token->error != 0)
+        return;
     if (token->type == BACKTICK)
         get_token_backtick(token);
     if (token->type == REDIR_LEFT || token->type == DOUBLE_REDIR_LEFT) {

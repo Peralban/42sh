@@ -20,10 +20,12 @@ SRC	=	src/main.c										\
 		src/builtin/environment/set_environment.c		\
 		src/builtin/environment/parse_args_setenv.c		\
 		src/builtin/environment/set_get_env.c			\
+		src/builtin/variable_builtins.c					\
 		\
 		src/execution/my_exec.c							\
 		src/execution/command_error_handling.c			\
 		src/execution/my_put_errors.c					\
+		src/execution/check_usr_bin.c					\
 		\
 		src/ncurse/my_getline_ncurses.c					\
 		src/ncurse/my_str_to_array_max_size.c			\
@@ -44,6 +46,7 @@ SRC	=	src/main.c										\
 		src/parser/pipe_gestion.c						\
 		src/parser/redir_gestion.c						\
 		src/parser/parser_backtick.c					\
+		src/parser/get_quote.c							\
 		\
 		src/prompt/my_getenv.c							\
 		src/prompt/print_prompt.c						\

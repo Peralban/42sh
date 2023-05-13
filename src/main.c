@@ -61,8 +61,6 @@ static void loop(void)
         if (history(line, &error) == 1)
             continue;
         line = detect_variables(line, get_env_tab(), &error);
-        if (echo_execution(line, &error) == true)
-            continue;
         parser(line, &exit_value, &error);
         free(line);
     }
@@ -89,6 +87,8 @@ void the_sh(char **env)
 int main(int ac, char **av, char **env)
 {
     if (ac != 1 || av[0] == NULL)
+        return 84;
+    if (sizeof(void *) == 4)
         return 84;
     if (isatty(0) == 1)
         start_ncurses();
