@@ -21,6 +21,8 @@ static void exec_inside_backtick(char *line)
     int error = 0;
     int fd = open("/tmp/.42sh_backtick", O_CREAT | O_WRONLY | O_TRUNC, 0666);
 
+    if (fd == -1)
+        exit(84);
     ncurses_on_off(0);
     dup2(fd, 1);
     close(fd);
@@ -35,6 +37,8 @@ static void create_arr_from_backtick(char ***arr)
     char *str = NULL;
     char **tmp = NULL;
 
+    if (fd == -1)
+        return;
     stat("/tmp/.42sh_backtick", &st);
     str = malloc(sizeof(char) * (st.st_size + 1));
     if (str == NULL)
