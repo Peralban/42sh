@@ -17,25 +17,24 @@
 // This function print the prompt. And a '~' for replace the home directory.
 static char *find_branch_name(void)
 {
-    FILE *fp = popen("git branch | grep \"*\" | cut -d ' ' -f2", "r");
+    FILE *fp = popen("cat .git/HEAD |  cut -d '/' -f3", "r");
     char *branch = NULL;
     size_t len = 0;
 
+    if (fp == NULL)
+        return "none";
     getline(&branch, &len, fp);
     branch[strlen(branch) - 1] = '\0';
     pclose(fp);
     return branch;
 }
 
-static void is_github_folder(char *pwd, char **env)
+static void is_github_folder(char *pwd)
 {
     char **arr = my_str_to_word_array(pwd, "/");
-    char *home = my_getenv(env, "HOME");
     int len = my_arraylen(arr);
     DIR *dir = NULL;
 
-    if (my_start_with(pwd, home) == true)
-        len -= 2;
     for (int i = 0; i < len; i++) {
         dir = opendir(".git");
         if (dir != NULL) {
@@ -57,13 +56,13 @@ void print_prompt(char **env, int result_cmd)
 
     if (is_ncurses() == false)
         return;
-    if (my_start_with(pwd, home)) {
+    if (home != NULL && my_start_with(pwd, home)) {
         my_putstr("~");
         my_putstr(pwd + strlen(home));
     } else {
         my_putstr(pwd);
     }
-    is_github_folder(pwd, env);
+    is_github_folder(pwd);
     my_putstr("\n> ");
     chdir(pwd);
     free(prompt);

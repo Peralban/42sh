@@ -14,57 +14,20 @@
 #include <string.h>
 #include "my.h"
 
-// This function return the home directory.
-char *gethome(char *actual_pwd)
-{
-    char *home = NULL;
-    char **array_pwd = my_str_to_word_array(actual_pwd, "/");
-
-    if (strcmp(array_pwd[0], "home") == 0) {
-        home = malloc(sizeof(char) * (strlen(array_pwd[0]) + 3));
-        if (home == NULL)
-            return NULL;
-        home[0] = '\0';
-        home = strcat(home, "/");
-        home = strcat(home, array_pwd[0]);
-        home = strcat(home, "/");
-        if (array_pwd[1] != NULL && strcmp(array_pwd[1], "lost+found") != 0) {
-            home = realloc(home, sizeof(char) * (strlen(home) +
-            strlen(array_pwd[1]) + 1));
-            home = strcat(home, array_pwd[1]);
-        }
-    }
-    return home;
-}
-
-// This function set the environment variables [pwd, home, user and oldpwd].
-static void set_environment(char *home, char **env)
-{
-    char **array_home = my_str_to_word_array(home, "/");
-    char *usr = strdup(array_home[1]);
-    char *pwd = my_getpwd();
-    char *setenv_cmd[4][4] = {
-        {"setenv", strdup("HOME"), home, NULL},
-        {"setenv", strdup("USER"), usr, NULL},
-        {"setenv", strdup("OLDPWD"), strdup(""), NULL},
-        {"setenv", strdup("PWD"), pwd, NULL}
-        };
-
-    for (int i = 0; i < 4; i++)
-        my_setenv(setenv_cmd[i], env, (int *) {0});
-    free(pwd);
-    free(usr);
-    free(home);
-}
-
-// This function set the environment variables.
-// It's call in the main function.
+// This function set the environment variables [pwd and oldpwd].
 int setup_env(char **env)
 {
-    char *actual_pwd = my_getpwd();
-    char *home = NULL;
+    char *pwd = my_getpwd();
+    char *setenv_cmd[2][4] = {
+        {"setenv", strdup("OLDPWD"), strdup(""), NULL},
+        {"setenv", strdup("PWD"), pwd, NULL}
+    };
 
-    home = gethome(actual_pwd);
-    set_environment(home, env);
+    for (int i = 0; i < 2; i++) {
+        my_setenv(setenv_cmd[i], env, (int *) {0});
+        env = get_env_tab();
+    }
+    set_env_tab(env);
+    free(pwd);
     return 0;
 }
