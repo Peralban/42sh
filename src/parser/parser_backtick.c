@@ -40,7 +40,7 @@ static void create_arr_from_backtick(char ***arr)
     if (str == NULL)
         return;
     read(fd, str, st.st_size);
-    str[st.st_size] = '\0';
+    str[st.st_size - 1] = '\0';
     tmp = my_str_to_word_array(str, "\n");
     for (int i = 0; tmp[i] != NULL; i++) {
         arr_append(arr, strdup(tmp[i]));

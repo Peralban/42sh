@@ -6,6 +6,7 @@
 */
 
 #include "parser.h"
+#include "mysh.h"
 #include <string.h>
 #include <special_char.h>
 
