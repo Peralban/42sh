@@ -25,6 +25,7 @@ const special_t special[] = {
         {";", 1, SEMICOLON},
         {"&&", 2, AND},
         {"||", 2, OR},
+        {"`", 1, BACKTICK},
         {NULL, 0, NONE}
 };
 
