@@ -42,14 +42,6 @@ static void print_history(void)
     fclose(fd);
 }
 
-static int add_in_history(char *line, int fd)
-{
-    write(fd, line, strlen(line));
-    write(fd, "\n", 1);
-    close(fd);
-    return 0;
-}
-
 static int history_managemnt(char *line, int fd, int *error)
 {
     if (strcmp(line, "history-clear") == 0) {
@@ -60,8 +52,9 @@ static int history_managemnt(char *line, int fd, int *error)
         close(fd);
         print_history();
     } else {
-        if (add_in_history(line, fd) == 84)
-            return 84;
+        write(fd, line, strlen(line));
+        write(fd, "\n", 1);
+        close(fd);
         return 0;
     }
     return 1;
