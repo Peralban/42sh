@@ -121,5 +121,6 @@ void append_local_variable(char *name, char *value);
 int handle_equal_sign(char **line, int i);
 bool detect_variable_attribution(char **line);
 char *find_local_variable(char *str, int i);
+int cmd_in_sublime(char **line);
 
 #endif

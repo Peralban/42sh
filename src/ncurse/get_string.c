@@ -31,6 +31,8 @@ static void get_keyboard_event(int ch, char **save, char **line, size_t len)
         (*line)[len + 1] = '\0';
         *save = strdup(*line);
     }
+    if (ch == 5)
+        cmd_in_sublime(line);
 }
 
 static void free_history_and_save(char **history, char *save)
