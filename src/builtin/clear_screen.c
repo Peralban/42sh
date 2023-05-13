@@ -15,11 +15,11 @@
 
 static void print_usage(void)
 {
-    my_puterror("Usage: clear [OPTION]\n\n\n");
-    my_puterror("Options:\n");
-    my_puterror("\t-T TERM\tuse this instead of $TERM\n");
-    my_puterror("\t-V\tprint curses-version\n");
-    my_puterror("\t-x\tdo not try to clear scrollback\n");
+    my_putstr("Usage: clear [OPTION]\n\n\n");
+    my_putstr("Options:\n");
+    my_putstr("\t-T TERM\tuse this instead of $TERM\n");
+    my_putstr("\t-V\tprint curses-version\n");
+    my_putstr("\t-x\tdo not try to clear scrollback\n");
 }
 
 static int clear_option(char **cmd)
