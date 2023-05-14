@@ -87,6 +87,8 @@ char *get_string(char *term_name, char *line);
 void fill_color_file(void);
 void fill_color_line(const char *line);
 char **get_color_arr(char *buffer);
+void print_cursor(char *line, int index);
+void move_cursor(int ch, char *line, int *index);
 char **create_command(token_t *token, char **arr);
 int read_command(token_t *token);
 void skip_and_or(token_t *token);

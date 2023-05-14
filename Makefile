@@ -39,6 +39,7 @@ SRC	=	src/main.c										\
 		src/ncurse/is_ncurses.c							\
 		src/ncurse/get_string.c							\
 		src/ncurse/color_gestion.c						\
+		src/ncurse/line_edition/cursor_gestion.c		\
 		\
 		src/parser/parser.c								\
 		src/parser/parsing_error.c						\
