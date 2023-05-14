@@ -47,7 +47,8 @@ typedef enum special_type_e {
     PIPE,
     SEMICOLON,
     AND,
-    OR
+    OR,
+    BACKTICK
 } special_type_e;
 
     #define ANY_REDIR_TYPE(type) \

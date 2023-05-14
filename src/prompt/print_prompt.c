@@ -7,6 +7,7 @@
 
 #include "../../include/mysh.h"
 #include "../../include/my.h"
+#include "../../include/my_getline.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -38,9 +39,9 @@ static void is_github_folder(char *pwd)
     for (int i = 0; i < len; i++) {
         dir = opendir(".git");
         if (dir != NULL) {
-            my_putstr("        git:(");
-            my_putstr(find_branch_name());
-            my_putstr(")");
+            my_putstr_color("        git:(", GREEN);
+            my_putstr_color(find_branch_name(), GREEN);
+            my_putstr_color(")", GREEN);
             closedir(dir);
             return;
         }
@@ -57,13 +58,16 @@ void print_prompt(char **env, int result_cmd)
     if (is_ncurses() == false)
         return;
     if (home != NULL && my_start_with(pwd, home)) {
-        my_putstr("~");
-        my_putstr(pwd + strlen(home));
+        my_putstr_color("~", BLUE);
+        my_putstr_color(pwd + strlen(home), BLUE);
     } else {
-        my_putstr(pwd);
+        my_putstr_color(pwd, BLUE);
     }
     is_github_folder(pwd);
-    my_putstr("\n> ");
+    if (result_cmd == 0)
+        my_putstr_color("\n> ", GREEN);
+    else
+        my_putstr_color("\n> ", RED);
     chdir(pwd);
     free(prompt);
     free(pwd);

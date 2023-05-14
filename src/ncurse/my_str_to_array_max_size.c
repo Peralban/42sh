@@ -34,7 +34,7 @@ void add_to_arr(char ***arr, char *str, int *swa)
     swa[SWA_K] = -1;
 }
 
-void get_word(char *str, char *delim, char ***arr, int *swa)
+static void get_word(char *str, char *delim, char ***arr, int *swa)
 {
     if (isin(str[swa[SWA_I] - 1], delim) && !(isin(str[swa[SWA_I]], delim))) {
         swa[SWA_BEGIN] = swa[SWA_I];

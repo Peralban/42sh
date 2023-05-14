@@ -74,29 +74,32 @@ void display_term(char *term_name, char *line);
 char *my_getline_ncurses(char *term_name);
 char *my_strdupij_endin(const char *str, int begin, int end);
 void add_to_arr(char ***arr, char *str, int *swa);
-void get_word(char *str, char *delim, char ***arr, int *swa);
 void init_swa(int max_size, int *swa);
 char **my_str_to_word_array_max_size(char *str, char *delim, int max_size);
-void put_str_in_term(int fd, const char *str);
-void put_array_in_term(int fd, char **arr);
-void put_number_in_term(int fd, int nb);
+void put_str_in_term(int fd, const char *str, char color);
+void put_array_in_term(int fd, char **arr, char color);
+void put_number_in_term(int fd, int nb, char color);
 void my_putstr(const char *str);
 void my_putnbr(int nb);
 void print_array(char **arr);
 void my_puterror(const char *str);
+void my_putstr_color(const char *str, char color);
 char *set_term_name(char *name);
 char *get_term_name(void);
+char *set_color_file(char *color);
+char *get_color_file(void);
 void start_ncurses(void);
-
-/* Functions from line_edition */
+void end_ncurses(void);
 char *move_in_history(int ch, char *save, int *index, char **history);
 
 /* Functions from ncurse */
 int ncurses_on_off(int on_off);
 int is_ncurses(void);
 char *get_string(char *term_name, char *line);
-
-/* Functions from parser */
+void fill_color_file(void);
+void fill_color_line(const char *line);
+char **get_color_arr(char *buffer);
+char **create_command(token_t *token, char **arr);
 int read_command(token_t *token);
 void skip_and_or(token_t *token);
 void read_and_or(token_t *token);
@@ -107,6 +110,7 @@ void parsing_display_error(int code);
 int parsing_error(token_t *token);
 int pipe_right_side(token_t *token, int *nb_pipe);
 void parsing_error_pipe(token_t *token);
+void get_token_backtick(token_t *token);
 void get_token_right(token_t *token);
 void get_token_with_redir(token_t *token, int nb_pipe);
 void set_token_type(token_t *token);
@@ -120,6 +124,8 @@ void multiple_pipe(token_t *token, pipe_t *pipes, int *status);
 void read_pipe(token_t *token);
 void set_redirection_name(token_t *token);
 void reset_redir_name(token_t *token);
+void parser_backtick(token_t *token, char ***arr);
+void backtick_gestion(token_t *token);
 char *get_quote(token_t *token);
 
 /* Functions from prompt */

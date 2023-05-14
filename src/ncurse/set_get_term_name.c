@@ -23,3 +23,17 @@ char *get_term_name(void)
 {
     return set_term_name(NULL);
 }
+
+char *set_color_file(char *color)
+{
+    static char *color_file = NULL;
+
+    if (color != NULL)
+        color_file = strdup(color);
+    return color_file;
+}
+
+char *get_color_file(void)
+{
+    return set_color_file(NULL);
+}
