@@ -21,14 +21,19 @@ void print_from_the_end(char *buffer)
     int max_y = getmaxy(stdscr);
     int start = 0;
     int len = 0;
+    char **color_arr = get_color_arr(buffer);
 
-    if (arr == NULL)
+    if (arr == NULL || color_arr == NULL)
         return;
     for (; arr[len] != NULL; len++);
     if (len > max_y)
         start = len - max_y;
     for (int i = start; i < len; i++) {
-        mvprintw(i - start, 0, "%s", arr[i]);
+        for (int j = 0; arr[i][j] != '\0'; j++) {
+            attron(COLOR_PAIR(color_arr[i][j] - '0'));
+            mvprintw(i - start, j, "%c", arr[i][j]);
+            attroff(COLOR_PAIR(color_arr[i][j] - '0'));
+        }
     }
     destroy_array(arr);
 }
@@ -76,5 +81,6 @@ char *my_getline_ncurses(char *term_name)
     write(fd, line, strlen(line));
     write(fd, "\n", 1);
     close(fd);
+    fill_color_line(line);
     return line;
 }

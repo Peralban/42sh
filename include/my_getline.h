@@ -19,4 +19,16 @@ typedef enum swa_e {
     SWA_MAX
 } swa_e;
 
+typedef enum color_e {
+    WHITE = '1',
+    BLACK,
+    RED,
+    GREEN,
+    BLUE,
+    COLOR_MAX
+} color_e;
+
+char **my_str_to_word_array_max_size_model(char *model, char *delim,
+int max_size, char *src);
+
 #endif //INC_42SH_REPO_MY_GETLINE_H
