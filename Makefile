@@ -111,11 +111,10 @@ include:
 	@echo "** The mysh's include file" >> include/mysh.h
 	@echo "*/" >> include/mysh.h
 	@echo "" >> include/mysh.h
-	@echo "#include <stdbool.h>" >> include/mysh.h
-	@echo "" >> include/mysh.h
 	@echo "#ifndef __"mysh"_H" >> include/mysh.h
 	@echo "    #define __"mysh"_H" >> include/mysh.h
 	@echo "" >> include/mysh.h
+	@echo "    #include <stdbool.h>" >> include/mysh.h
 	@echo "    #include <stddef.h>" >> include/mysh.h
 	@echo "    #include <unistd.h>" >> include/mysh.h
 	@echo "    #include <stdio.h>" >> include/mysh.h
@@ -123,9 +122,16 @@ include:
 	@echo "" >> include/mysh.h
 	@echo "typedef struct token_s token_t;" >> include/mysh.h
 	@echo "typedef struct pipe_s pipe_t;" >> include/mysh.h
-	@echo "" >> include/mysh.h
-	@cat $(SRC) | grep -B1 "^{" | grep "(" | grep -v "static" | sed \
-		s/"$$"/";"/ >> include/mysh.h
+	for file in $(SRC); do \
+		FOLDER=`echo "$${file}" | rev | cut -d '/' -f2 | rev`; \
+		if [ "$${FOLDER}" != "$${CURRENT_FOLDER}" ]; then \
+			CURRENT_FOLDER="$${FOLDER}"; \
+			echo "" >> include/mysh.h; \
+			echo "/* Functions from "$${FOLDER}" */" >> include/mysh.h; \
+		fi; \
+		cat "$${file}" | grep -B1 "^{" | grep "(" | grep -v "static" | sed \
+		s/"$$"/";"/ >> include/mysh.h; \
+	done
 	@echo "" >> include/mysh.h
 	@echo "#endif" >> include/mysh.h
 
