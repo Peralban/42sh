@@ -41,7 +41,7 @@ int exec_command(char **env_cpy, char **cmd, token_t *token)
     int *error = token->error;
     int *exit_value = token->exit;
 
-    if (built_in(cmd, env_cpy, error, exit_value) == 2)
+    if (built_in(&cmd, env_cpy, error, exit_value) == 2)
         return my_exec(cmd, env_cpy, token);
     return *error;
 }
@@ -57,8 +57,6 @@ static void loop(void)
         error = 0;
         line = my_get_line(get_term_name(), &exit_value);
         if (line == NULL || line[0] == '\0')
-            continue;
-        if (history(&line, &error) == 1)
             continue;
         line = detect_variables(line, get_env_tab(), &error);
         parser(line, &exit_value, &error);

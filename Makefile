@@ -59,6 +59,7 @@ SRC	=	src/main.c										\
 		\
 		src/history/history.c				            \
 		src/history/get_history_array.c					\
+		src/history/add_in_history.c					\
 		\
 		src/redirection/redirections.c					\
 		src/redirection/double_left_redirection.c		\
