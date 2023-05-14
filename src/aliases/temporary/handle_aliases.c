@@ -9,9 +9,9 @@
 #include "my.h"
 #include <string.h>
 
-static void print_aliases(char **env)
+static void print_aliases(void)
 {
-    char **aliases = get_alias_file(env);
+    char **aliases = get_alias_file();
 
     if (aliases == NULL)
         return;
@@ -22,21 +22,24 @@ static void print_aliases(char **env)
     destroy_array(aliases);
 }
 
-void handle_aliases(char **cmd, char **env, int *error, int *exit_value)
+int handle_alias(char *line, int *error)
 {
-    if (cmd == NULL || cmd[0] == NULL)
-        return;
-    if (my_arraylen(cmd) == 1 && strcmp(cmd[0], "alias") == 0) {
-        print_aliases(env);
-        return;
+    if (strcmp(line, "alias") == 0) {
+        print_aliases();
+        *error = 0;
+        return 1;
     }
-    if (strcmp(cmd[1], "alias") == 0) {
-        add_alias(env, cmd);
-        return;
+    if (strncmp(line, "alias", 5) == 0) {
+        add_alias(line, error);
+        return 1;
     }
-    if (strcmp(cmd[1], "unalias") == 0) {
-        remove_alias(env, cmd);
-        return;
+    if (strncmp(line, "unalias", 7) == 0) {
+        remove_alias(line, error);
+        return 1;
     }
-    execute_alias(cmd, env, error, exit_value);
+    if (is_an_alias(line) == true) {
+        execute_alias(line, error);
+        return 1;
+    }
+    return 0;
 }

@@ -13,55 +13,73 @@
 #include <string.h>
 #include <sys/stat.h>
 
-char *get_cmd_from_alias(char **env, char *cmd)
+static get_cmd_from_array(char **line)
 {
-    char **alias = get_alias_file(env);
-    char *alias_cmd = NULL;
+    char *cmd = NULL;
+    int len = 0;
 
-    if (alias == NULL)
+    for (int i = 1; line[i] != NULL; i++)
+        len += strlen(line[i]) + 1;
+    cmd = malloc(sizeof(char) * (len + 1));
+    if (cmd == NULL) {
+        destroy_array(line);
         return NULL;
-    for (int i = 0; alias[i] != NULL; i++) {
-        if (strncmp(alias[i], cmd, strlen(cmd)) == 0) {
-            alias_cmd = strdup(alias[i]);
-            break;
-        }
     }
-    destroy_array(alias);
-    return alias_cmd;
+    cmd[0] = '\0';
+    for (int i = 1; line[i] != NULL; i++) {
+        strcat(cmd, line[i]);
+        if (line[i + 1] != NULL)
+            strcat(cmd, " ");
+    }
+    destroy_array(line);
+    return cmd;
 }
 
-char **get_alias_file(char **env)
+char *get_cmd_from_alias(char *cmd)
 {
-    int fd = get_alias_file_fd(env);
-    char *home_path = my_getenv(env, "HOME");
-    char *alias_path = NULL;
-    char *buffer = NULL;
-    char **alias = NULL;
-    struct stat stats;
+    char **alias_list = get_alias_file();
+    char **line = NULL;
 
-    alias_path = malloc(sizeof(char) * (strlen(home_path) + 12));
-    if (fd == -1 || home_path == NULL || alias_path == NULL)
+    if (alias_list == NULL)
         return NULL;
-    alias_path = strcpy(alias_path, home_path);
-    alias_path = strcat(alias_path, "/.42sh_alias");
-    stat(alias_path, &stats);
-    read(fd, buffer, stats.st_size);
-    alias = my_str_to_word_array(buffer, "\n");
-    close(fd);
-    free(home_path);
-    free(alias_path);
+    for (int i = 0; alias_list[i] != NULL; i++) {
+        line = my_str_to_word_array(alias_list[i], "\t()");
+        if (strcmp(line[0], cmd) == 0) {
+            destroy_array(alias_list);
+            return get_cmd_from_array(line);
+        }
+        destroy_array(line);
+    }
+    destroy_array(alias_list);
+    return NULL;
+}
+
+char **get_alias_file(void)
+{
+    char **alias = NULL;
+    int fd = get_alias_file_fd();
+    char *buffer = NULL;
+    struct stat st;
+
+    if (fd == -1)
+        return NULL;
+    stat("/tmp/.42sh_aliases", &st);
+    buffer = malloc(sizeof(char) * (st.st_size + 1));
+    if (read(fd, buffer, st.st_size) == -1) {
+        free(buffer);
+        close(fd);
+        return NULL;
+    }
+    buffer[st.st_size] = '\0';
+    alias = my_str_to_word_array(buffer, "\n()");
     free(buffer);
+    close(fd);
     return alias;
 }
 
-int get_alias_file_fd(char **env)
+int get_alias_file_fd(void)
 {
-    char *home_path = my_getenv(env, "HOME");
-    int fd = 0;
+    int fd = open("/tmp/.42sh_aliases", O_CREAT | O_APPEND | O_RDWR, 0664);
 
-    if (home_path == NULL || env == NULL)
-        return -1;
-    fd = open("/.42sh_alias", O_RDWR);
-    free(home_path);
     return fd;
 }

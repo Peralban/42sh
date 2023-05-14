@@ -10,18 +10,26 @@
 #include <unistd.h>
 #include <string.h>
 
-void add_alias(char **env, char **cmd)
+void add_alias(char *line, int *error)
 {
-    int fd = get_alias_file_fd(env);
+    int fd = get_alias_file_fd();
+    char **cmd = my_str_to_word_array(line, " \t");
+    int nb_args = my_arraylen(cmd);
 
-    if (fd == -1)
+    if (fd == -1) {
+        *error = 1;
         return;
-    write(fd, cmd[1], strlen(cmd[1]));
-    write(fd, "\t", 1);
-    for (int i = 2; i < my_arraylen(cmd); i++) {
-        write(fd, " ", 1);
+    }
+    for (int i = 1; cmd[i] != NULL; i++) {
+        if (i == 2 && nb_args > 3)
+            write(fd, "(", 1);
         write(fd, cmd[i], strlen(cmd[i]));
+        if (cmd[i + 1] != NULL)
+            write(fd, " ", 1);
+        if (nb_args > 3 && cmd[i + 1] == NULL)
+            write(fd, ")", 1);
     }
     write(fd, "\n", 1);
     close(fd);
+    return;
 }
