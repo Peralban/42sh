@@ -51,6 +51,7 @@ int clear_screen(char **cmd)
     int array_size = my_arraylen(cmd);
     char *path_to_term = get_path(".42sh_term");
     int fd = 0;
+    int fdp = 0;
 
     if (array_size > 2) {
         my_puterror("clear: Too many arguments.\n");
@@ -60,9 +61,11 @@ int clear_screen(char **cmd)
     if (array_size == 2)
         return clear_option(cmd);
     fd = open(path_to_term, O_WRONLY | O_TRUNC);
+    fdp = open(get_color_file(), O_WRONLY | O_TRUNC);
     if (fd == -1)
         return 1;
     close(fd);
+    close(fdp);
     free(path_to_term);
     return 0;
 }

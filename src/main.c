@@ -61,7 +61,8 @@ static void loop(void)
         line = detect_variables(line, get_env_tab(), &error);
         parser(line, &exit_value, &error);
         free(line);
-        fill_color_file();
+        if (is_ncurses() == true)
+            fill_color_file();
     }
 }
 
