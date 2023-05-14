@@ -15,24 +15,45 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-static void get_keyboard_event(int ch, char **save, char **line, size_t len)
+static void add_char_to_line(int ch, char **save, char **line, int *index)
 {
-    if (ch == KEY_BACKSPACE && len > 0) {
-        *line = realloc(*line, sizeof(char) * (len));
-        if (*line == NULL)
-            return;
-        (*line)[len - 1] = '\0';
+    int len = strlen(*line);
+
+    (*line) = realloc(*line, sizeof(char) * (len + 2));
+    if (*line == NULL)
+        return;
+    for (int i = len; i >= *index; i--)
+        (*line)[i + 1] = (*line)[i];
+    (*line)[*index] = (char)ch;
+    (*line)[len + 1] = '\0';
+    (*index)++;
+    *save = strdup(*line);
+}
+
+static void remove_char_to_line(char **line, int *index)
+{
+    int len = strlen(*line);
+
+    *line = realloc(*line, sizeof(char) * (len));
+    if (*line == NULL)
+        return;
+    for (int i = *index - 1; i < len; i++)
+        (*line)[i] = (*line)[i + 1];
+    (*line)[len - 1] = '\0';
+    (*index)--;
+}
+
+static void get_keyboard_event(int ch, char **save, char **line, int *index)
+{
+    if (ch == KEY_BACKSPACE && *index > 0) {
+        remove_char_to_line(line, index);
     }
     if (PRINTABLE(ch)) {
-        (*line) = realloc(*line, sizeof(char) * (len + 2));
-        if (*line == NULL)
-            return;
-        (*line)[len] = (char)ch;
-        (*line)[len + 1] = '\0';
-        *save = strdup(*line);
+        add_char_to_line(ch, save, line, index);
     }
     if (ch == 4) {
         free(*line);
+        endwin();
         exit(0);
     }
     if (ch == 5)
@@ -49,16 +70,21 @@ static void free_history_and_save(char **history, char *save)
 
 char *get_string(char *term_name, char *line)
 {
-    size_t len = 0;
     char **history = get_history_array();
     int history_index = my_arraylen(history);
     char *save = strdup(line);
+    int index = 0;
 
-    for (int ch = getch(); ch != 10; ch = getch(), len = strlen(line)) {
-        get_keyboard_event(ch, &save, &line, len);
-        if (ch == KEY_UP || ch == KEY_DOWN)
+    for (int ch = getch(); ch != 10; ch = getch()) {
+        get_keyboard_event(ch, &save, &line, &index);
+        if (ch == KEY_UP || ch == KEY_DOWN) {
             line = strdup(move_in_history(ch, save, &history_index, history));
+            index = strlen(line);
+        }
         display_term(term_name, line);
+        if (ch == KEY_LEFT || ch == KEY_RIGHT)
+            move_cursor(ch, line, &index);
+        print_cursor(line, index);
     }
     free_history_and_save(history, save);
     return line;
