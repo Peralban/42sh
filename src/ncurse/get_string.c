@@ -37,7 +37,7 @@ static void remove_char_to_line(char **line, int *index)
     *line = realloc(*line, sizeof(char) * (len));
     if (*line == NULL)
         return;
-    for (int i = *index; i < len; i++)
+    for (int i = *index - 1; i < len; i++)
         (*line)[i] = (*line)[i + 1];
     (*line)[len - 1] = '\0';
     (*index)--;
@@ -45,7 +45,7 @@ static void remove_char_to_line(char **line, int *index)
 
 static void get_keyboard_event(int ch, char **save, char **line, int *index)
 {
-    if (ch == KEY_BACKSPACE && strlen(*line) > 0) {
+    if (ch == KEY_BACKSPACE && *index > 0) {
         remove_char_to_line(line, index);
     }
     if (PRINTABLE(ch)) {
