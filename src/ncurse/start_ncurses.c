@@ -13,7 +13,10 @@
 void start_ncurses(void)
 {
     char *color = set_color_file("/tmp/.42sh_color");
+    int fd = open(color, O_CREAT | O_RDWR | O_TRUNC, 0666);
 
+    if (fd == -1)
+        exit(84);
     setenv("TERM", "xterm-256color", 1);
     initscr();
     noecho();
@@ -25,9 +28,6 @@ void start_ncurses(void)
     init_pair(3, COLOR_RED, COLOR_BLACK);
     init_pair(4, COLOR_GREEN, COLOR_BLACK);
     init_pair(5, COLOR_BLUE, COLOR_BLACK);
-    int fd = open(color, O_CREAT | O_RDWR | O_TRUNC, 0666);
-    if (fd == -1)
-        exit(84);
     close(fd);
     set_color_file(color);
     ncurses_on_off(true);

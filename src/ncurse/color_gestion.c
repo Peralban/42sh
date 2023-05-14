@@ -35,6 +35,8 @@ void fill_color_line(const char *line)
 {
     int fdc = open(get_color_file(), O_WRONLY | O_APPEND);
 
+    if (fdc == -1)
+        return;
     if (line[0] == '\0')
         write(fdc, "0", 1);
     for (int i = 0; line[i] != '\0'; i++)

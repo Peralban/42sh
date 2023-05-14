@@ -42,11 +42,11 @@ int max_size, char *src)
     char **arr = malloc(sizeof(char*));
     char **str = malloc(sizeof(char*) * 2);
 
+    if (src == NULL || arr == NULL || swa == NULL ||
+    model == NULL || str == NULL)
+        return NULL;
     str[0] = model;
     str[1] = src;
-    if (src == NULL || arr == NULL || swa == NULL ||
-        model == NULL || str == NULL)
-        return NULL;
     init_swa(max_size, swa);
     arr[0] = NULL;
     for (; model[swa[SWA_I]] != 0; swa[SWA_I]++, swa[SWA_K]++) {
