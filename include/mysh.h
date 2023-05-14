@@ -122,5 +122,12 @@ void append_local_variable(char *name, char *value);
 int handle_equal_sign(char **line, int i);
 bool detect_variable_attribution(char **line);
 char *find_local_variable(char *str, int i);
+void add_alias(char *line, int *error);
+void execute_alias(char *line, int *error);
+char *get_cmd_from_alias(char *cmd);
+char **get_alias_file(void);
+int get_alias_file_fd(void);
+int handle_alias(char *line, int *error);
+void remove_alias(char *line, int *error);
 
 #endif
