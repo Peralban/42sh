@@ -42,51 +42,47 @@ static void print_history(void)
     fclose(fd);
 }
 
-static int history_managemnt(char *line, int fd, int *error)
+static int history_managemnt(char **cmd, int fd, int *error)
 {
-    if (strcmp(line, "history-clear") == 0) {
+    if (strcmp(cmd[0], "history-clear") == 0 && my_arraylen(cmd) == 1) {
         fd = open(get_path(".42sh_history"), O_RDWR | O_CREAT | O_TRUNC, 0666);
-        if (history_error(fd, error) == 84)
-            return 84;
-    } else if (strcmp(line, "history") == 0) {
-        close(fd);
-        print_history();
-    } else {
-        write(fd, line, strlen(line));
+        return history_error(fd, error);
+    } else if (strcmp(cmd[0], "history") == 0 && my_arraylen(cmd) == 1) {
+        write(fd, cmd[0], strlen(cmd[0]));
         write(fd, "\n", 1);
         close(fd);
+        print_history();
         return 0;
+    } else {
+        return add_in_history(cmd, fd);
+    }
+}
+
+static int search_cmd(char ***cmd)
+{
+    char **history = get_history_array();
+
+    if (strlen(*cmd[0]) == 1)
+        return 1;
+    if (history == NULL)
+        return 84;
+    for (int i = my_arraylen(history) - 1; i >= 0; i--) {
+        if (my_start_with(history[i], (*cmd[0]) + 1) == 1) {
+            *cmd = my_str_to_word_array(history[i], " \t");
+            return 1;
+        }
     }
     return 1;
 }
 
-static int search_cmd(char **line)
-{
-    char **history = get_history_array();
-
-    if (strlen(*line) == 1)
-        return 0;
-    if (history == NULL)
-        return 84;
-    for (int i = my_arraylen(history) - 1; i >= 0; i--) {
-        if (my_start_with(history[i], (*line) + 1) == 1) {
-            (*line) = strdup(history[i]);
-            return 0;
-        }
-    }
-    return 0;
-}
-
-int history(char **line, int *error)
+int history(char ***cmd, int *error)
 {
     int fd = 0;
 
-    if (*line[0] == '\0')
-        return 0;
     fd = open(get_path(".42sh_history"), O_WRONLY | O_CREAT | O_APPEND, 0666);
     if (history_error(fd, error) == 84)
         return 84;
-    if (my_start_with(*line, "!") == 1)
-        return search_cmd(line);
-    return history_managemnt(*line, fd, error);
+    if (my_start_with(*cmd[0], "!") == 1)
+        return search_cmd(cmd);
+    return history_managemnt(*cmd, fd, error);
 }

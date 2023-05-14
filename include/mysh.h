@@ -28,7 +28,7 @@ void destroy_array(char **arr);
 /* Functions from builtin */
 char **delete_quotes(char **cmd);
 int local_var_built_in(char **cmd, int *error);
-int built_in(char **cmd, char **env, int *error, int *exit_value);
+int built_in(char ***cmd, char **env, int *error, int *exit_value);
 int clear_screen(char **cmd);
 int my_exit(int *exit_value);
 int my_cd(char **cmd, char **env, int *error);
@@ -143,8 +143,9 @@ char *my_getpwd(void);
 bool var_are_init(char **env);
 
 /* Functions from history */
-int history(char **line, int *error);
+int history(char ***cmd, int *error);
 char **get_history_array(void);
+int add_in_history(char **cmd, int fd);
 
 /* Functions from redirection */
 int get_term_fd(void);
