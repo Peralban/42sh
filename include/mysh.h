@@ -12,6 +12,7 @@
 
     #include <stddef.h>
     #include <unistd.h>
+    #include <stdio.h>
     #include "parser.h"
 
 typedef struct token_s token_t;
@@ -23,13 +24,15 @@ void the_sh(char **env);
 int main(int ac, char **av, char **env);
 char *get_path(char *file_name);
 void destroy_array(char **arr);
+char **delete_quotes(char **cmd);
+int local_var_built_in(char **cmd, int *error);
 int built_in(char **cmd, char **env, int *error, int *exit_value);
+int clear_screen(char **cmd);
 int my_exit(int *exit_value);
 int my_cd(char **cmd, char **env, int *error);
-char *adapt_str(char *str, int nb_quotes);
+char *adapt_str(char *str);
 char *test_echo_special_cases(char *str);
-int my_echo(char *line, int *error);
-bool echo_execution(char *line, int *error);
+int my_echo(char **cmd, int *error);
 char *find_special_char_last_cases(char c);
 char *find_special_char(char c);
 char *handle_backslash(char *str, char *new_str, int i, int j);
@@ -41,6 +44,11 @@ int setup_env(char **env);
 int parse_args_setenv(char **args);
 char **set_env_tab(char **new_env);
 char **get_env_tab(void);
+void delete_local_variable(char *name);
+void append_local_variable(char *name, char *value);
+int display_local_variables(void);
+int my_set(char **cmd, int *error);
+int my_unset(char **cmd, int *error);
 void exec_parent(int pid, int *error);
 void exec_redirections(const token_t *token);
 int my_exec(char **cmd, char **env, token_t *token);
@@ -74,6 +82,7 @@ char *move_in_history(int ch, char *save, int *index, char **history);
 int ncurses_on_off(int on_off);
 int is_ncurses(void);
 char *get_string(char *term_name, char *line);
+char **create_command(token_t *token, char **arr);
 int read_command(token_t *token);
 void skip_and_or(token_t *token);
 void read_and_or(token_t *token);
@@ -84,6 +93,7 @@ void parsing_display_error(int code);
 int parsing_error(token_t *token);
 int pipe_right_side(token_t *token, int *nb_pipe);
 void parsing_error_pipe(token_t *token);
+void get_token_backtick(token_t *token);
 void get_token_right(token_t *token);
 void get_token_with_redir(token_t *token, int nb_pipe);
 void set_token_type(token_t *token);
@@ -97,11 +107,14 @@ void multiple_pipe(token_t *token, pipe_t *pipes, int *status);
 void read_pipe(token_t *token);
 void set_redirection_name(token_t *token);
 void reset_redir_name(token_t *token);
+void parser_backtick(token_t *token, char ***arr);
+void backtick_gestion(token_t *token);
+char *get_quote(token_t *token);
 char *my_getenv(char **env, char *var);
 void print_prompt(char **env, int result_cmd);
 char *my_getpwd(void);
 bool var_are_init(char **env);
-int history(char *line, int *error);
+int history(char **line, int *error);
 char **get_history_array(void);
 int get_term_fd(void);
 int redirect_left(int fd, char *file_path);
@@ -111,16 +124,13 @@ int double_left_redirection(char *brackets);
 char *find_num_variable(char *str, char **wa, int i, char **env);
 char *create_new_line(char *new_line, char *tmp, int size);
 char *detect_variables(char *line, char **env, int *error);
-char *get_var(char *str, int i);
+char *get_var_value(char *str, int i);
 char *get_var_name(char *str, int i);
 int get_back_cmd(void);
 char *join_all_args(char *str);
 char *find_other_variable(char *str, char **wa, int i, char **env);
 char *find_special_variable(char *str, int i, char **env, int *error);
-void delete_local_variable(char *name);
-void append_local_variable(char *name, char *value);
-int handle_equal_sign(char **line, int i);
-bool detect_variable_attribution(char **line);
+void free_find_local_var(char *var, char *path, char *line, FILE *fd);
 char *find_local_variable(char *str, int i);
 void add_alias(char *line, int *error);
 void execute_alias(char *line, int *error);
@@ -129,5 +139,6 @@ char **get_alias_file(void);
 int get_alias_file_fd(void);
 int handle_alias(char *line, int *error);
 void remove_alias(char *line, int *error);
+int cmd_in_sublime(char **line);
 
 #endif
