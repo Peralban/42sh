@@ -36,12 +36,12 @@ void delete_local_variable(char *name)
 void append_local_variable(char *name, char *value)
 {
     char *path = get_path(".42sh_variables");
-    FILE *fd = fopen(path, "a");
+    FILE *fd = NONE;
 
+    delete_local_variable(name);
+    fd = fopen(path, "a");
     if (fd == NULL)
         return;
-    if (find_local_variable(name, 0) != NULL)
-        delete_local_variable(name);
     fprintf(fd, "%s %s\n", name, value);
     fclose(fd);
     free(path);
