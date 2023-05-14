@@ -16,9 +16,9 @@ void put_str_in_term(int fd, const char *str, char color)
     int fdp = 0;
     int fdc = 0;
 
-    if (is_ncurses() == false)
+    if (is_ncurses() == false) {
         write(fd, str, strlen(str));
-    else {
+    } else {
         fdp = open(get_term_name(), O_WRONLY | O_APPEND);
         fdc = open(get_color_file(), O_WRONLY | O_APPEND);
         if (fdp == -1 || fdc == -1)
